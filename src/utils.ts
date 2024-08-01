@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { QUEUE_TITLES } from "./constants";
+import { EQueueTitles } from "./model";
 
 /**
  * React setInterval Equivalent
@@ -36,7 +36,7 @@ export const useInterval = (callback: () => void, delay: number | null) => {
  * @param {string} queueNumber
  */
 export const getQueueName = (name: string) => {
-  Object.values(QUEUE_TITLES).forEach((TITLE) => {
+  Object.values(EQueueTitles).forEach((TITLE) => {
     name = name.replace(TITLE, "");
   });
   return name.trim();

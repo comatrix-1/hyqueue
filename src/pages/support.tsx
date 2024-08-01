@@ -17,9 +17,9 @@ import { Main } from '../components/Main'
 import { Footer } from '../components/Footer'
 import { NavBar } from '../components/Navbar'
 import { UrlInput } from '../components/Support/UrlInput'
-import { API_ENDPOINT, QUEUE_TITLES } from '../constants'
+import { API_ENDPOINT } from '../constants'
 import PeopleOnPhones from '../assets/svg/people-on-phones.svg'
-import { ITrelloBoardList } from '../model'
+import { EQueueTitles, ITrelloBoardList } from '../model'
 
 const Index = () => {
   const [rootUrl, setRootUrl] = useState('')
@@ -46,7 +46,7 @@ const Index = () => {
       const boardLists = await axios.get(`${API_ENDPOINT}/view?type=boardlists&board=${boardId}`)
 
       boardLists.data.forEach((list: ITrelloBoardList) => {
-        if (list.name.indexOf(QUEUE_TITLES.PENDING) > -1) {
+        if (list.name.indexOf(EQueueTitles.PENDING) > -1) {
           setQueueId(list.id)
           console.log(list.id);
         }

@@ -8,7 +8,7 @@ import axios from "axios";
 import { useCookies } from "react-cookie";
 
 import { useInterval } from "../utils";
-import { COOKIE_MAX_AGE, API_ENDPOINT, TICKET_STATUS } from "../constants";
+import { COOKIE_MAX_AGE, API_ENDPOINT } from "../constants";
 import { Container } from "../components/Container";
 import { Main } from "../components/Main";
 import { Footer } from "../components/Footer";
@@ -20,6 +20,7 @@ import { Skipped } from "../components/Ticket/Skipped";
 import { Served } from "../components/Ticket/Served";
 import { NotFound } from "../components/Ticket/NotFound";
 import { LeaveModal } from "../components/Ticket/LeaveModal";
+import { EQueueTitles, ETicketStatus } from "../model";
 
 const Index = () => {
   const { t, lang } = useTranslation("common");
@@ -30,7 +31,7 @@ const Index = () => {
   const [numberOfTicketsAhead, setNumberOfTicketsAhead] = useState<number>();
 
   const [boardId, setBoardId] = useState<string>();
-  const [ticketState, setTicketState] = useState<string>();
+  const [ticketState, setTicketState] = useState<ETicketStatus>();
   const [ticketId, setTicketId] = useState<string>();
   const [queueId, setQueueId] = useState<string>();
   const [queueName, setQueueName] = useState<string>();
@@ -119,19 +120,19 @@ const Index = () => {
       // Hack: Check whether to alert the user based on if the
       // queue name contains the word 'alert'
       // USING THE CONSTANT BREAKS I18N? IDK HOW
-      if (queueName.includes("[ALERT]")) {
-        setQueueName(queueName.replace("[ALERT]", "").trim());
-        setTicketState("alerted");
-      } else if (queueName.includes("[DONE]")) {
-        setTicketState("served");
+      if (queueName.includes(EQueueTitles.ALERTED)) {
+        setQueueName(queueName.replace(EQueueTitles.ALERTED, "").trim());
+        setTicketState(ETicketStatus.ALERTED);
+      } else if (queueName.includes(EQueueTitles.DONE)) {
+        setTicketState(ETicketStatus.SERVED);
         setRefreshEnabled(false);
         removeCookie("ticket"); // Remove cookie so they can join the queue again
-      } else if (queueName.includes("[MISSED]")) {
-        setTicketState("missed");
+      } else if (queueName.includes(EQueueTitles.MISSED)) {
+        setTicketState(ETicketStatus.MISSED);
       } else if (numberOfTicketsAhead === -1) {
         throw new Error("Ticket not found");
       } else {
-        setTicketState("pending");
+        setTicketState(ETicketStatus.PENDING);
       }
     } catch (err: any) {
       // TODO: change any
@@ -141,7 +142,7 @@ const Index = () => {
         console.log("429 detected");
         return;
       }
-      setTicketState("error");
+      setTicketState(ETicketStatus.ERROR);
       setRefreshEnabled(false);
       removeCookie("ticket"); // Remove cookie so they can join the queue again
     }
@@ -175,7 +176,7 @@ const Index = () => {
   const renderTicket = () => {
     // There are 4 possible ticket states
     // 1. Alerted - Ticket is called by admin
-    if (ticketState === TICKET_STATUS.ALERTED) {
+    if (ticketState === ETicketStatus.ALERTED) {
       return (
         <Alerted
           waitingTime={waitTimePerTicket}
@@ -187,14 +188,14 @@ const Index = () => {
       );
     }
     // 2. Served - Ticket is complete
-    else if (ticketState === TICKET_STATUS.SERVED) {
+    else if (ticketState === ETicketStatus.SERVED) {
       return <Served feedbackLink={feedbackLink} />;
     }
     // 3. Missed - Ticket is in [MISSED] / not in the queue / queue doesnt exist
-    else if (ticketState === TICKET_STATUS.MISSED) {
+    else if (ticketState === ETicketStatus.MISSED) {
       return <Skipped rejoinQueue={rejoinQueue} />;
     } else if (
-      ticketState === TICKET_STATUS.ERROR ||
+      ticketState === ETicketStatus.ERROR ||
       numberOfTicketsAhead === -1
     ) {
       return <NotFound />;
@@ -243,7 +244,7 @@ const Index = () => {
         />
         <NavBar />
         <Main>
-          {ticketState != TICKET_STATUS.ERROR && (
+          {ticketState != ETicketStatus.ERROR && (
             <Flex direction="column" alignItems="center">
               <Heading textStyle="heading1" fontSize="1.5rem">
                 Queue Number

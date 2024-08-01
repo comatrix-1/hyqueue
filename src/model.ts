@@ -94,3 +94,19 @@ export interface IBoardData {
   lists: IList[];
   cards: ICard[];
 }
+
+export enum EQueueTitles {
+  PENDING = "[PENDING]",
+  ALERTED = "[ALERT]",
+  DONE = "[DONE]",
+  MISSED = "[MISSED]",
+}
+
+export enum ETicketStatus {
+  PENDING = "pending",
+  REMOVED = "removed",
+  ALERTED = "alerted",
+  SERVED = "served",
+  MISSED = "missed",
+  ERROR = "error",
+}

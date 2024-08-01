@@ -1,7 +1,7 @@
 const axios = require("axios");
 const { parse: parseUrl } = require("url");
 import type { NextApiRequest, NextApiResponse } from "next";
-import { IBoardData, ICard, IList } from "../../model";
+import { EQueueTitles, IBoardData, ICard, IList } from "../../model";
 
 /**
  * Function for Ticket / Card Trello API calls
@@ -68,9 +68,9 @@ export default async function handler(
           let numberOfTicketsAhead = -1;
           if (
             !(
-              queueName.includes("[ALERT]") ||
-              queueName.includes("[DONE]") ||
-              queueName.includes("[MISSED]")
+              queueName.includes(EQueueTitles.ALERTED) ||
+              queueName.includes(EQueueTitles.DONE) ||
+              queueName.includes(EQueueTitles.MISSED)
             )
           ) {
             // Get card position based on length of list before

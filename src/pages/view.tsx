@@ -6,14 +6,14 @@ import Head from 'next/head'
 import { useEffect, useState } from 'react'
 import queryString from 'query-string'
 import axios from 'axios'
-import { API_ENDPOINT, QUEUE_TITLES } from '../constants'
+import { API_ENDPOINT } from '../constants'
 import { useInterval } from '../utils'
 import { CurrentlyServingQueue } from '../components/View/CurrentlyServingQueue'
 import { MissedQueue } from '../components/View/MissedQueue'
 import { ViewHeader } from '../components/View/ViewHeader'
 import { ViewFooter } from '../components/View/ViewFooter'
 import * as _ from 'lodash'
-import { ITrelloBoardList } from '../model'
+import { EQueueTitles, ITrelloBoardList } from '../model'
 
 const Index = () => {
 
@@ -70,17 +70,17 @@ const Index = () => {
     if (boardId) {
       try {
         const boardLists = await axios.get(`${API_ENDPOINT}/view?type=boardlists&board=${boardId}`)
-        let alertQueues = boardLists.data.filter((list: ITrelloBoardList) => list.name.indexOf(QUEUE_TITLES.ALERTED) > -1).map((q: ITrelloBoardList) => q.id)
+        let alertQueues = boardLists.data.filter((list: ITrelloBoardList) => list.name.indexOf(EQueueTitles.ALERTED) > -1).map((q: ITrelloBoardList) => q.id)
         // Optionality to slice a range of queues to support large numbers on different screens
         if (from && _.isInteger(Number(from)) && to && _.isInteger(Number(to))) {
           alertQueues = alertQueues.slice(from, to)
         }
         setqueueAlertIds(alertQueues)
 
-        const missedQueues = boardLists.data.filter((list: ITrelloBoardList) => list.name.indexOf(QUEUE_TITLES.MISSED) > -1).map((q: ITrelloBoardList) => q.id)
+        const missedQueues = boardLists.data.filter((list: ITrelloBoardList) => list.name.indexOf(EQueueTitles.MISSED) > -1).map((q: ITrelloBoardList) => q.id)
         setQueueMissedIds(missedQueues)
 
-        const pendingQueue = boardLists.data.find((list: ITrelloBoardList) => list.name.indexOf(QUEUE_TITLES.PENDING) > -1)
+        const pendingQueue = boardLists.data.find((list: ITrelloBoardList) => list.name.indexOf(EQueueTitles.PENDING) > -1)
         if (pendingQueue) {
           setQueuePendingUrl(location.origin + `/queue?id=${pendingQueue.id}`)
         }
