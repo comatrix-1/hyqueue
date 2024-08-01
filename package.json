@@ -29,6 +29,11 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@netlify/plugin-nextjs": "^4.28.3"
+    "@netlify/plugin-nextjs": "^4.28.3",
+    "@types/bluebird": "^3.5.42",
+    "@types/is-url": "^1.2.32",
+    "@types/node": "^22.0.2",
+    "@types/react": "^18.3.3",
+    "typescript": "^5.5.4"
   }
 }
