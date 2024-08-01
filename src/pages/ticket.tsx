@@ -152,7 +152,10 @@ const Index = () => {
     try {
       axios.delete(`${API_ENDPOINT}/ticket?id=${ticketId}&boardId=${boardId}`);
       removeCookie("ticket");
-      router.push(`/queue?id=${queueId}`);
+      router.push({
+        pathname: "/queue",
+        query: { id: queueId },
+      });
     } catch (error) {
       console.log(error);
     }
