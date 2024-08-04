@@ -30,26 +30,34 @@ import {
 import { useCookies } from "react-cookie";
 import useTranslation from "next-translate/useTranslation";
 import { API_ENDPOINT } from "../constants";
-import { ITicketDescription } from "../model";
+import {
+  IEditableSettings,
+  ITicketDescription,
+  ITrelloBoardSettings,
+} from "../model";
 
 const Index = () => {
   const { t, lang } = useTranslation("common");
   const router = useRouter();
   const [cookies] = useCookies(["ticket"]);
 
-  const [boardId, setBoardId] = useState();
+  const [boardId, setBoardId] = useState<string>("");
   const [boardName, setBoardName] = useState("");
   const [isQueueValid, setIsQueueValid] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [isQueueInactive, setIsQueueInactive] = useState(true);
   const [feedbackLink, setFeedbackLink] = useState();
-  const [privacyPolicyLink, setPrivacyPolicyLink] = useState();
-  const [registrationFields, setRegistrationFields] = useState<string[]>([]);
-  const [ticketPrefix, setTicketPrefix] = useState();
-  const [categories, setCategories] = useState([]);
-  const [waitTimePerTicket, setWaitTimePerTicket] = useState();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [invalidNRIC, setInvalidNRIC] = useState(false);
+  const [editableSettings, setEditableSettings] = useState<IEditableSettings>({
+    registrationFields: [],
+    categories: [],
+    feedbackLink: "",
+    privacyPolicyLink: "",
+    ticketPrefix: "",
+    openingHours: [],
+    waitTimePerTicket: null,
+  });
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -103,58 +111,41 @@ const Index = () => {
       // Get the board queue belongs to this
       // 1. Verifies that queue actually exists
       // 2. Gets info stored as JSON in board description
-      const getBoardQueueBelongsTo = await axios.get(
-        `${API_ENDPOINT}/queue?id=${queueId}`
-      );
-      console.log("getBoardQueueBelongsTo", getBoardQueueBelongsTo);
-      const { id, name, desc } = getBoardQueueBelongsTo.data;
 
-      setBoardId(id);
+      const response = await axios.get(`${API_ENDPOINT}/view?type=board`);
+      const boardSettings: ITrelloBoardSettings = response.data;
 
-      const cleanedDesc = desc
+      setBoardId(boardSettings?.id ?? "");
+
+      const cleanedDesc = boardSettings?.desc
         .replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1")
         .replace(/\\\"/g, '"');
       console.log("parsing JSON", cleanedDesc);
-      const boardInfo = JSON.parse(cleanedDesc);
+      const boardInfo: IEditableSettings = JSON.parse(cleanedDesc);
       console.log("parsed JSON", boardInfo);
 
+      setEditableSettings({
+        feedbackLink: boardInfo.feedbackLink,
+        privacyPolicyLink: boardInfo.privacyPolicyLink,
+        registrationFields: boardInfo.registrationFields,
+        ticketPrefix: boardInfo.ticketPrefix,
+        categories: boardInfo.categories,
+        waitTimePerTicket:
+          boardInfo.waitTimePerTicket &&
+          !isNaN(Number(boardInfo.waitTimePerTicket))
+            ? boardInfo.waitTimePerTicket
+            : null,
+        openingHours: boardInfo.openingHours,
+      });
+
       setIsQueueInactive(
-        name.includes("[DISABLED]") || isQueueClosed(boardInfo.openingHours)
+        boardSettings?.name.includes("[DISABLED]") ||
+          isQueueClosed(boardInfo.openingHours)
       );
       setIsLoading(false);
 
-      const cleanedName = name.replace("[DISABLED]", "").trim();
+      const cleanedName = boardSettings?.name.replace("[DISABLED]", "").trim();
       setBoardName(cleanedName);
-
-      //  Set Registration Fields
-      setRegistrationFields(boardInfo.registrationFields);
-
-      if (boardInfo.ticketPrefix) {
-        setTicketPrefix(boardInfo.ticketPrefix);
-      }
-
-      //  Feedback Link
-      if (boardInfo.feedbackLink && url(boardInfo.feedbackLink)) {
-        setFeedbackLink(boardInfo.feedbackLink);
-      }
-
-      //  Privacy Policy
-      if (boardInfo.privacyPolicyLink && url(boardInfo.privacyPolicyLink)) {
-        setPrivacyPolicyLink(boardInfo.privacyPolicyLink);
-      }
-
-      //  Categories
-      if (boardInfo.categories && Array.isArray(boardInfo.categories)) {
-        setCategories(boardInfo.categories);
-      }
-
-      //  Feedback Link
-      if (
-        boardInfo.waitTimePerTicket &&
-        !isNaN(Number(boardInfo.waitTimePerTicket))
-      ) {
-        setWaitTimePerTicket(boardInfo.waitTimePerTicket);
-      }
     } catch (err) {
       console.log(err);
       setIsQueueValid(false);
@@ -168,8 +159,8 @@ const Index = () => {
 
       // Check if NRIC is valid
       if (
-        Array.isArray(registrationFields) &&
-        registrationFields.includes("nric")
+        Array.isArray(editableSettings.registrationFields) &&
+        editableSettings.registrationFields.includes("nric")
       ) {
         if (validate(e.target["nric"].value) === false) {
           setInvalidNRIC(true);
@@ -190,16 +181,19 @@ const Index = () => {
         category: "",
       };
 
-      registrationFields.forEach((key) => {
+      editableSettings.registrationFields.forEach((key) => {
         if (e.target[key].value !== "") {
           (desc as any)[key] = e.target[key].value;
         }
       });
-      if (Array.isArray(categories) && categories.length > 0) {
+      if (
+        Array.isArray(editableSettings.categories) &&
+        editableSettings.categories.length > 0
+      ) {
         desc.category = e.target.category.value;
       }
-      if (ticketPrefix) {
-        desc.ticketPrefix = ticketPrefix;
+      if (editableSettings.ticketPrefix) {
+        desc.ticketPrefix = editableSettings.ticketPrefix;
       }
 
       // call netlify function to create a ticket
@@ -213,8 +207,10 @@ const Index = () => {
       const feedback = feedbackLink
         ? `&feedback=${encodeURIComponent(feedbackLink)}`
         : "";
-      const waitTime = waitTimePerTicket
-        ? `&waitTimePerTicket=${encodeURIComponent(waitTimePerTicket)}`
+      const waitTime = editableSettings.waitTimePerTicket
+        ? `&waitTimePerTicket=${encodeURIComponent(
+            editableSettings.waitTimePerTicket
+          )}`
         : 1; // TODO: set proper wait time per ticket default
       const url = `/ticket?queue=${query.id}&board=${boardId}&ticket=${ticketId}${feedback}${waitTime}`;
       router.push(url, url, { locale: lang });
@@ -298,7 +294,7 @@ const Index = () => {
             <Box layerStyle="card">
               <form onSubmit={submit}>
                 <Flex direction="column">
-                  {registrationFields.includes("name") && (
+                  {editableSettings.registrationFields.includes("name") && (
                     <>
                       <Text pb="0.5rem" textStyle="subtitle1">
                         {t("your-name")}
@@ -312,7 +308,7 @@ const Index = () => {
                       />
                     </>
                   )}
-                  {registrationFields.includes("contact") && (
+                  {editableSettings.registrationFields.includes("contact") && (
                     <>
                       <Text pt="0.5rem" pb="0.5rem" textStyle="subtitle1">
                         {t("mobile-number")}
@@ -329,7 +325,9 @@ const Index = () => {
                       />
                     </>
                   )}
-                  {registrationFields.includes("postalcode") && (
+                  {editableSettings.registrationFields.includes(
+                    "postalcode"
+                  ) && (
                     <>
                       <Text pt="0.5rem" pb="0.5rem" textStyle="subtitle1">
                         {t("postal-code")}
@@ -348,7 +346,7 @@ const Index = () => {
                     </>
                   )}
 
-                  {registrationFields.includes("nric") && (
+                  {editableSettings.registrationFields.includes("nric") && (
                     <>
                       <Text pt="0.5rem" pb="0.5rem" textStyle="subtitle1">
                         NRIC
@@ -372,27 +370,30 @@ const Index = () => {
                     </>
                   )}
 
-                  {Array.isArray(categories) && categories.length > 0 && (
-                    <>
-                      <Text pt="0.5rem" pb="0.5rem" textStyle="subtitle1">
-                        {t("category")}
-                      </Text>
-                      <Flex mb="1rem">
-                        <Select
-                          name="category"
-                          layerStyle="formSelect"
-                          placeholder={t("select-category")}
-                          required
-                        >
-                          {categories.map((category) => (
-                            <option value={category}>{category}</option>
-                          ))}
-                        </Select>
-                      </Flex>
-                    </>
-                  )}
+                  {Array.isArray(editableSettings.categories) &&
+                    editableSettings.categories.length > 0 && (
+                      <>
+                        <Text pt="0.5rem" pb="0.5rem" textStyle="subtitle1">
+                          {t("category")}
+                        </Text>
+                        <Flex mb="1rem">
+                          <Select
+                            name="category"
+                            layerStyle="formSelect"
+                            placeholder={t("select-category")}
+                            required
+                          >
+                            {editableSettings.categories.map((category) => (
+                              <option value={category}>{category}</option>
+                            ))}
+                          </Select>
+                        </Flex>
+                      </>
+                    )}
 
-                  {registrationFields.includes("description") && (
+                  {editableSettings.registrationFields.includes(
+                    "description"
+                  ) && (
                     <>
                       <Text pt="0.5rem" pb="0.5rem" textStyle="subtitle1">
                         {t("description")}
@@ -418,19 +419,24 @@ const Index = () => {
                     variant="solid"
                     marginTop="1.5rem"
                     type="submit"
-                    isDisabled={registrationFields.length === 0}
+                    isDisabled={
+                      editableSettings.registrationFields.length === 0
+                    }
                   >
                     {t("join-queue")}
                   </Button>
 
-                  {privacyPolicyLink && (
+                  {editableSettings.privacyPolicyLink && (
                     <>
                       <Text pt="1rem" textStyle="body3">
                         <Text display="inline-block">
                           {t("by-joining-this-queue-you-agree-to-our")}&nbsp;
                         </Text>
                         <Text display="inline-block" textStyle="link">
-                          <a href={privacyPolicyLink} target="_blank">
+                          <a
+                            href={editableSettings.privacyPolicyLink}
+                            target="_blank"
+                          >
                             {t("privacy-policy")}
                           </a>
                         </Text>
