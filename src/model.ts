@@ -72,7 +72,7 @@ export interface IEditableSettings {
 
 export interface ITrelloBoardSettings {
   id?: string;
-  desc?: string;
+  desc?: IEditableSettings;
   name?: string;
 }
 

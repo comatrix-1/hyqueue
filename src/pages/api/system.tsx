@@ -1,9 +1,7 @@
 const axios = require("axios");
-const { parse: parseUrl } = require("url");
 import type { NextApiRequest, NextApiResponse } from "next";
 import {
   IEditableSettings,
-  ITrelloBoardList,
   ITrelloBoardSettings,
 } from "../../model";
 
@@ -12,11 +10,10 @@ import {
  */
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<ITrelloBoardSettings | null>
 ) {
   try {
-    const { method: httpMethod, url } = req;
-    const { query: queryStringParameters } = parseUrl(url, true);
+    const { method: httpMethod } = req;
     const {
       TRELLO_KEY,
       TRELLO_TOKEN,
@@ -49,7 +46,7 @@ export default async function handler(
       return res.status(200).json({
         id,
         name,
-        parsedDesc
+        desc: parsedDesc,
       });
     } else {
       res.status(404).json(null);

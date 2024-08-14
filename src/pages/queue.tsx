@@ -113,16 +113,21 @@ const Index = () => {
       // 2. Gets info stored as JSON in board description
 
       const response = await axios.get(`${API_ENDPOINT}/system`);
+      console.log("API response: " + response.data);
       const boardSettings: ITrelloBoardSettings = response.data;
+      console.log("boardSettings: " + boardSettings);
+      const boardInfo = boardSettings?.desc;
+
+      if (!boardInfo) return; // TODO: handle error
 
       setBoardId(boardSettings?.id ?? "");
 
-      const cleanedDesc = boardSettings?.desc
-        ?.replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1")
-        .replace(/\\\"/g, '"');
-      console.log("parsing JSON", cleanedDesc);
-      const boardInfo: IEditableSettings = JSON.parse(cleanedDesc ?? "");
-      console.log("parsed JSON", boardInfo);
+      // const cleanedDesc = boardSettings?.desc
+      //   ?.replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1")
+      //   .replace(/\\\"/g, '"');
+      // console.log("parsing JSON", cleanedDesc);
+      // const boardInfo: IEditableSettings = JSON.parse(cleanedDesc ?? "");
+      // console.log("parsed JSON", boardInfo);
 
       setEditableSettings({
         feedbackLink: boardInfo.feedbackLink,
@@ -145,7 +150,7 @@ const Index = () => {
       setIsLoading(false);
 
       const cleanedName = boardSettings?.name?.replace("[DISABLED]", "").trim();
-      setBoardName(cleanedName ?? '');
+      setBoardName(cleanedName ?? "");
     } catch (err) {
       console.log(err);
       setIsQueueValid(false);
