@@ -24,11 +24,13 @@ import { InputText, Navbar } from "../../components/Admin";
 
 import ManWithHourglass from "../../assets/svg/man-with-hourglass.svg";
 import { API_ENDPOINT } from "../../constants";
+import { useRouter } from "next/router";
 
 const Index = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isLoading, setIsLoading] = useState(false);
   const [boardId, setBoardId] = useState<string>("");
+  const router = useRouter();
 
   useEffect(() => {
     const query = queryString.parse(location.search);
@@ -54,6 +56,12 @@ const Index = () => {
   const authoriseApp = async (e: any) => {
     // TODO: change any
     e.preventDefault();
+    if (process.env.IS_TEST) {
+      console.log('returning to admin')
+      router.push("/admin");
+      setIsLoading(false);
+      return;
+    }
     if (boardId) {
       try {
         setIsLoading(true);

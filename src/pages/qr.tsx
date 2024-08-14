@@ -34,7 +34,7 @@ const Index = () => {
       // Get the board queue belongs to this
       // 1. Verifies that queue actually exists
       // 2. Gets info stored as JSON in board description
-      const getBoardQueueBelongsTo = await axios.get(`${API_ENDPOINT}/queue?id=${queue}`)
+      const getBoardQueueBelongsTo = await axios.get(`${API_ENDPOINT}/queues?id=${queue}`)
       const { name } = getBoardQueueBelongsTo.data
       setBoardName(name)
     } catch (err) {

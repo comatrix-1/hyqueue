@@ -34,6 +34,7 @@ import {
   ITrelloBoardData,
   ITrelloBoardSettings,
 } from "../../model";
+import { API_ENDPOINT } from "../../constants";
 
 const Index = () => {
   const router = useRouter();
@@ -47,6 +48,7 @@ const Index = () => {
     privacyPolicyLink: "",
     ticketPrefix: "",
     openingHours: [],
+    waitTimePerTicket: null,
   });
 
   /**
@@ -79,18 +81,17 @@ const Index = () => {
    * Gets the board data from trello directly
    */
   const getBoard = async () => {
-    if (apiConfig && apiConfig.key && apiConfig.token && apiConfig.boardId) {
-      try {
-        const response = await axios.get(
-          `https://api.trello.com/1/boards/${apiConfig.boardId}?key=${apiConfig.key}&token=${apiConfig.token}`
-        );
+    try {
+      const response = await axios.get(
+        `${API_ENDPOINT}/view?type=board`
+        // `https://api.trello.com/1/boards/${apiConfig.boardId}?key=${apiConfig.key}&token=${apiConfig.token}` // TODO: remove
+      );
 
-        console.log(response.data);
-        setEditableSettings(JSON.parse(response.data.desc));
-        setBoardData(response.data);
-      } catch (error) {
-        errorHandler(error);
-      }
+      console.log(response.data);
+      setEditableSettings(JSON.parse(response.data.desc));
+      setBoardData(response.data);
+    } catch (error) {
+      errorHandler(error);
     }
   };
 
@@ -135,10 +136,10 @@ const Index = () => {
             throw Error(`Wrong type: ${type} provided in updating board`);
         }
 
-        await axios.put(
-          `https://api.trello.com/1/boards/${apiConfig.boardId}?key=${apiConfig.key}&token=${apiConfig.token}`,
-          settings
-        );
+        // await axios.put(
+        //   `https://api.trello.com/1/boards/${apiConfig.boardId}?key=${apiConfig.key}&token=${apiConfig.token}`,
+        //   settings
+        // ); // TODO: re-implement PUT
       } catch (error) {
         errorHandler(error);
       } finally {
@@ -471,6 +472,16 @@ const Index = () => {
                   />
 
                   <ButtonGroup>
+                    <Button
+                      display="flex"
+                      colorScheme="blue"
+                      borderRadius="3px"
+                      color="white"
+                      variant="solid"
+                      onClick={() => router.push(`/support`)}
+                    >
+                      Queue management
+                    </Button>
                     <Button
                       display="flex"
                       colorScheme="blue"

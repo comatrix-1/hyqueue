@@ -11,8 +11,15 @@ export default async function handler(
 ) {
   try {
     const { method: httpMethod, body: request } = req;
-    const { TRELLO_KEY, REDIRECT_URL, SCOPES, APP_NAME, EXPIRATION_DURATION } =
-      process.env;
+    const {
+      TRELLO_KEY,
+      REDIRECT_URL,
+      SCOPES,
+      APP_NAME,
+      EXPIRATION_DURATION,
+      IS_TEST,
+      NEXT_PUBLIC_TRELLO_BOARD_ID
+    } = process.env;
 
     if (httpMethod === "POST") {
       if (request.boardId) {
@@ -25,6 +32,12 @@ export default async function handler(
             request.boardId
           }&key=${TRELLO_KEY}`
         );
+
+        if (IS_TEST === "true") {
+          return res.json({
+            authorizeUrl: `http://localhost:3000/admin/callback?boardId=${NEXT_PUBLIC_TRELLO_BOARD_ID}`,
+          });
+        }
 
         res.json({
           authorizeUrl: `https://trello.com/1/authorize?expiration=${expiration}&name=${appName}&scope=${scopes}&response_type=token&key=${TRELLO_KEY}&return_url=${redirectUrl}`,

@@ -1,6 +1,7 @@
 const axios = require("axios");
 const { parse: parseUrl } = require("url");
 import type { NextApiRequest, NextApiResponse } from "next";
+import { ITicketDescription, ITrelloBoardList, ITrelloCard } from "../../model";
 
 /**
  * Function for Board Trello API calls
@@ -17,6 +18,7 @@ export default async function handler(
       TRELLO_TOKEN,
       IS_PUBLIC_BOARD,
       TRELLO_ENDPOINT = "https://api.trello.com/1",
+      NEXT_PUBLIC_TRELLO_BOARD_ID,
     } = process.env;
     const tokenAndKeyParams =
       IS_PUBLIC_BOARD === "true"
@@ -32,13 +34,16 @@ export default async function handler(
     if (httpMethod === "GET") {
       let result = {};
       const { type } = queryStringParameters;
+      console.log("GET()");
+      console.log("type", type);
+      console.log("queryStringParameters.board", queryStringParameters.board);
       /**
        * 1. board - Retrieves data about the board
        * *  @param  {string} board The board id
        */
-      if (type === "board" && queryStringParameters.board) {
+      if (type === "board") {
         const board = await axios.get(
-          `${TRELLO_ENDPOINT}/boards/${queryStringParameters.board}?${tokenAndKeyParams}`
+          `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}?${tokenAndKeyParams}`
         );
         result = board.data;
       } else if (type === "boardlists" && queryStringParameters.board) {
@@ -46,6 +51,7 @@ export default async function handler(
          * 2. boardlists - Retrieves all the lists that a board contains
          * *  @param  {string} board The board id
          */
+        console.log('type === "boardlists" && queryStringParameters.board');
         const boardLists = await axios.get(
           `${TRELLO_ENDPOINT}/boards/${queryStringParameters.board}/lists?${tokenAndKeyParams}`
         );
@@ -106,6 +112,60 @@ export default async function handler(
               [queueAlertIds[index]]: queue["200"],
             })
         );
+      } else if (type === "queuesWithCards") {
+        console.log('type === "queuesWithCards');
+        // Get all lists on the board
+        const listsResponse = await axios.get(
+          `https://api.trello.com/1/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/lists?${tokenAndKeyParams}`
+        );
+
+        const lists = listsResponse.data;
+        console.log("lists", lists[0]);
+
+        const listsWithCardsPromises = lists.map(
+          async (list: ITrelloBoardList) => {
+            const cardsResponse = await axios.get(
+              `https://api.trello.com/1/lists/${list.id}/cards?${tokenAndKeyParams}`
+            );
+
+            const cards = cardsResponse.data.map((card: ITrelloCard) => {
+              let parsedDesc: ITicketDescription = {
+                category: null,
+                contact: null,
+                name: null,
+                ticketPrefix: null,
+              };
+              try {
+                parsedDesc = JSON.parse(card.desc as string);
+              } catch (error) {
+                console.log("Error parsing desc");
+              }
+
+              return {
+                id: card.id,
+                name: card.name,
+                shortLink: card.shortLink,
+                shortUrl: card.shortUrl,
+                desc: {
+                  category: parsedDesc.category,
+                  contact: parsedDesc.contact,
+                  name: parsedDesc.name,
+                  ticketPrefix: parsedDesc.ticketPrefix,
+                },
+              };
+            });
+
+            return {
+              listId: list.id,
+              listName: list.name,
+              cards: cards,
+            };
+          }
+        );
+
+        const listsWithCards = await Promise.all(listsWithCardsPromises);
+
+        result = listsWithCards;
       }
       res.json(result);
     } else {

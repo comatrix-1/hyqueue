@@ -20,7 +20,7 @@ const Index = () => {
     const token = hashParams.get("token") ?? "";
 
     authentication.login(keyValue, token);
-    router.push({ pathname: "admin", query: { boardId: boardIdValue } });
+    router.push({ pathname: "/admin", query: { boardId: boardIdValue } });
   };
 
   useEffect(() => {

@@ -9,6 +9,11 @@ export interface ITrelloBoardList {
   softLimit: null;
 }
 
+export interface ITrelloList {
+  id: string;
+  name: string;
+}
+
 // TODO: remove if not needed
 export interface ITrelloApiResponse {
   status: number;
@@ -43,10 +48,10 @@ export interface ITrelloApiResponse {
 }
 
 export interface ITicketDescription {
-  ticketPrefix: string;
-  name: string;
-  contact: string;
-  category: string;
+  ticketPrefix: string | null;
+  name: string | null;
+  contact: string | null;
+  category: string | null;
 }
 
 export interface IApiConfig {
@@ -62,9 +67,11 @@ export interface IEditableSettings {
   privacyPolicyLink: string;
   ticketPrefix: string;
   openingHours: any[]; // TODO: change any
+  waitTimePerTicket: number | null;
 }
 
 export interface ITrelloBoardSettings {
+  id?: string;
   desc: string;
   name: string;
 }
@@ -74,12 +81,16 @@ export interface ITrelloBoardData {
   shortUrl: string;
 }
 
-export interface ICard {
+export interface ITrelloCard {
   id: string;
-  idList: string;
-  name: string;
-  idShort: number;
-  desc: string;
+  idList?: string;
+  name?: string;
+  idShort?: number;
+  desc?: any;
+  shortLink?: string;
+  shortUrl?: string;
+}
+export interface ICard extends ITrelloCard {
   numberOfTicketsAhead?: number;
   queueName?: string;
 }
@@ -87,12 +98,12 @@ export interface ICard {
 export interface IList {
   id: string;
   name: string;
-  cards: ICard[];
+  cards: ITrelloCard[];
 }
 
 export interface IBoardData {
   lists: IList[];
-  cards: ICard[];
+  cards: ITrelloCard[];
 }
 
 export enum EQueueTitles {
@@ -109,4 +120,13 @@ export enum ETicketStatus {
   SERVED = "served",
   MISSED = "missed",
   ERROR = "error",
+}
+
+export interface IApiResponseQueue {
+  servers: any[]; // TODO: change any
+  served: any[]; // TODO: change any
+  pending: any[]; // TODO: change any
+  removed: any[]; // TODO: change any
+  done: any[]; // TODO: change any
+  error: any[]; // TODO: change any
 }

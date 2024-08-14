@@ -1,7 +1,14 @@
 const axios = require("axios");
 const { parse: parseUrl } = require("url");
 import type { NextApiRequest, NextApiResponse } from "next";
-import { EQueueTitles, IBoardData, ICard, IList } from "../../model";
+import {
+  EQueueTitles,
+  IBoardData,
+  ITrelloCard,
+  IList,
+  ICard,
+  ITicketDescription,
+} from "../../model";
 
 /**
  * Function for Ticket / Card Trello API calls
@@ -35,7 +42,45 @@ export default async function handler(
      *  Returns the name and description of the Trello board that queue belongs to.
      */
     if (httpMethod === "GET") {
-      const { id, board: boardId } = queryStringParameters;
+      const { id, board: boardId, queueId } = queryStringParameters;
+
+      if (queueId) {
+        const cardsResponse = await axios.get(
+          `${TRELLO_ENDPOINT}/lists/${queueId}/cards?${tokenAndKeyParams}`
+        );
+
+        console.log('cardsResponse', cardsResponse.data)
+
+        const cards = cardsResponse.data.map((card: ITrelloCard) => {
+          let parsedDesc: ITicketDescription = {
+            category: null,
+            contact: null,
+            name: null,
+            ticketPrefix: null,
+          };
+          try {
+            parsedDesc = JSON.parse(card.desc as string);
+          } catch (error) {
+            console.log("Error parsing desc");
+          }
+
+          return {
+            id: card.id,
+            name: card.name,
+            shortLink: card.shortLink,
+            shortUrl: card.shortUrl,
+            idShort: card.idShort,
+            desc: {
+              category: parsedDesc.category,
+              contact: parsedDesc.contact,
+              name: parsedDesc.name,
+              ticketPrefix: parsedDesc.ticketPrefix,
+            },
+          };
+        });
+
+        return res.json(cards);
+      }
 
       // Get the card's position in the current queue
       const getBoardInfo = await axios.get(
@@ -59,7 +104,7 @@ export default async function handler(
 
         data.cards.forEach((card: ICard) => {
           console.log("card", card);
-          const queueId = card.idList;
+          const queueId = card.idList ?? "";
 
           // Get the name of the queue the card resides in
           const queueName = listMap[queueId].name;
@@ -104,17 +149,17 @@ export default async function handler(
         queueName: card.queueName,
         ticketNumber: card.idShort,
         ticketId: id,
-        ticketDesc: JSON.parse(card.desc),
+        ticketDesc: card.desc ? JSON.parse(card.desc) : null,
         numberOfTicketsAhead: card.numberOfTicketsAhead,
       });
     } else if (httpMethod === "POST") {
-    /**
-     * POST /ticket
-     * - Creates a new ticket/card in queue with provided description
-     * @param  {string} desc JSON string of user submitted info
-     * @return {ticketId: string, ticketNumber: string}
-     *  Returns the id and number of the created ticket
-     */
+      /**
+       * POST /ticket
+       * - Creates a new ticket/card in queue with provided description
+       * @param  {string} desc JSON string of user submitted info
+       * @return {ticketId: string, ticketNumber: string}
+       *  Returns the id and number of the created ticket
+       */
       const { desc } = body;
 
       const prefix = desc.ticketPrefix ? desc.ticketPrefix : "";
@@ -162,13 +207,13 @@ export default async function handler(
         res.json({ ticketId: id, ticketNumber: idShort });
       }
     } else if (httpMethod === "PUT") {
-    /**
-     * PUT /ticket
-     * - Moves ticket to the bottom of the queue. Used for rejoining the queue
-     * @param  {string} id The id of the ticket
-     * @param  {string} queue The id of the queue
-     * @return {statusCode: Number } Returns 200 if successful
-     */
+      /**
+       * PUT /ticket
+       * - Moves ticket to the bottom of the queue. Used for rejoining the queue
+       * @param  {string} id The id of the ticket
+       * @param  {string} queue The id of the queue
+       * @return {statusCode: Number } Returns 200 if successful
+       */
       const { id, queue } = queryStringParameters;
       if (id && queue) {
         await axios.put(
@@ -177,12 +222,12 @@ export default async function handler(
       }
       res.json(null);
     } else if (httpMethod === "DELETE") {
-    /**
-     * DELETE /ticket
-     * - Moves ticket to the bottom of the queue. Used for rejoining the queue
-     * @param  {string} id The id of the ticket
-     * @return {statusCode: Number } Returns 200 if successful
-     */
+      /**
+       * DELETE /ticket
+       * - Moves ticket to the bottom of the queue. Used for rejoining the queue
+       * @param  {string} id The id of the ticket
+       * @return {statusCode: Number } Returns 200 if successful
+       */
       const { id, boardId } = queryStringParameters;
 
       if (id && boardId) {
