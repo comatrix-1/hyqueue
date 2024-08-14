@@ -41,12 +41,7 @@ export default async function handler(
        * 1. board - Retrieves data about the board
        * *  @param  {string} board The board id
        */
-      if (type === "board") {
-        const board = await axios.get(
-          `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}?${tokenAndKeyParams}`
-        );
-        result = board.data;
-      } else if (type === "boardlists" && queryStringParameters.board) {
+      if (type === "boardlists" && queryStringParameters.board) {
         /**
          * 2. boardlists - Retrieves all the lists that a board contains
          * *  @param  {string} board The board id

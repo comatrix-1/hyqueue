@@ -82,10 +82,7 @@ const Index = () => {
    */
   const getBoard = async () => {
     try {
-      const response = await axios.get(
-        `${API_ENDPOINT}/view?type=board`
-        // `https://api.trello.com/1/boards/${apiConfig.boardId}?key=${apiConfig.key}&token=${apiConfig.token}` // TODO: remove
-      );
+      const response = await axios.get(`${API_ENDPOINT}/system`);
 
       console.log(response.data);
       setEditableSettings(JSON.parse(response.data.desc));

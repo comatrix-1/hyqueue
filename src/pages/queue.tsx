@@ -112,16 +112,16 @@ const Index = () => {
       // 1. Verifies that queue actually exists
       // 2. Gets info stored as JSON in board description
 
-      const response = await axios.get(`${API_ENDPOINT}/view?type=board`);
+      const response = await axios.get(`${API_ENDPOINT}/system`);
       const boardSettings: ITrelloBoardSettings = response.data;
 
       setBoardId(boardSettings?.id ?? "");
 
       const cleanedDesc = boardSettings?.desc
-        .replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1")
+        ?.replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1")
         .replace(/\\\"/g, '"');
       console.log("parsing JSON", cleanedDesc);
-      const boardInfo: IEditableSettings = JSON.parse(cleanedDesc);
+      const boardInfo: IEditableSettings = JSON.parse(cleanedDesc ?? "");
       console.log("parsed JSON", boardInfo);
 
       setEditableSettings({
@@ -139,13 +139,13 @@ const Index = () => {
       });
 
       setIsQueueInactive(
-        boardSettings?.name.includes("[DISABLED]") ||
+        boardSettings?.name?.includes("[DISABLED]") ||
           isQueueClosed(boardInfo.openingHours)
       );
       setIsLoading(false);
 
-      const cleanedName = boardSettings?.name.replace("[DISABLED]", "").trim();
-      setBoardName(cleanedName);
+      const cleanedName = boardSettings?.name?.replace("[DISABLED]", "").trim();
+      setBoardName(cleanedName ?? '');
     } catch (err) {
       console.log(err);
       setIsQueueValid(false);

@@ -54,6 +54,8 @@ const Serve = ({
       `${API_ENDPOINT}/queues?id=${queueIdValue}`
     );
 
+    console.log('response', response)
+
     setQueueInfo(response?.data);
   };
 

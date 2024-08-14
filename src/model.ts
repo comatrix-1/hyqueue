@@ -72,8 +72,8 @@ export interface IEditableSettings {
 
 export interface ITrelloBoardSettings {
   id?: string;
-  desc: string;
-  name: string;
+  desc?: string;
+  name?: string;
 }
 
 export interface ITrelloBoardData {
