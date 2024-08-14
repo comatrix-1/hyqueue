@@ -25,6 +25,7 @@ export default async function handler(
       TRELLO_TOKEN,
       IS_PUBLIC_BOARD,
       TRELLO_ENDPOINT = "https://api.trello.com/1",
+      NEXT_PUBLIC_TRELLO_BOARD_ID,
     } = process.env;
     const tokenAndKeyParams =
       IS_PUBLIC_BOARD === "true"
@@ -42,7 +43,7 @@ export default async function handler(
      *  Returns the name and description of the Trello board that queue belongs to.
      */
     if (httpMethod === "GET") {
-      const { id, board: boardId, queueId } = queryStringParameters;
+      const { id, queueId } = queryStringParameters;
 
       if (queueId) {
         const cardsResponse = await axios.get(
@@ -84,7 +85,7 @@ export default async function handler(
 
       // Get the card's position in the current queue
       const getBoardInfo = await axios.get(
-        `${TRELLO_ENDPOINT}/boards/${boardId}/?fields=id,name,desc&cards=visible&card_fields=id,idList,name,idShort,desc&lists=open&list_fields=id,name&${tokenAndKeyParams}`
+        `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/?fields=id,name,desc&cards=visible&card_fields=id,idList,name,idShort,desc&lists=open&list_fields=id,name&${tokenAndKeyParams}`
       );
       console.log("getBoardInfo", getBoardInfo);
       if (getBoardInfo.status !== 200) {
@@ -228,11 +229,11 @@ export default async function handler(
        * @param  {string} id The id of the ticket
        * @return {statusCode: Number } Returns 200 if successful
        */
-      const { id, boardId } = queryStringParameters;
+      const { id } = queryStringParameters;
 
-      if (id && boardId) {
+      if (id && NEXT_PUBLIC_TRELLO_BOARD_ID) {
         const getBoardInfo = await axios.get(
-          `${TRELLO_ENDPOINT}/boards/${boardId}/?fields=id,name,desc&cards=visible&card_fields=id,idList,name,idShort,desc&lists=open&list_fields=id,name&${tokenAndKeyParams}`
+          `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/?fields=id,name,desc&cards=visible&card_fields=id,idList,name,idShort,desc&lists=open&list_fields=id,name&${tokenAndKeyParams}`
         );
 
         const { lists } = getBoardInfo.data;
