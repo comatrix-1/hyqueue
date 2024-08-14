@@ -1,9 +1,10 @@
 import { Flex, Box, Heading } from "@chakra-ui/react";
 import { QrCode } from "./QrCode";
 import { getQueueNumber } from "../../utils";
+import { ITrelloCard } from "../../model";
 
 type Props = {
-  tickets: any[]; // TODO: change any
+  tickets: ITrelloCard[];
   queuePendingUrl: string;
 };
 
@@ -33,7 +34,7 @@ export const MissedQueue = ({ tickets = [], queuePendingUrl }: Props) => {
                     width="50%"
                     mb="0.5em"
                   >
-                    {getQueueNumber(ticket.name)}
+                    {getQueueNumber(ticket.name ?? "")}
                   </Heading>
                 </>
               );

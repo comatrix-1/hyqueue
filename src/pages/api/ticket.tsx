@@ -8,6 +8,7 @@ import {
   IList,
   ICard,
   ITicketDescription,
+  ITrelloBoardList,
 } from "../../model";
 
 /**
@@ -43,14 +44,14 @@ export default async function handler(
      *  Returns the name and description of the Trello board that queue belongs to.
      */
     if (httpMethod === "GET") {
-      const { id, queueId } = queryStringParameters;
+      const { id, queueId, type } = queryStringParameters;
 
       if (queueId) {
         const cardsResponse = await axios.get(
           `${TRELLO_ENDPOINT}/lists/${queueId}/cards?${tokenAndKeyParams}`
         );
 
-        console.log('cardsResponse', cardsResponse.data)
+        console.log("cardsResponse", cardsResponse.data);
 
         const cards = cardsResponse.data.map((card: ITrelloCard) => {
           let parsedDesc: ITicketDescription = {
@@ -81,6 +82,58 @@ export default async function handler(
         });
 
         return res.json(cards);
+      } else {
+        const listsResponse = await axios.get(
+          `https://api.trello.com/1/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/lists?${tokenAndKeyParams}`
+        );
+
+        const lists = listsResponse.data;
+        console.log("lists", lists[0]);
+
+        const listsWithCardsPromises = lists.map(
+          async (list: ITrelloBoardList) => {
+            const cardsResponse = await axios.get(
+              `https://api.trello.com/1/lists/${list.id}/cards?${tokenAndKeyParams}`
+            );
+
+            const cards = cardsResponse.data.map((card: ITrelloCard) => {
+              let parsedDesc: ITicketDescription = {
+                category: null,
+                contact: null,
+                name: null,
+                ticketPrefix: null,
+              };
+              try {
+                parsedDesc = JSON.parse(card.desc as string);
+              } catch (error) {
+                console.log("Error parsing desc");
+              }
+
+              return {
+                id: card.id,
+                name: card.name,
+                shortLink: card.shortLink,
+                shortUrl: card.shortUrl,
+                desc: {
+                  category: parsedDesc.category,
+                  contact: parsedDesc.contact,
+                  name: parsedDesc.name,
+                  ticketPrefix: parsedDesc.ticketPrefix,
+                },
+              };
+            });
+
+            return {
+              id: list.id,
+              name: list.name,
+              cards: cards,
+            };
+          }
+        );
+
+        const listsWithCards = await Promise.all(listsWithCardsPromises);
+
+        res.json(listsWithCards);
       }
 
       // Get the card's position in the current queue

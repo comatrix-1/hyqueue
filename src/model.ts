@@ -12,6 +12,7 @@ export interface ITrelloBoardList {
 export interface ITrelloList {
   id: string;
   name: string;
+  cards: ITrelloCard[];
 }
 
 // TODO: remove if not needed

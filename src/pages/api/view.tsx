@@ -41,14 +41,13 @@ export default async function handler(
        * 1. board - Retrieves data about the board
        * *  @param  {string} board The board id
        */
-      if (type === "boardlists" && queryStringParameters.board) {
+      if (type === "boardlists") {
         /**
          * 2. boardlists - Retrieves all the lists that a board contains
          * *  @param  {string} board The board id
          */
-        console.log('type === "boardlists" && queryStringParameters.board');
         const boardLists = await axios.get(
-          `${TRELLO_ENDPOINT}/boards/${queryStringParameters.board}/lists?${tokenAndKeyParams}`
+          `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/lists?${tokenAndKeyParams}`
         );
         result = boardLists.data;
       } else if (
@@ -61,6 +60,7 @@ export default async function handler(
         queryStringParameters.queueAlertIds &&
         queryStringParameters.queueMissedIds
       ) {
+        console.log("hit type === queues")
         const queueAlertIds = queryStringParameters.queueAlertIds.split(",");
         const queueMissedIds = queryStringParameters.queueMissedIds.split(",");
         const setOfBatchUrls: string[] = [];

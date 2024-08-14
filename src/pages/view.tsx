@@ -10,7 +10,7 @@ import { MissedQueue } from "../components/View/MissedQueue";
 import { ViewHeader } from "../components/View/ViewHeader";
 import { ViewFooter } from "../components/View/ViewFooter";
 import * as _ from "lodash";
-import { EQueueTitles, ITrelloBoardList } from "../model";
+import { EQueueTitles, ITrelloBoardList, ITrelloList } from "../model";
 
 const Index = () => {
   const [audio, setAudio] = useState<HTMLAudioElement>();
@@ -18,20 +18,14 @@ const Index = () => {
   const [boardLists, setBoardLists] = useState({});
   const [queuePendingUrl, setQueuePendingUrl] = useState("");
   const [queueAlertIds, setqueueAlertIds] = useState([]);
-  const [ticketsAlerted, setTicketsAlerted] = useState([]);
+  const [ticketsAlerted, setTicketsAlerted] = useState<ITrelloList[]>([]);
   const [queueMissedIds, setQueueMissedIds] = useState([]);
   const [ticketsMissed, setTicketsMissed] = useState<any[]>([]); // TODO: change any
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const boardValue = searchParams.get("board");
-    const fromValue = searchParams.get("from");
-    const toValue = searchParams.get("to");
-
-    if (boardValue && fromValue && toValue) {
-      getBoard();
-      getBoardLists(boardValue, fromValue, toValue);
-    }
+    // getBoard();
+    // getBoardLists();
+    getTicketsGroupedByQueue();
 
     setAudio(new Audio("/chime.mp3"));
   }, []);
@@ -45,69 +39,26 @@ const Index = () => {
     getQueues();
   }, refreshInterval);
 
-  /**
-   *  Gets a board data
-   */
-  const getBoard = async () => {
-    try {
-      const board = await axios.get(`${API_ENDPOINT}/system`);
-      setBoard(board.data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const getTicketsGroupedByQueue = async () => {
+    const tickets = await axios.get(`${API_ENDPOINT}/ticket`);
+    console.log("returned from API", tickets.data);
 
-  /**
-   *  Gets a board with lists
-   */
-  const getBoardLists = async (boardId: string, from: string, to: string) => {
-    if (boardId) {
-      try {
-        const boardLists = await axios.get(
-          `${API_ENDPOINT}/view?type=boardlists&board=${boardId}`
-        );
-        let alertQueues = boardLists.data
-          .filter(
-            (list: ITrelloBoardList) =>
-              list.name.indexOf(EQueueTitles.ALERTED) > -1
-          )
-          .map((q: ITrelloBoardList) => q.id);
-        // Optionality to slice a range of queues to support large numbers on different screens
-        if (
-          from &&
-          _.isInteger(Number(from)) &&
-          to &&
-          _.isInteger(Number(to))
-        ) {
-          alertQueues = alertQueues.slice(from, to);
-        }
-        setqueueAlertIds(alertQueues);
+    const ticketsData: ITrelloList[] = tickets.data;
 
-        const missedQueues = boardLists.data
-          .filter(
-            (list: ITrelloBoardList) =>
-              list.name.indexOf(EQueueTitles.MISSED) > -1
-          )
-          .map((q: ITrelloBoardList) => q.id);
-        setQueueMissedIds(missedQueues);
-
-        const pendingQueue = boardLists.data.find(
-          (list: ITrelloBoardList) =>
-            list.name.indexOf(EQueueTitles.PENDING) > -1
-        );
-        if (pendingQueue) {
-          setQueuePendingUrl(location.origin + `/queue?id=${pendingQueue.id}`);
-        }
-
-        const lists: { [key: string]: ITrelloBoardList } = {};
-        boardLists.data.forEach((list: ITrelloBoardList) => {
-          lists[list.id] = list;
-        });
-        setBoardLists(lists);
-      } catch (error) {
-        console.error(error);
-      }
-    }
+    setTicketsMissed(
+      ticketsData.filter(
+        (list: ITrelloList) => list.name.indexOf(EQueueTitles.MISSED) > -1
+      )
+    );
+    setTicketsAlerted(
+      ticketsData.filter(
+        (list: ITrelloList) => list.name.indexOf(EQueueTitles.ALERTED) > -1
+      )
+    );
+    const pendingQueue = ticketsData.find(
+      (list: ITrelloList) => list.name.indexOf(EQueueTitles.PENDING) > -1
+    );
+    if (pendingQueue) setQueuePendingUrl(pendingQueue.id);
   };
 
   /**
@@ -127,12 +78,12 @@ const Index = () => {
       setTicketsMissed(combinedMissed);
 
       const chime = hasNewAlerts(ticketsAlerted, tickets.data.alerted);
-      if (audio && chime) {
-        // audio is
-        try {
-          audio.play();
-        } catch (e) {}
-      }
+      // if (audio && chime) {
+      //   // audio is
+      //   try {
+      //     audio.play();
+      //   } catch (e) {}
+      // }
       //  Set the alerted tickets
       setTicketsAlerted(tickets.data.alerted);
     }
@@ -173,10 +124,10 @@ const Index = () => {
           <ViewHeader board={board} />
         </GridItem>
         <GridItem colSpan={5} rowSpan={14} bg="secondary.300">
-          <CurrentlyServingQueue
+          {/* <CurrentlyServingQueue
             listsOfTickets={ticketsAlerted}
             lists={boardLists}
-          />
+          /> */}
         </GridItem>
         <GridItem colSpan={2} rowSpan={14} bg="error.300">
           <MissedQueue
