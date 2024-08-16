@@ -30,13 +30,9 @@ const Index = () => {
     setAudio(new Audio("/chime.mp3"));
   }, []);
 
-  useEffect(() => {
-    getQueues();
-  }, [queueAlertIds, queueMissedIds]);
-
   const refreshInterval = 10000; //process.env.NEXT_PUBLIC_REFRESH_INTERVAL || 5000
   useInterval(() => {
-    getQueues();
+    getTicketsGroupedByQueue();
   }, refreshInterval);
 
   const getTicketsGroupedByQueue = async () => {
@@ -50,55 +46,31 @@ const Index = () => {
         (list: ITrelloList) => list.name.indexOf(EQueueTitles.MISSED) > -1
       )
     );
-    setTicketsAlerted(
-      ticketsData.filter(
-        (list: ITrelloList) => list.name.indexOf(EQueueTitles.ALERTED) > -1
-      )
+    const latestTicketsAlerted: ITrelloList[] = ticketsData.filter(
+      (list: ITrelloList) => list.name.indexOf(EQueueTitles.ALERTED) > -1
     );
+    if (hasNewAlerts(ticketsAlerted[0], latestTicketsAlerted[0]) && audio) {
+      try {
+        audio.play();
+      } catch (e) {
+        console.log("Audio failed to play");
+      }
+    }
+    setTicketsAlerted(latestTicketsAlerted);
+
     const pendingQueue = ticketsData.find(
       (list: ITrelloList) => list.name.indexOf(EQueueTitles.PENDING) > -1
     );
     if (pendingQueue) setQueuePendingUrl(pendingQueue.id);
   };
 
-  /**
-   * Gets Queues
-   */
-  const getQueues = async () => {
-    if (queueAlertIds && queueMissedIds) {
-      const tickets = await axios.get(
-        `${API_ENDPOINT}/view?type=queues&queueAlertIds=${queueAlertIds.join(
-          ","
-        )}&queueMissedIds=${queueMissedIds.join(",")}`
-      );
-
-      // Set the missed tickets
-      // Combined all missed queues into 1
-      const combinedMissed = _.flatMap(tickets.data.missed);
-      setTicketsMissed(combinedMissed);
-
-      const chime = hasNewAlerts(ticketsAlerted, tickets.data.alerted);
-      // if (audio && chime) {
-      //   // audio is
-      //   try {
-      //     audio.play();
-      //   } catch (e) {}
-      // }
-      //  Set the alerted tickets
-      setTicketsAlerted(tickets.data.alerted);
-    }
-  };
-
-  /**
-   * Checks current alerts and compares it with latest. If latest has items not in current, trigger chime
-   */
-  const hasNewAlerts = (current: any[], latest: any[]) => {
-    // TODO: change any
-    const currentAlerts = _.flatMap(current).map(
-      (tx) => `${tx.idList}${tx.name}`
+  const hasNewAlerts = (current: ITrelloList, latest: ITrelloList) => {
+    if (!current || !latest) return false;
+    const currentAlerts = _.flatMap(current.cards).map(
+      (card) => `${card.idList}${card.name}`
     );
-    const latestAlerts = _.flatMap(latest).map(
-      (tx) => `${tx.idList}${tx.name}`
+    const latestAlerts = _.flatMap(latest.cards).map(
+      (card) => `${card.idList}${card.name}`
     );
     return (
       _.intersection(currentAlerts, latestAlerts).length < latestAlerts.length

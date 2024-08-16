@@ -34,16 +34,16 @@ const Index = () => {
 
     if (boardIdValue) {
       setBoardId(boardIdValue)
-      getBoard(boardIdValue)
+      getBoard()
     }
   }, []);
 
   /**
  * Fetches the board details
  */
-  const getBoard = async (boardId: string) => {
+  const getBoard = async () => {
     try {
-      const boardLists = await axios.get(`${API_ENDPOINT}/view?type=boardlists&board=${boardId}`)
+      const boardLists = await axios.get(`${API_ENDPOINT}/queues`)
 
       boardLists.data.forEach((list: ITrelloBoardList) => {
         if (list.name.indexOf(EQueueTitles.PENDING) > -1) {
@@ -65,7 +65,7 @@ const Index = () => {
     setLoading(true)
     setRootUrl(location.origin)
     setFormError('')
-    if (boardId) await getBoard(boardId) // TODO: add error handling
+    await getBoard() // TODO: add error handling
     setLoading(false)
   }
 

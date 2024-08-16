@@ -43,7 +43,7 @@ const Index = () => {
   const getBoardLists = async (boardId: string) => {
     if (boardId) {
       try {
-        const boardLists = await axios.get(`${API_ENDPOINT}/view?type=boardlists&board=${boardId}`)
+        const boardLists = await axios.get(`${API_ENDPOINT}/queues`)
         console.log('boardLists', boardLists)
         boardLists.data.forEach((list: ITrelloBoardList) => {
           if (list.name.indexOf('[PENDING]') > -1) {
