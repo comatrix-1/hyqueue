@@ -69,7 +69,7 @@ const EditableSettings = ({
                               <Checkbox
                                 key={index}
                                 value={key}
-                                isChecked={props.values.registrationFields.includes(
+                                isChecked={props.values.registrationFields?.includes(
                                   key
                                 )}
                                 onChange={(e) => {
@@ -77,7 +77,7 @@ const EditableSettings = ({
                                     push(key);
                                   } else {
                                     const idx =
-                                      props.values.registrationFields.indexOf(
+                                      props.values.registrationFields?.indexOf(
                                         key
                                       );
                                     remove(idx);

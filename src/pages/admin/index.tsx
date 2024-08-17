@@ -43,17 +43,7 @@ const Index = () => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [apiConfig, setApiConfig] = useState<IApiConfig>();
-  const [boardId, setBoardId] = useState<string>("");
-  const [boardData, setBoardData] = useState<any>();
-  const [editableSettings, setEditableSettings] = useState<IEditableSettings>({
-    registrationFields: [],
-    categories: [],
-    feedbackLink: "",
-    privacyPolicyLink: "",
-    ticketPrefix: "",
-    openingHours: [],
-    waitTimePerTicket: null,
-  });
+  const [boardData, setBoardData] = useState<ITrelloBoardSettings>();
 
   /**
    * TODO: move into a separate middleware service
@@ -95,42 +85,34 @@ const Index = () => {
     }
   };
 
-  const updateBoard = async (type = "settings", data = null) => {
+  const updateBoard = async (data: ITrelloBoardSettings) => {
     if (isSubmitting) return;
 
     if (apiConfig && apiConfig.key && apiConfig.token) {
       try {
         setIsSubmitting(true);
-        let settings: ITrelloBoardSettings = { name: "" };
+        let settings: ITrelloBoardSettings | null = null;
 
-        switch (type) {
-          case "settings":
-            const desc = JSON.stringify(editableSettings);
-            //  Verify that the board desc does not exceed 16384 characters
-            //  https://developer.atlassian.com/cloud/trello/rest/api-group-boards/#api-boards-id-put
-            if (desc.length > 16384)
-              throw Error(
-                "Could not save due to setting JSON length exceeding 16384"
-              );
-            settings.desc = editableSettings;
-            break;
+        if (data.name && data.name !== boardData?.name) {
+          // Is changing name
+          settings = {
+            name: data.name,
+          };
+        } else {
+          // Is changing desc
 
-          case "name":
-            //  Return if the board name is not changed
-            if (boardData?.name === data) return;
-
-            //  Update the board name
-            if (data) {
-              settings.name = String(data);
-            } else {
-              throw Error(`Board name cannot be empty`);
-            }
-            break;
-
-          default:
-            throw Error(`Wrong type: ${type} provided in updating board`);
+          //  Verify that the board desc does not exceed 16384 characters
+          //  https://developer.atlassian.com/cloud/trello/rest/api-group-boards/#api-boards-id-put
+          if (JSON.stringify(data).length > 16384)
+            throw Error(
+              "Could not save due to setting JSON length exceeding 16384"
+            );
+          settings = {
+            desc: data.desc,
+          };
         }
 
+        console.log("updating settings:", settings);
         await axios.put(`${API_ENDPOINT}/system`, settings);
         getBoard();
       } catch (error) {
@@ -161,8 +143,8 @@ const Index = () => {
   const submit = async (e: any) => {
     // TODO: change any
     try {
-      e.preventDefault();
-      await updateBoard("settings");
+      console.log("submit, e", e);
+      await updateBoard({ desc: e });
     } catch (error) {
       console.error(error);
     }
@@ -190,18 +172,20 @@ const Index = () => {
                     color="primary.500"
                     fontSize="xl"
                     isLoading={isSubmitting}
-                    onSubmit={(boardName) => updateBoard("name", boardName)}
+                    onSubmit={(name) => updateBoard({ name })}
                     textStyle="heading1"
                     value={boardData.name}
                   />
 
-                  <Links trelloUrl={boardData.shortUrl} />
+                  <Links trelloUrl={boardData.shortUrl ?? ""} />
                 </Flex>
 
-                <EditableSettings
-                  editableSettings={boardData?.desc}
-                  submit={submit}
-                />
+                {boardData?.desc ? (
+                  <EditableSettings
+                    editableSettings={boardData?.desc}
+                    submit={submit}
+                  />
+                ) : null}
               </Flex>
             ) : (
               <Spinner />
