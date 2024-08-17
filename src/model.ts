@@ -59,7 +59,6 @@ export interface ITicketDescription {
 export interface IApiConfig {
   token: string;
   key: string;
-  boardId: string;
 }
 
 export interface IEditableSettings {
@@ -76,6 +75,7 @@ export interface ITrelloBoardSettings {
   id?: string;
   desc?: IEditableSettings;
   name?: string;
+  shortUrl?: string;
 }
 
 export interface ITrelloBoardData {

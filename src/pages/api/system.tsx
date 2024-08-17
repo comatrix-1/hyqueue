@@ -1,19 +1,18 @@
-const axios = require("axios");
 import type { NextApiRequest, NextApiResponse } from "next";
-import {
-  IEditableSettings,
-  ITrelloBoardSettings,
-} from "../../model";
+import { IEditableSettings, ITrelloBoardSettings } from "../../model";
+import axios from "axios";
 
 /**
  * Function for Queue System
  */
+
+const API_ENDPOINT = "/api/system";
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ITrelloBoardSettings | null>
 ) {
   try {
-    const { method: httpMethod } = req;
+    const { method: httpMethod, body } = req;
     const {
       TRELLO_KEY,
       TRELLO_TOKEN,
@@ -27,11 +26,12 @@ export default async function handler(
         : `key=${TRELLO_KEY}&token=${TRELLO_TOKEN}`;
 
     if (httpMethod === "GET") {
+      console.log(`${API_ENDPOINT} GET`);
       const getBoard = await axios.get(
         `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}?${tokenAndKeyParams}`
       );
 
-      const { id, name, desc } = getBoard.data;
+      const { id, name, desc, shortUrl } = getBoard.data;
 
       let parsedDesc: IEditableSettings | null = null;
       try {
@@ -47,9 +47,23 @@ export default async function handler(
         id,
         name,
         desc: parsedDesc,
+        shortUrl
       });
+    } else if (httpMethod === "PUT") {
+      console.log(`${API_ENDPOINT} PUT`);
+      console.log(`${API_ENDPOINT} PUT body:`, body);
+      const update = {
+        name: 'test2',
+        desc: JSON.stringify(body.desc),
+      };
+      const response = await axios.put(
+        `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}?${tokenAndKeyParams}`,
+        update
+      );
+
+      return res.status(200).json(response.data);
     } else {
-      res.status(404).json(null);
+      res.status(405).json(null);
     }
   } catch (err: any) {
     // TODO: change any

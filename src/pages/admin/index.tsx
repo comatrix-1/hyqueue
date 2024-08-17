@@ -34,13 +34,14 @@ import {
   ITrelloBoardData,
   ITrelloBoardSettings,
 } from "../../model";
-import { API_ENDPOINT } from "../../constants";
+import { API_ENDPOINT, IS_TEST } from "../../constants";
 
 const Index = () => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [apiConfig, setApiConfig] = useState<IApiConfig>();
-  const [boardData, setBoardData] = useState<ITrelloBoardData>();
+  const [boardId, setBoardId] = useState<string>("");
+  const [boardData, setBoardData] = useState<any>();
   const [editableSettings, setEditableSettings] = useState<IEditableSettings>({
     registrationFields: [],
     categories: [],
@@ -84,8 +85,7 @@ const Index = () => {
     try {
       const response = await axios.get(`${API_ENDPOINT}/system`);
 
-      console.log(response.data);
-      setEditableSettings(JSON.parse(response.data.desc));
+      console.log("getBoard() response: ", response.data);
       setBoardData(response.data);
     } catch (error) {
       errorHandler(error);
@@ -98,9 +98,9 @@ const Index = () => {
    * Note that there is a 16384 character limit
    */
   const updateBoard = async (type = "settings", data = null) => {
-    if (isSubmitting === true) return;
+    if (isSubmitting) return;
 
-    if (apiConfig && apiConfig.key && apiConfig.token && apiConfig.boardId) {
+    if (apiConfig && apiConfig.key && apiConfig.token) {
       try {
         setIsSubmitting(true);
         let settings: ITrelloBoardSettings = { name: "" };
@@ -133,10 +133,8 @@ const Index = () => {
             throw Error(`Wrong type: ${type} provided in updating board`);
         }
 
-        // await axios.put(
-        //   `https://api.trello.com/1/boards/${apiConfig.boardId}?key=${apiConfig.key}&token=${apiConfig.token}`,
-        //   settings
-        // ); // TODO: re-implement PUT
+        await axios.put(`${API_ENDPOINT}/system`, settings);
+        getBoard();
       } catch (error) {
         errorHandler(error);
       } finally {
@@ -145,48 +143,23 @@ const Index = () => {
     }
   };
 
-  /**
-   * Effects
-   */
   useEffect(() => {
-    const token = authentication.getToken();
-    const key = authentication.getKey();
-    const searchParams = new URLSearchParams(window.location.search);
-    const boardIdValue = searchParams.get("boardId");
-
-    let boardId =
-      boardIdValue || prompt("Please enter your queue id", "E.g. Yg9jAKfn");
+    const token = IS_TEST ? "testToken" : authentication.getToken();
+    const key = IS_TEST ? "testKey" : authentication.getKey();
 
     if (token && key) {
-      router.push({
-        pathname: `/admin`,
-        query: {
-          boardId,
-        },
-      });
       setApiConfig({
-        token: authentication.getToken() ?? "",
-        key: authentication.getKey() ?? "",
-        boardId: boardId ?? "",
+        token: token,
+        key: key,
       });
+      getBoard();
     } else {
-      //  redirects the user to the login page
       router.push({
         pathname: `/admin/login`,
-        query: {
-          boardId,
-        },
       });
     }
   }, []);
 
-  useEffect(() => {
-    getBoard();
-  }, [apiConfig]);
-
-  /**
-   * On Categories Change
-   */
   const onCategoriesChange = (e: any) => {
     // TODO: change any
     const categories =
@@ -197,9 +170,6 @@ const Index = () => {
     });
   };
 
-  /**
-   * On Text Input Change
-   */
   const onTextInputChange = (e: any) => {
     // TODO: change any
     setEditableSettings({
@@ -208,9 +178,6 @@ const Index = () => {
     });
   };
 
-  /**
-   * On Open Hours Input Change
-   */
   const onOpeningHoursInputChange = (openingHours: any[]) => {
     // TODO: change any
     setEditableSettings({
@@ -219,9 +186,6 @@ const Index = () => {
     });
   };
 
-  /**
-   * On Checkbox Input Change
-   */
   const onCheckboxInputChange = (id: string, value: any) => {
     // TODO: change any
     setEditableSettings({
@@ -230,9 +194,6 @@ const Index = () => {
     });
   };
 
-  /**
-   * Generates a report on the Queue
-   */
   const assembleCSVData = (
     batchCardActions: any[],
     doneCardMap: Map<any, any>,
@@ -351,11 +312,11 @@ const Index = () => {
   const generateReport = async () => {
     try {
       setIsSubmitting(true);
-      if (apiConfig && apiConfig.key && apiConfig.token && apiConfig.boardId) {
+      if (apiConfig && apiConfig.key && apiConfig.token) {
         // Get list of board to find 'DONE' list id
         const listsOnBoard = (
           await axios.get(
-            `https://api.trello.com/1/boards/${apiConfig.boardId}/lists?key=${apiConfig.key}&token=${apiConfig.token}`
+            `https://api.trello.com/1/boards/${boardId}/lists?key=${apiConfig.key}&token=${apiConfig.token}`
           )
         ).data;
 

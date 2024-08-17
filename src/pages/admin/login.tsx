@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import queryString from "query-string";
 import Head from "next/head";
 import {
@@ -32,19 +32,6 @@ const Index = () => {
   const [boardId, setBoardId] = useState<string>("");
   const router = useRouter();
 
-  useEffect(() => {
-    const query = queryString.parse(location.search);
-    const boardIdValue = query.boardId;
-
-    if (typeof boardIdValue === "string") {
-      setBoardId(boardIdValue);
-    } else if (Array.isArray(boardIdValue)) {
-      setBoardId(boardIdValue[0] || "");
-    } else {
-      setBoardId("");
-    }
-  }, []);
-
   const updateBoardId = (e: any) => {
     // TODO: change any
     setBoardId(e.target.value);
@@ -53,35 +40,30 @@ const Index = () => {
   /**
    * Go to Trello to authorise the app
    */
-  const authoriseApp = async (e: any) => {
-    // TODO: change any
-    e.preventDefault();
-    if (process.env.IS_TEST) {
-      console.log('returning to admin')
-      router.push("/admin");
-      setIsLoading(false);
+  const authoriseApp = async (e: FormEvent<HTMLFormElement>) => {
+    if (!boardId) {
+      alert("Please enter a valid Trello board ID");
       return;
     }
-    if (boardId) {
-      try {
-        setIsLoading(true);
-        const response = await axios.post(`${API_ENDPOINT}/login`, {
-          boardId,
-        });
-        if (response.data.authorizeUrl) {
-          window.location.href = response.data.authorizeUrl;
-        } else {
-          throw Error("Functions Login URL was not defined.");
-        }
-      } catch (error: unknown) {
-        if (axios.isAxiosError(error) && error.message) {
-          alert(`Error: ${error.message}`);
-        } else {
-          console.error(error);
-        }
-      } finally {
-        setIsLoading(false);
+
+    // TODO: change any
+    e.preventDefault();
+    try {
+      setIsLoading(true);
+      const response = await axios.post(`${API_ENDPOINT}/login`);
+      if (response.data.authorizeUrl) {
+        window.location.href = response.data.authorizeUrl;
+      } else {
+        throw Error("Functions Login URL was not defined.");
       }
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.message) {
+        alert(`Error: ${error.message}`);
+      } else {
+        console.error(error);
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -120,7 +102,7 @@ const Index = () => {
                 />
 
                 <Button
-                  display="flex" // TODO: test if working
+                  display="flex"
                   isLoading={isLoading}
                   width="100%"
                   colorScheme="primary"
