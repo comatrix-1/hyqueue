@@ -47,13 +47,13 @@ export default async function handler(
         id,
         name,
         desc: parsedDesc,
-        shortUrl
+        shortUrl,
       });
     } else if (httpMethod === "PUT") {
       console.log(`${API_ENDPOINT} PUT`);
       console.log(`${API_ENDPOINT} PUT body:`, body);
       const update = {
-        name: 'test2',
+        name: body.name,
         desc: JSON.stringify(body.desc),
       };
       const response = await axios.put(
