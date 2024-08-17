@@ -34,7 +34,7 @@ import {
   ITrelloBoardData,
   ITrelloBoardSettings,
 } from "../../model";
-import { API_ENDPOINT, IS_TEST } from "../../constants";
+import { API_ENDPOINT } from "../../constants";
 import EditableSettings from "../../components/Admin/EditableSettings";
 import Links from "../../components/Admin/Links";
 import { FormikHelpers } from "formik";
@@ -124,8 +124,14 @@ const Index = () => {
   };
 
   useEffect(() => {
-    const token = IS_TEST ? "testToken" : authentication.getToken();
-    const key = IS_TEST ? "testKey" : authentication.getKey();
+    const token =
+      process.env.NODE_ENV === "development"
+        ? "testToken"
+        : authentication.getToken();
+    const key =
+      process.env.NODE_ENV === "development"
+        ? "testKey"
+        : authentication.getKey();
 
     if (token && key) {
       setApiConfig({
