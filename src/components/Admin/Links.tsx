@@ -213,6 +213,16 @@ const Links = ({ trelloUrl }: { trelloUrl: string }) => {
         borderRadius="3px"
         color="white"
         variant="solid"
+        onClick={() => router.push(`/admin/dashboard`)}
+      >
+        Dashboard
+      </Button>
+      <Button
+        display="flex"
+        colorScheme="blue"
+        borderRadius="3px"
+        color="white"
+        variant="solid"
         onClick={() => router.push(`/admin/management`)}
       >
         Queue management

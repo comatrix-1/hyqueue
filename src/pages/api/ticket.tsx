@@ -12,6 +12,8 @@ import {
   IEditableSettings,
 } from "../../model";
 
+const API_ENDPOINT = "/api/ticket";
+
 /**
  * Function for Ticket / Card Trello API calls
  */
@@ -45,61 +47,9 @@ export default async function handler(
      *  Returns the name and description of the Trello board that queue belongs to.
      */
     if (httpMethod === "GET") {
+      console.log(`${API_ENDPOINT} GET`);
       const { id, queueId, type } = queryStringParameters;
-      if (id) {
-        const getBoardInfo = await axios.get(
-          `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/?fields=id,name,desc&cards=visible&card_fields=id,idList,name,idShort,desc&lists=open&list_fields=id,name&${tokenAndKeyParams}`
-        );
-        if (getBoardInfo.status !== 200) {
-          return {
-            statusCode: getBoardInfo.status,
-            message: "getBoardInfo error",
-          };
-        }
-        const parseBoardData = (data: any) => {
-          const listMap: any = {};
-          const cardMap = new Map();
-
-          data.lists.forEach((list: any) => {
-            listMap[list.id] = { ...list, cards: [] };
-          });
-
-          data.cards.forEach((card: any) => {
-            const queueId = card.idList;
-            const queueName = listMap[queueId].name;
-
-            // Calculate numberOfTicketsAhead
-            let numberOfTicketsAhead = -1;
-            if (
-              ![
-                EQueueTitles.ALERTED,
-                EQueueTitles.DONE,
-                EQueueTitles.MISSED,
-              ].some((status) => queueName.includes(status))
-            ) {
-              numberOfTicketsAhead = listMap[queueId].cards.length;
-            }
-
-            // Add card details to listMap and cardMap
-            const updatedCard = { ...card, numberOfTicketsAhead, queueName };
-            listMap[queueId].cards.push(updatedCard);
-            cardMap.set(updatedCard.id, updatedCard);
-          });
-
-          return { listMap, cardMap };
-        };
-
-        const { cardMap } = parseBoardData(getBoardInfo.data);
-        const card = cardMap.get(id);
-        res.json({
-          queueId: card.idList,
-          queueName: card.queueName,
-          ticketNumber: card.idShort,
-          ticketId: id,
-          ticketDesc: JSON.parse(card.desc),
-          numberOfTicketsAhead: card.numberOfTicketsAhead,
-        });
-      } else if (queueId) {
+      if (queueId) {
         const cardsResponse = await axios.get(
           `${TRELLO_ENDPOINT}/lists/${queueId}/cards?${tokenAndKeyParams}`
         );
@@ -138,60 +88,93 @@ export default async function handler(
 
         return res.json(cards);
       } else {
-        const listsResponse = await axios.get(
-          `https://api.trello.com/1/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/lists?${tokenAndKeyParams}`
+        // const getBoardInfo = await axios.get(
+        //   `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/cards?fields=id,idList,name,idShort,desc,shortLink,shortUrl,queueNo&lists=open&list_fields=id,name&${tokenAndKeyParams}`
+        // );
+        const getBoardInfo = await axios.get(
+          `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/?fields=id,name,desc&cards=visible&card_fields=id,idList,name,idShort,desc&lists=open&list_fields=id,name&${tokenAndKeyParams}
+`
         );
+        console.log("getBoardInfo TEST", getBoardInfo.data);
+        if (getBoardInfo.status !== 200) {
+          return {
+            statusCode: getBoardInfo.status,
+            message: "getBoardInfo error",
+          };
+        }
 
-        const lists = listsResponse.data;
-        console.log("lists", lists[0]);
+        const parseCardsData = (cards: any[]) => {
+          return cards.map((card) => {
+            // Parse the desc field into an object
+            const parsedDesc = JSON.parse(card.desc);
 
-        const listsWithCardsPromises = lists.map(
-          async (list: ITrelloBoardList) => {
-            const cardsResponse = await axios.get(
-              `https://api.trello.com/1/lists/${list.id}/cards?${tokenAndKeyParams}`
-            );
-
-            const cards = cardsResponse.data.map((card: ITrelloCard) => {
-              let parsedDesc: ITicketDescription = {
-                category: null,
-                contact: null,
-                name: null,
-                ticketPrefix: null,
-                queueNo: null,
-              };
-              try {
-                parsedDesc = JSON.parse(card.desc as string);
-              } catch (error) {
-                console.log("Error parsing desc");
-              }
-
-              return {
-                id: card.id,
-                name: card.name,
-                shortLink: card.shortLink,
-                shortUrl: card.shortUrl,
-                desc: {
-                  category: parsedDesc.category,
-                  contact: parsedDesc.contact,
-                  name: parsedDesc.name,
-                  ticketPrefix: parsedDesc.ticketPrefix,
-                  queueNo: parsedDesc.queueNo,
-                },
-              };
-            });
-
+            // Return a new object with the parsed desc field
             return {
-              id: list.id,
-              name: list.name,
-              cards: cards,
+              ...card,
+              desc: parsedDesc,
             };
-          }
-        );
+          });
+        };
 
-        const listsWithCards = await Promise.all(listsWithCardsPromises);
+        const parsedCardsData = parseCardsData(getBoardInfo.data.cards);
 
-        res.json(listsWithCards);
+        res.json({ tickets: parsedCardsData, queues: getBoardInfo.data.lists });
       }
+      // else {
+      //   const listsResponse = await axios.get(
+      //     `https://api.trello.com/1/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/lists?${tokenAndKeyParams}`
+      //   );
+
+      //   const lists = listsResponse.data;
+      //   console.log("lists", lists[0]);
+
+      //   const listsWithCardsPromises = lists.map(
+      //     async (list: ITrelloBoardList) => {
+      //       const cardsResponse = await axios.get(
+      //         `https://api.trello.com/1/lists/${list.id}/cards?${tokenAndKeyParams}`
+      //       );
+
+      //       const cards = cardsResponse.data.map((card: ITrelloCard) => {
+      //         let parsedDesc: ITicketDescription = {
+      //           category: null,
+      //           contact: null,
+      //           name: null,
+      //           ticketPrefix: null,
+      //           queueNo: null,
+      //         };
+      //         try {
+      //           parsedDesc = JSON.parse(card.desc as string);
+      //         } catch (error) {
+      //           console.log("Error parsing desc");
+      //         }
+
+      //         return {
+      //           id: card.id,
+      //           name: card.name,
+      //           shortLink: card.shortLink,
+      //           shortUrl: card.shortUrl,
+      //           desc: {
+      //             category: parsedDesc.category,
+      //             contact: parsedDesc.contact,
+      //             name: parsedDesc.name,
+      //             ticketPrefix: parsedDesc.ticketPrefix,
+      //             queueNo: parsedDesc.queueNo,
+      //           },
+      //         };
+      //       });
+
+      //       return {
+      //         id: list.id,
+      //         name: list.name,
+      //         cards: cards,
+      //       };
+      //     }
+      //   );
+
+      //   const listsWithCards = await Promise.all(listsWithCardsPromises);
+
+      //   res.json(listsWithCards);
+      // }
 
       // Get the card's position in the current queue
       const getBoardInfo = await axios.get(
