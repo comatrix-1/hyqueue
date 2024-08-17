@@ -97,10 +97,9 @@ const Index = () => {
           <ViewHeader board={board} />
         </GridItem>
         <GridItem colSpan={5} rowSpan={14} bg="secondary.300">
-          {/* <CurrentlyServingQueue
-            listsOfTickets={ticketsAlerted}
-            lists={boardLists}
-          /> */}
+          <CurrentlyServingQueue
+            missedQueues={ticketsAlerted}
+          />
         </GridItem>
         <GridItem colSpan={2} rowSpan={14} bg="error.300">
           <MissedQueue

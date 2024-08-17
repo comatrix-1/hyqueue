@@ -59,6 +59,7 @@ export default async function handler(
             contact: null,
             name: null,
             ticketPrefix: null,
+            queueNo: null,
           };
           try {
             parsedDesc = JSON.parse(card.desc as string);
@@ -77,6 +78,7 @@ export default async function handler(
               contact: parsedDesc.contact,
               name: parsedDesc.name,
               ticketPrefix: parsedDesc.ticketPrefix,
+              queueNo: parsedDesc.queueNo,
             },
           };
         });
@@ -102,6 +104,7 @@ export default async function handler(
                 contact: null,
                 name: null,
                 ticketPrefix: null,
+                queueNo: null,
               };
               try {
                 parsedDesc = JSON.parse(card.desc as string);
@@ -119,6 +122,7 @@ export default async function handler(
                   contact: parsedDesc.contact,
                   name: parsedDesc.name,
                   ticketPrefix: parsedDesc.ticketPrefix,
+                  queueNo: parsedDesc.queueNo,
                 },
               };
             });
@@ -220,6 +224,7 @@ export default async function handler(
       const name = desc.name ? `-${desc.name}` : "";
       const contact = desc.contact ? `-${desc.contact}` : "";
       const category = desc.category ? `-${desc.category}` : "";
+      const queueNo = desc.queueNo ? `-${desc.queueNo}` : "";
       const descString = JSON.stringify(desc);
 
       const queue = queryStringParameters.queue;
@@ -250,7 +255,7 @@ export default async function handler(
         );
 
         const { id, idShort } = createCard.data;
-        const cardName = `${prefix}${idShort}${name}${contact}${category}`;
+        const cardName = `${prefix}${idShort}${name}${contact}${category}${queueNo}`;
         // Update newly created card with number{-name}{-contact}{-category} and desc
         await axios.put(
           `${TRELLO_ENDPOINT}/cards/${id}?${tokenAndKeyParams}&name=${encodeURIComponent(

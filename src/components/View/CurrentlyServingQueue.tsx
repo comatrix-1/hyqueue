@@ -1,16 +1,13 @@
 import { Box, Heading, Flex } from "@chakra-ui/react";
 import { getQueueName, getQueueNumber } from "../../utils";
+import { ITrelloList } from "../../model";
 
 type Props = {
-  listsOfTickets: any;
-  lists: any;
+  missedQueues: ITrelloList[];
 };
 
-export const CurrentlyServingQueue = ({
-  listsOfTickets = {},
-  lists = {},
-}: Props) => {
-  const listIds = Object.keys(listsOfTickets);
+export const CurrentlyServingQueue = ({ missedQueues }: Props) => {
+  console.log("CurrentlyServingQueue() missedQueues: ", missedQueues);
   return (
     <Box mx={20} my={10}>
       <Flex justifyContent="space-between">
@@ -22,16 +19,15 @@ export const CurrentlyServingQueue = ({
         </Heading>
       </Flex>
 
-      {listIds.length === 0 && <Heading textStyle="display2">-</Heading>}
+      {missedQueues.length === 0 && <Heading textStyle="display2">-</Heading>}
 
-      {listIds.map((listId) => {
-        const list = lists[listId];
-        const queueName = getQueueName(list.name);
+      {missedQueues.map((missedQueue) => {
+        const queueName = getQueueName(missedQueue.name);
 
-        if (queueName.length > 0 && listsOfTickets[listId].length > 0) {
+        if (queueName.length > 0 && missedQueue.cards.length > 0) {
           return (
             <Flex
-              key={listId}
+              key={missedQueue.id}
               mt="1.25em"
               mb="0.25em"
               px="0.25em"
@@ -41,7 +37,7 @@ export const CurrentlyServingQueue = ({
                 {queueName}
               </Heading>
               <Heading textStyle="heading2" fontSize="5xl" flex={1}>
-                {getQueueNumber(listsOfTickets[listId][0].name)}
+                #{missedQueue.cards[0].desc.queueNo}
               </Heading>
             </Flex>
           );

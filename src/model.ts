@@ -53,6 +53,7 @@ export interface ITicketDescription {
   name: string | null;
   contact: string | null;
   category: string | null;
+  queueNo: string | null;
 }
 
 export interface IApiConfig {
@@ -90,6 +91,7 @@ export interface ITrelloCard {
   desc?: any;
   shortLink?: string;
   shortUrl?: string;
+  queueNo?: number;
 }
 export interface ICard extends ITrelloCard {
   numberOfTicketsAhead?: number;
