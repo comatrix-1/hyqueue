@@ -31,6 +31,8 @@ export default async function handler(
         `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}?${tokenAndKeyParams}`
       );
 
+      console.log("GET getBoard", getBoard);
+
       const { id, name, desc, shortUrl } = getBoard.data;
 
       let parsedDesc: IEditableSettings | null = null;

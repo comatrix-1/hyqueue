@@ -9,6 +9,7 @@ import {
   ICard,
   ITicketDescription,
   ITrelloBoardList,
+  IEditableSettings,
 } from "../../model";
 
 /**
@@ -45,8 +46,60 @@ export default async function handler(
      */
     if (httpMethod === "GET") {
       const { id, queueId, type } = queryStringParameters;
+      if (id) {
+        const getBoardInfo = await axios.get(
+          `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/?fields=id,name,desc&cards=visible&card_fields=id,idList,name,idShort,desc&lists=open&list_fields=id,name&${tokenAndKeyParams}`
+        );
+        if (getBoardInfo.status !== 200) {
+          return {
+            statusCode: getBoardInfo.status,
+            message: "getBoardInfo error",
+          };
+        }
+        const parseBoardData = (data: any) => {
+          const listMap: any = {};
+          const cardMap = new Map();
 
-      if (queueId) {
+          data.lists.forEach((list: any) => {
+            listMap[list.id] = { ...list, cards: [] };
+          });
+
+          data.cards.forEach((card: any) => {
+            const queueId = card.idList;
+            const queueName = listMap[queueId].name;
+
+            // Calculate numberOfTicketsAhead
+            let numberOfTicketsAhead = -1;
+            if (
+              ![
+                EQueueTitles.ALERTED,
+                EQueueTitles.DONE,
+                EQueueTitles.MISSED,
+              ].some((status) => queueName.includes(status))
+            ) {
+              numberOfTicketsAhead = listMap[queueId].cards.length;
+            }
+
+            // Add card details to listMap and cardMap
+            const updatedCard = { ...card, numberOfTicketsAhead, queueName };
+            listMap[queueId].cards.push(updatedCard);
+            cardMap.set(updatedCard.id, updatedCard);
+          });
+
+          return { listMap, cardMap };
+        };
+
+        const { cardMap } = parseBoardData(getBoardInfo.data);
+        const card = cardMap.get(id);
+        res.json({
+          queueId: card.idList,
+          queueName: card.queueName,
+          ticketNumber: card.idShort,
+          ticketId: id,
+          ticketDesc: JSON.parse(card.desc),
+          numberOfTicketsAhead: card.numberOfTicketsAhead,
+        });
+      } else if (queueId) {
         const cardsResponse = await axios.get(
           `${TRELLO_ENDPOINT}/lists/${queueId}/cards?${tokenAndKeyParams}`
         );
@@ -309,7 +362,10 @@ export default async function handler(
 
         const ticketsResponseData: ITrelloCard[] = ticketsResponse.data;
         const ticketIdOfFirstInPendingQueue = ticketsResponseData[0].id;
-        console.log('ticketIdOfFirstInPendingQueue', ticketIdOfFirstInPendingQueue)
+        console.log(
+          "ticketIdOfFirstInPendingQueue",
+          ticketIdOfFirstInPendingQueue
+        );
 
         const response = await axios.put(
           `${TRELLO_ENDPOINT}/cards/${ticketIdOfFirstInPendingQueue}?${tokenAndKeyParams}&idList=${queue}&pos=bottom`

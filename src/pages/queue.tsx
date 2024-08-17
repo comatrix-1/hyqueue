@@ -184,6 +184,7 @@ const Index = () => {
         name: "",
         contact: "",
         category: "",
+        queueNo: null,
       };
 
       editableSettings.registrationFields.forEach((key) => {
@@ -216,7 +217,7 @@ const Index = () => {
         ? `&waitTimePerTicket=${encodeURIComponent(
             editableSettings.waitTimePerTicket
           )}`
-        : 1; // TODO: set proper wait time per ticket default
+        : ""; // TODO: set proper wait time per ticket default
       const url = `/ticket?queue=${query.id}&board=${boardId}&ticket=${ticketId}${feedback}${waitTime}`;
       router.push(url, url, { locale: lang });
     } catch (err: unknown) {

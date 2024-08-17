@@ -86,9 +86,8 @@ const Index = () => {
 
   const getTicketStatus = async (ticket: string, board: string) => {
     try {
-      const getTicket = await axios.get(
-        `${API_ENDPOINT}/ticket?id=${ticket}&board=${board}`
-      );
+      const getTicket = await axios.get(`${API_ENDPOINT}/ticket?id=${ticket}`);
+      console.log("getTicket", getTicket);
       const {
         queueId,
         queueName,
