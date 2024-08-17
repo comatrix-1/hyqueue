@@ -54,6 +54,7 @@ const Management = () => {
               <Text>Select queue</Text>
               {queues.map((queue: ITrelloBoardList) => (
                 <Button
+                  key={queue.id}
                   display="flex"
                   colorScheme="blue"
                   borderRadius="3px"

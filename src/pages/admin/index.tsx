@@ -103,7 +103,7 @@ const Index = () => {
     if (apiConfig && apiConfig.key && apiConfig.token && apiConfig.boardId) {
       try {
         setIsSubmitting(true);
-        let settings: ITrelloBoardSettings = { desc: "", name: "" };
+        let settings: ITrelloBoardSettings = { name: "" };
 
         switch (type) {
           case "settings":
@@ -114,7 +114,7 @@ const Index = () => {
               throw Error(
                 "Could not save due to setting JSON length exceeding 16384"
               );
-            settings.desc = JSON.stringify(editableSettings);
+            settings.desc = editableSettings;
             break;
 
           case "name":
