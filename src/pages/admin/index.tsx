@@ -35,6 +35,7 @@ import {
   ITrelloBoardSettings,
 } from "../../model";
 import { API_ENDPOINT, IS_TEST } from "../../constants";
+import EditableSettings from "../../components/Admin/EditableSettings";
 
 const Index = () => {
   const router = useRouter();
@@ -410,7 +411,6 @@ const Index = () => {
         <Navbar />
         <Main justifyContent="start" minHeight="90vh" width="100%">
           <Center>
-            {/* TODO: migrate to components for sanity */}
             {boardData ? (
               <Flex width="100%" maxW="1200px" flexDir="column">
                 <Flex
@@ -474,89 +474,10 @@ const Index = () => {
                   </ButtonGroup>
                 </Flex>
 
-                <Box layerStyle="card" width="100%">
-                  <form onSubmit={submit}>
-                    <Grid templateColumns="repeat(2, 1fr)" gap={6}>
-                      <Box w="100%">
-                        {/* registration fields */}
-                        <InputCheckbox
-                          id="registrationFields"
-                          label="Registration Fields"
-                          value={editableSettings.registrationFields}
-                          onChange={(value) =>
-                            onCheckboxInputChange("registrationFields", value)
-                          }
-                          options={{
-                            name: "Full Name",
-                            contact: "Phone Number",
-                            nric: "NRIC",
-                            postalcode: "Postal Code",
-                            description: "Description",
-                          }}
-                        />
-
-                        {/* categories */}
-                        <InputTextarea
-                          id="categories"
-                          label="Categories"
-                          value={editableSettings.categories}
-                          onChange={onCategoriesChange}
-                        />
-
-                        {/* feedback link */}
-                        <InputText
-                          id="feedbackLink"
-                          label="Feedback Link"
-                          type="url"
-                          value={editableSettings.feedbackLink}
-                          onChange={onTextInputChange}
-                        />
-
-                        {/* privacy link */}
-                        <InputText
-                          id="privacyPolicyLink"
-                          label="Privacy Policy Link"
-                          type="url"
-                          value={editableSettings.privacyPolicyLink}
-                          onChange={onTextInputChange}
-                        />
-
-                        {/* ticket prefix */}
-                        <InputText
-                          id="ticketPrefix"
-                          label="Ticket Prefix"
-                          type="text"
-                          value={editableSettings.ticketPrefix}
-                          onChange={onTextInputChange}
-                        />
-
-                        {/* Submit */}
-                        <Button
-                          isLoading={isSubmitting}
-                          loadingText="Updating..."
-                          colorScheme="primary"
-                          borderRadius="3px"
-                          color="white"
-                          size="lg"
-                          variant="solid"
-                          marginTop="1.5rem"
-                          type="submit"
-                        >
-                          Save Settings
-                        </Button>
-                      </Box>
-                      <Box w="100%">
-                        {/* Opening Hours */}
-                        <OpeningHours
-                          id="openingHours"
-                          label="Opening Hours"
-                          value={editableSettings.openingHours || {}}
-                          onChange={onOpeningHoursInputChange}
-                        />
-                      </Box>
-                    </Grid>
-                  </form>
-                </Box>
+                <EditableSettings
+                  editableSettings={boardData?.desc}
+                  submit={submit}
+                />
               </Flex>
             ) : (
               <Spinner />
