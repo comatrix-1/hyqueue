@@ -4,6 +4,7 @@ import {
   Container,
   Flex,
   Heading,
+  Spinner,
   Text,
 } from "@chakra-ui/react";
 
@@ -25,27 +26,12 @@ import { Alerted } from "../../components/Ticket/Alerted";
 import { useRouter } from "next/router";
 import ManWithHourglass from "../../../src/assets/svg/man-with-hourglass.svg";
 
-interface Props {
-  queue: any;
-  currentTicketId: string;
-  setCurrentTicketId: Dispatch<SetStateAction<string>>;
-}
-
-const Serve = ({
-  queue: boardList,
-  currentTicketId,
-  setCurrentTicketId,
-}: Props) => {
-  const [queueAlertIds, setqueueAlertIds] = useState([]);
-  const [ticketsAlerted, setTicketsAlerted] = useState([]);
-  const [queueMissedIds, setQueueMissedIds] = useState([]);
-  const [ticketsMissed, setTicketsMissed] = useState<any[]>([]); // TODO: change any
-  const [queuePendingUrl, setQueuePendingUrl] = useState("");
-  const [boardLists, setBoardLists] = useState({});
+const Serve = () => {
   const [tickets, setTickets] = useState<ITrelloCard[]>([]);
   const [ticket, setTicket] = useState<ITrelloCard>();
-  const [queueInfo, setQueueInfo] = useState<ITrelloList>();
+  const [queueSystemInfo, setQueueSystemInfo] = useState<ITrelloList>();
   const router = useRouter();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const getQueueInfo = async (queueIdValue: string) => {
     if (!queueIdValue) return;
@@ -54,9 +40,9 @@ const Serve = ({
       `${API_ENDPOINT}/queues?id=${queueIdValue}`
     );
 
-    console.log('response', response)
+    console.log("response", response);
 
-    setQueueInfo(response?.data);
+    setQueueSystemInfo(response?.data);
   };
 
   const navigateToAdminPage = () => {
@@ -71,6 +57,58 @@ const Serve = ({
     console.log("tickets returned by API", response);
 
     setTicket(response.data[0]);
+  };
+
+  const onComplete = async () => {
+    console.log("onComplete ticket: ", ticket);
+    setIsSubmitting(true);
+    try {
+      await axios.put(
+        `${API_ENDPOINT}/ticket?id=${ticket?.id}&newQueue=${EQueueTitles.DONE}`
+      );
+
+      const searchParams = new URLSearchParams(window.location.search);
+      const queueIdValue = searchParams.get("queueId") ?? "";
+      await getListsWithCards(queueIdValue);
+    } catch {
+      console.log("Error completing ticket");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const onMissed = async () => {
+    console.log("onMissed ticket: ", ticket);
+    setIsSubmitting(true);
+    try {
+      await axios.put(
+        `${API_ENDPOINT}/ticket?id=${ticket?.id}&newQueue=${EQueueTitles.MISSED}`
+      );
+
+      const searchParams = new URLSearchParams(window.location.search);
+      const queueIdValue = searchParams.get("queueId") ?? "";
+      await getListsWithCards(queueIdValue);
+    } catch {
+      console.log("Error completing ticket");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const onTakeFromPending = async () => {
+    console.log("onTakeFromPending()");
+    const searchParams = new URLSearchParams(window.location.search);
+    const queueIdValue = searchParams.get("queueId") ?? "";
+    setIsSubmitting(true);
+    try {
+      await axios.put(`${API_ENDPOINT}/ticket?queue=${queueIdValue}`);
+
+      await getListsWithCards(queueIdValue);
+    } catch {
+      console.log("Error completing ticket");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   useEffect(() => {
@@ -93,34 +131,43 @@ const Serve = ({
         <Main minHeight="90vh" width="100%">
           <Center>
             <Flex direction="column" alignItems="center">
-              <ServerControls />
+              <ServerControls
+                onComplete={onComplete}
+                onMissed={onMissed}
+                onTakeFromPending={onTakeFromPending}
+                isSubmitting={isSubmitting}
+              />
               <Heading textStyle="heading2" fontSize="1rem" mb="1rem">
-                {queueInfo?.name}
+                {queueSystemInfo?.name}
               </Heading>
               <Heading textStyle="heading1" fontSize="1.5rem">
                 You are serving queue number:
               </Heading>
-
               <Flex direction="column" alignItems="center">
                 <ManWithHourglass className="featured-image" />
               </Flex>
-
-              <Heading
-                mt="8px"
-                textStyle="heading1"
-                fontSize="3.5rem"
-                letterSpacing="0.2rem"
-              >
-                {ticket?.idShort}
-              </Heading>
-              <Text
-                mt="24px"
-                textStyle="body2"
-                fontSize="1.5rem"
-                letterSpacing="0.1rem"
-              >
-                {ticket?.desc?.name}
-              </Text>
+              {isSubmitting ? (
+                <Spinner />
+              ) : (
+                <>
+                  <Heading
+                    mt="8px"
+                    textStyle="heading1"
+                    fontSize="3.5rem"
+                    letterSpacing="0.2rem"
+                  >
+                    {ticket?.idShort ?? "-"}
+                  </Heading>
+                  <Text
+                    mt="24px"
+                    textStyle="body2"
+                    fontSize="1.5rem"
+                    letterSpacing="0.1rem"
+                  >
+                    {ticket?.desc?.name}
+                  </Text>
+                </>
+              )}
               <Button
                 bgColor="primary.500"
                 borderRadius="3px"

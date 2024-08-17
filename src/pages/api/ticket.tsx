@@ -266,18 +266,56 @@ export default async function handler(
         res.json({ ticketId: id, ticketNumber: idShort });
       }
     } else if (httpMethod === "PUT") {
-      /**
-       * PUT /ticket
-       * - Moves ticket to the bottom of the queue. Used for rejoining the queue
-       * @param  {string} id The id of the ticket
-       * @param  {string} queue The id of the queue
-       * @return {statusCode: Number } Returns 200 if successful
-       */
-      const { id, queue } = queryStringParameters;
+      const { id, queue, newQueue: newQueueText } = queryStringParameters;
+      console.log("id: ", id);
+      console.log("newQueue: ", newQueueText);
       if (id && queue) {
         await axios.put(
           `${TRELLO_ENDPOINT}/cards/${id}?${tokenAndKeyParams}&idList=${queue}&pos=bottom`
         );
+      } else if (id && newQueueText) {
+        const queuesResponse = await axios.get(
+          `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/lists?${tokenAndKeyParams}`
+        );
+
+        const queuesResponseData: ITrelloBoardList[] = queuesResponse.data;
+
+        const newQueue = queuesResponseData.find((queue) =>
+          queue.name.includes(newQueueText)
+        );
+        const newQueueId = newQueue ? newQueue.id : null;
+
+        const response = await axios.put(
+          `${TRELLO_ENDPOINT}/cards/${id}?${tokenAndKeyParams}&idList=${newQueueId}&pos=bottom`
+        );
+
+        return res.status(201).json(response.data);
+      } else if (queue) {
+        // Take from pending queue and put into queue Id
+        const queuesResponse = await axios.get(
+          `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/lists?${tokenAndKeyParams}`
+        );
+
+        const queuesResponseData: ITrelloBoardList[] = queuesResponse.data;
+
+        const pendingQueue = queuesResponseData.find((queue) =>
+          queue.name.includes(EQueueTitles.PENDING)
+        );
+        const pendingQueueId = pendingQueue ? pendingQueue.id : null;
+
+        const ticketsResponse = await axios.get(
+          `${TRELLO_ENDPOINT}/lists/${pendingQueueId}/cards?${tokenAndKeyParams}`
+        );
+
+        const ticketsResponseData: ITrelloCard[] = ticketsResponse.data;
+        const ticketIdOfFirstInPendingQueue = ticketsResponseData[0].id;
+        console.log('ticketIdOfFirstInPendingQueue', ticketIdOfFirstInPendingQueue)
+
+        const response = await axios.put(
+          `${TRELLO_ENDPOINT}/cards/${ticketIdOfFirstInPendingQueue}?${tokenAndKeyParams}&idList=${queue}&pos=bottom`
+        );
+
+        return res.status(201).json(response.data);
       }
       res.json(null);
     } else if (httpMethod === "DELETE") {
