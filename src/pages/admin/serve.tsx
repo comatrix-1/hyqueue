@@ -96,6 +96,9 @@ const Serve = () => {
   };
 
   const onTakeFromPending = async () => {
+    if (ticket?.id) {
+      await onComplete();
+    }
     console.log("onTakeFromPending()");
     const searchParams = new URLSearchParams(window.location.search);
     const queueIdValue = searchParams.get("queueId") ?? "";
