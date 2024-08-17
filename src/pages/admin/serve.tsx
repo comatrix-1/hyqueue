@@ -59,8 +59,8 @@ const Serve = ({
     setQueueInfo(response?.data);
   };
 
-  const navigateToManagementPage = () => {
-    router.push("/admin/management");
+  const navigateToAdminPage = () => {
+    router.push("/admin");
   };
 
   const getListsWithCards = async (queueId: string) => {
@@ -129,9 +129,9 @@ const Serve = ({
                 size="lg"
                 variant="solid"
                 marginTop="2rem"
-                onClick={navigateToManagementPage}
+                onClick={navigateToAdminPage}
               >
-                Go back to management page
+                Go back to admin page
               </Button>
             </Flex>
           </Center>
