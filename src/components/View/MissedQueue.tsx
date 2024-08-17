@@ -9,6 +9,7 @@ type Props = {
 };
 
 export const MissedQueue = ({ tickets = [], queuePendingUrl }: Props) => {
+  console.log("tickets", tickets);
   return (
     <Flex
       mx={12}
@@ -25,18 +26,16 @@ export const MissedQueue = ({ tickets = [], queuePendingUrl }: Props) => {
           {tickets.length > 0 ? (
             tickets.map((ticket) => {
               return (
-                <>
-                  <Heading
-                    key={ticket.id}
-                    textStyle="display1"
-                    fontSize="5xl"
-                    textAlign="center"
-                    width="50%"
-                    mb="0.5em"
-                  >
-                    {getQueueNumber(ticket.name ?? "")}
-                  </Heading>
-                </>
+                <Heading
+                  key={ticket.id}
+                  textStyle="display1"
+                  fontSize="5xl"
+                  textAlign="center"
+                  width="50%"
+                  mb="0.5em"
+                >
+                  {getQueueNumber(ticket.name ?? "")}
+                </Heading>
               );
             })
           ) : (

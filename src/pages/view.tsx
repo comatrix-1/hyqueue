@@ -42,9 +42,10 @@ const Index = () => {
     const ticketsData: ITrelloList[] = tickets.data;
 
     setTicketsMissed(
-      ticketsData.filter(
-        (list: ITrelloList) => list.name.indexOf(EQueueTitles.MISSED) > -1
-      )
+      ticketsData
+        .filter(
+          (list: ITrelloList) => list.name.indexOf(EQueueTitles.MISSED) > -1
+        )[0].cards
     );
     const latestTicketsAlerted: ITrelloList[] = ticketsData.filter(
       (list: ITrelloList) => list.name.indexOf(EQueueTitles.ALERTED) > -1
