@@ -8,11 +8,14 @@ import { EQueueTitles } from "../../model";
 
 interface Props {
   queues: any[];
+  selectedQueues: { [key: string]: string };
 }
 
-const DashboardActions = ({ queues }: Props) => {
+const DashboardActions = ({ queues, selectedQueues }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const serverQueues = queues.filter((queue) => queue.name.includes(EQueueTitles.ALERTED))
+  const serverQueues = queues.filter((queue) =>
+    queue.name.includes(EQueueTitles.ALERTED)
+  );
 
   return (
     <ButtonGroup>
@@ -22,7 +25,8 @@ const DashboardActions = ({ queues }: Props) => {
         borderRadius="3px"
         color="white"
         variant="solid"
-        onClick={() => router.push(`/admin/dashboard`)}
+        disabled={Array.from(Object.keys(selectedQueues)).length === 0}
+        onClick={() => console.log(selectedQueues)}
       >
         Activate changes
       </Button>

@@ -17,13 +17,16 @@ import { useState } from "react";
 interface Props {
   tickets: ITrelloCard[]; // TODO: change any
   queues: any[]; // TODO: change any
+  selectedQueues: { [key: string]: string };
+  handleQueueChange: (ticketId: string, newQueueId: string) => void;
 }
 
-const DashboardTable = ({ tickets, queues }: Props) => {
-  const [selectedQueues, setSelectedQueues] = useState<{
-    [key: string]: string;
-  }>({});
-
+const DashboardTable = ({
+  tickets,
+  queues,
+  selectedQueues,
+  handleQueueChange,
+}: Props) => {
   const findQueueNameByCard = (
     cardId: string,
     queues: any[]
@@ -36,35 +39,12 @@ const DashboardTable = ({ tickets, queues }: Props) => {
     return queue ? queue.name : undefined;
   };
 
-  const handleQueueChange = (ticketId: string, newQueueId: string) => {
-    setSelectedQueues((prev) => ({
-      ...prev,
-      [ticketId]: newQueueId,
-    }));
-  };
-
-  const renderActionByQueueName = (queueName: string) => {
-    if (!queueName) return;
-
-    if (queueName.includes(EQueueTitles.ALERTED)) return <p>ALERTED</p>;
-
-    if (queueName.includes(EQueueTitles.DONE)) return <p>DONE</p>;
-    if (queueName.includes(EQueueTitles.MISSED)) return <p>MISSED</p>;
-    if (queueName.includes(EQueueTitles.PENDING)) return <p>PENDING</p>;
-  };
-
-  const isQueueChanged = (ticketId: string, currentQueueId: string) => {
-    return (
-      selectedQueues[ticketId] && selectedQueues[ticketId] !== currentQueueId
-    );
-  };
-
   return (
     <TableContainer>
       <Table variant="striped" colorScheme="primary">
         <Thead>
           <Tr>
-            <Th>S/N</Th>
+            <Th>ID</Th>
             <Th>Name</Th>
             <Th>Queue No.</Th>
             <Th>Queue name</Th>
@@ -77,14 +57,14 @@ const DashboardTable = ({ tickets, queues }: Props) => {
               <Td>{index + 1}</Td>
               <Td>{ticket.desc?.name}</Td>
               <Td>{ticket.desc?.queueNo}</Td>
-              <Td>{findQueueNameByCard(ticket?.idList ?? "", queues)}</Td>
+              <Td>{ticket.idList}</Td>
               <Td>
                 <Box position="relative">
                   <Select
+                    value={selectedQueues[index]}
                     onChange={(e) =>
                       handleQueueChange(ticket.id, e.target.value)
                     }
-                    defaultValue={ticket.idList}
                   >
                     {queues.map((queue) => (
                       <option value={queue.id} key={queue.id}>
@@ -92,18 +72,19 @@ const DashboardTable = ({ tickets, queues }: Props) => {
                       </option>
                     ))}
                   </Select>
-                  {isQueueChanged(ticket.id, ticket.idList ?? "") && (
-                    <Box
-                      position="absolute"
-                      top="50%"
-                      right="-20px"
-                      transform="translateY(-50%)"
-                      width="8px"
-                      height="8px"
-                      backgroundColor="red"
-                      borderRadius="50%"
-                    />
-                  )}
+                  {selectedQueues[ticket.id] &&
+                    selectedQueues[ticket.id] !== ticket.idList && (
+                      <Box
+                        position="absolute"
+                        top="50%"
+                        right="-3"
+                        transform="translate(50%, -50%)"
+                        width="8px"
+                        height="8px"
+                        borderRadius="50%"
+                        backgroundColor="red"
+                      />
+                    )}
                 </Box>
               </Td>
             </Tr>
