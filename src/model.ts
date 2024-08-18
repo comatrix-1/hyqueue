@@ -61,6 +61,11 @@ export interface IApiConfig {
   key: string;
 }
 
+export interface IApiResponse {
+  status: number;
+  data: any;
+}
+
 export interface IEditableSettings {
   registrationFields: any[]; // TODO: change any
   categories: any[]; // TODO: change any

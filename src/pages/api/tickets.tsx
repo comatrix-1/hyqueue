@@ -10,6 +10,7 @@ import { putTicketsByIdAndNewQueueId } from "../../services/putTicketsByIdAndNew
 import { putTicketsByIdAndNewQueueName } from "../../services/putTicketsByIdAndNewQueueName";
 import { putTicketsByNewQueueId } from "../../services/putTicketsByNewQueueId";
 import { putTicketsByQueueMap } from "../../services/putTicketsByQueueMap";
+import { IApiResponse } from "../../model";
 
 const API_ENDPOINT = "/api/tickets";
 
@@ -26,7 +27,7 @@ export default async function handler(
       case "GET": {
         const { id, queueId } = queryStringParameters;
 
-        let result;
+        let result: IApiResponse;
         if (id) {
           result = await getTicketsById(id as string);
         } else if (queueId) {
@@ -35,13 +36,19 @@ export default async function handler(
           result = await getTickets();
         }
 
-        return res.status(result.status).json(result.data);
+        if (!result) {
+          return res.status(400).json({
+            message: "No tickets were found",
+          });
+        }
+
+        return res.status(200).json(result);
       }
 
       case "POST": {
         const { desc } = body;
         const { queue } = queryStringParameters;
-        const { status, data } = await postTicketsByQueue(
+        const { status, data }: IApiResponse = await postTicketsByQueue(
           queue as string,
           desc
         );
@@ -52,7 +59,7 @@ export default async function handler(
         const { id, newQueueId, newQueueName } = queryStringParameters;
         const { queueMap } = body;
 
-        let result;
+        let result: IApiResponse | null = null;
         if (id && newQueueId) {
           result = await putTicketsByIdAndNewQueueId(
             id as string,
@@ -76,7 +83,7 @@ export default async function handler(
 
       case "DELETE": {
         const { id } = queryStringParameters;
-        const { status, data } = await deleteTicketsById(id as string);
+        const { status, data }: IApiResponse = await deleteTicketsById(id as string);
         return res.status(status).json(data);
       }
 

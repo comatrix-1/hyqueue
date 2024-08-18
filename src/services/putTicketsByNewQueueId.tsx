@@ -1,7 +1,7 @@
 import axios from "axios";
-import { ITrelloBoardList, EQueueTitles, ITrelloCard } from "../model";
+import { ITrelloBoardList, EQueueTitles, ITrelloCard, IApiResponse } from "../model";
 
-export const putTicketsByNewQueueId = async (newQueueId: string) => {
+export const putTicketsByNewQueueId = async (newQueueId: string): Promise<IApiResponse> => {
   const {
     TRELLO_KEY,
     TRELLO_TOKEN,

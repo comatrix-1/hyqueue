@@ -1,6 +1,10 @@
 import axios from "axios";
+import { IApiResponse } from "../model";
 
-export const postTicketsByQueue = async (queue: string, desc: any) => {
+export const postTicketsByQueue = async (
+  queue: string,
+  desc: any
+): Promise<IApiResponse> => {
   const {
     TRELLO_KEY,
     TRELLO_TOKEN,

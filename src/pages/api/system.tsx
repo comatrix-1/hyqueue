@@ -1,6 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { IEditableSettings, ITrelloBoardSettings } from "../../model";
 import axios from "axios";
+import { getSystem } from "../../services/getSystem";
+import { putSystem } from "../../services/putSystem";
 
 /**
  * Function for Queue System
@@ -13,58 +15,14 @@ export default async function handler(
 ) {
   try {
     const { method: httpMethod, body } = req;
-    const {
-      TRELLO_KEY,
-      TRELLO_TOKEN,
-      IS_PUBLIC_BOARD,
-      TRELLO_ENDPOINT = "https://api.trello.com/1",
-      NEXT_PUBLIC_TRELLO_BOARD_ID,
-    } = process.env;
-    const tokenAndKeyParams =
-      IS_PUBLIC_BOARD === "true"
-        ? ""
-        : `key=${TRELLO_KEY}&token=${TRELLO_TOKEN}`;
+    console.log(`${API_ENDPOINT} ${httpMethod}`);
 
     if (httpMethod === "GET") {
-      console.log(`${API_ENDPOINT} GET`);
-      const getBoard = await axios.get(
-        `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}?${tokenAndKeyParams}`
-      );
-
-      console.log("GET getBoard", getBoard);
-
-      const { id, name, desc, shortUrl } = getBoard.data;
-
-      let parsedDesc: IEditableSettings | null = null;
-      try {
-        parsedDesc = JSON.parse(desc as string);
-        console.log("parsed desc: ", parsedDesc);
-      } catch (error) {
-        console.log("Error parsing desc");
-      }
-
-      if (!parsedDesc) return res.status(200).json(null);
-
-      return res.status(200).json({
-        id,
-        name,
-        desc: parsedDesc,
-        shortUrl,
-      });
+      const { status, data } = await getSystem();
+      return res.status(status).json(data);
     } else if (httpMethod === "PUT") {
-      console.log(`${API_ENDPOINT} PUT`);
-      console.log(`${API_ENDPOINT} PUT body:`, body);
-      const update = {
-        name: body.name,
-        desc: JSON.stringify(body.desc),
-      };
-      if (!update.name) delete update.name;
-      const response = await axios.put(
-        `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}?${tokenAndKeyParams}`,
-        update
-      );
-
-      return res.status(200).json(response.data);
+      const { status, data } = await putSystem(body);
+      return res.status(status).json(data);
     } else {
       res.status(405).json(null);
     }

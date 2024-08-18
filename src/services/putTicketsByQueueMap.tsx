@@ -1,8 +1,9 @@
 import axios from "axios";
+import { IApiResponse } from "../model";
 
 export const putTicketsByQueueMap = async (queueMap: {
   [key: string]: string;
-}) => {
+}): Promise<IApiResponse> => {
   const {
     TRELLO_KEY,
     TRELLO_TOKEN,
