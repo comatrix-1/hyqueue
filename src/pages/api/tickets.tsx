@@ -36,13 +36,7 @@ export default async function handler(
           result = await getTickets();
         }
 
-        if (!result) {
-          return res.status(400).json({
-            message: "No tickets were found",
-          });
-        }
-
-        return res.status(200).json(result);
+        return res.status(result.status).json(result.data);
       }
 
       case "POST": {
@@ -83,7 +77,9 @@ export default async function handler(
 
       case "DELETE": {
         const { id } = queryStringParameters;
-        const { status, data }: IApiResponse = await deleteTicketsById(id as string);
+        const { status, data }: IApiResponse = await deleteTicketsById(
+          id as string
+        );
         return res.status(status).json(data);
       }
 
