@@ -28,11 +28,11 @@ const DashboardActions = ({
     setIsSubmitting(true);
     try {
       (async () => {
-        await axios.put(`${API_ENDPOINT}/tickets`, {
+        const response = await axios.put(`${API_ENDPOINT}/tickets`, {
           queueMap: selectedQueues,
         });
 
-        router.reload();
+        if (response.status === 201) router.reload();
       })();
     } catch (error) {
       console.log(error);
