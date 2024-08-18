@@ -94,7 +94,7 @@ const Index = () => {
       ticketCookie.ticket &&
       ticketCookie.board
     ) {
-      return `/ticket?queue=${ticketCookie.queue}&ticket=${ticketCookie.ticket}&board=${ticketCookie.board}`;
+      return `/tickets?queue=${ticketCookie.queue}&ticket=${ticketCookie.ticket}&board=${ticketCookie.board}`;
     }
 
     return false;
@@ -206,7 +206,7 @@ const Index = () => {
       // for that queue, return the ticket id and redirect to ticket page
       const query = queryString.parse(location.search);
       const postJoinQueue = await axios.post(
-        `${API_ENDPOINT}/ticket?queue=${query.id}`,
+        `${API_ENDPOINT}/tickets?queue=${query.id}`,
         { desc }
       );
       const { ticketId } = postJoinQueue.data;
@@ -218,7 +218,7 @@ const Index = () => {
             editableSettings.waitTimePerTicket
           )}`
         : ""; // TODO: set proper wait time per ticket default
-      const url = `/ticket?queue=${query.id}&board=${boardId}&ticket=${ticketId}${feedback}${waitTime}`;
+      const url = `/tickets?queue=${query.id}&board=${boardId}&ticket=${ticketId}${feedback}${waitTime}`;
       router.push(url, url, { locale: lang });
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err.response) {

@@ -86,7 +86,7 @@ const Index = () => {
 
   const getTicketStatus = async (ticket: string, board: string) => {
     try {
-      const getTicket = await axios.get(`${API_ENDPOINT}/ticket?id=${ticket}`);
+      const getTicket = await axios.get(`${API_ENDPOINT}/tickets?id=${ticket}`);
       console.log("getTicket", getTicket);
       const {
         queueId,
@@ -149,7 +149,7 @@ const Index = () => {
 
   const leaveQueue = async () => {
     try {
-      axios.delete(`${API_ENDPOINT}/ticket?id=${ticketId}&boardId=${boardId}`);
+      axios.delete(`${API_ENDPOINT}/tickets?id=${ticketId}&boardId=${boardId}`);
       removeCookie("ticket");
       router.push({
         pathname: "/queue",
@@ -169,7 +169,7 @@ const Index = () => {
     if (queueValue && ticketValue && boardIdValue) {
       // NOTE: Using query string queue as that is the initial queue not the current queue
       await axios.put(
-        `${API_ENDPOINT}/ticket?id=${ticketId}&queue=${queueValue}`
+        `${API_ENDPOINT}/tickets?id=${ticketId}&newQueueId=${queueValue}`
       );
       await getTicketStatus(ticketValue, boardIdValue);
     }

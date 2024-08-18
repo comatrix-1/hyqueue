@@ -12,7 +12,7 @@ import {
   IEditableSettings,
 } from "../../model";
 
-const API_ENDPOINT = "/api/ticket";
+const API_ENDPOINT = "/api/tickets";
 
 /**
  * Function for Ticket / Card Trello API calls
@@ -37,7 +37,7 @@ export default async function handler(
         : `key=${TRELLO_KEY}&token=${TRELLO_TOKEN}`;
 
     /**
-     * GET /ticket
+     * GET /tickets
      * - Retrieves info about a ticket and its position in queue
      *   Experimental GET flow to fetch status in a single API call.
      *   Lays the groundwork for adding a caching layer that can store this call
@@ -248,7 +248,7 @@ export default async function handler(
       });
     } else if (httpMethod === "POST") {
       /**
-       * POST /ticket
+       * POST /tickets
        * - Creates a new ticket/card in queue with provided description
        * @param  {string} desc JSON string of user submitted info
        * @return {ticketId: string, ticketNumber: string}
@@ -302,14 +302,12 @@ export default async function handler(
         res.json({ ticketId: id, ticketNumber: idShort });
       }
     } else if (httpMethod === "PUT") {
-      const { id, queue, newQueue: newQueueText } = queryStringParameters;
-      console.log("id: ", id);
-      console.log("newQueue: ", newQueueText);
-      if (id && queue) {
+      const { id, newQueueId, newQueueName, position = "bottom" } = queryStringParameters;
+      if (id && newQueueId) {
         await axios.put(
-          `${TRELLO_ENDPOINT}/cards/${id}?${tokenAndKeyParams}&idList=${queue}&pos=bottom`
+          `${TRELLO_ENDPOINT}/cards/${id}?${tokenAndKeyParams}&idList=${newQueueId}&pos=${position}`
         );
-      } else if (id && newQueueText) {
+      } else if (id && newQueueName) {
         const queuesResponse = await axios.get(
           `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/lists?${tokenAndKeyParams}`
         );
@@ -317,16 +315,16 @@ export default async function handler(
         const queuesResponseData: ITrelloBoardList[] = queuesResponse.data;
 
         const newQueue = queuesResponseData.find((queue) =>
-          queue.name.includes(newQueueText)
+          queue.name.includes(newQueueName)
         );
         const newQueueId = newQueue ? newQueue.id : null;
 
         const response = await axios.put(
-          `${TRELLO_ENDPOINT}/cards/${id}?${tokenAndKeyParams}&idList=${newQueueId}&pos=bottom`
+          `${TRELLO_ENDPOINT}/cards/${id}?${tokenAndKeyParams}&idList=${newQueueId}&pos=${position}`
         );
 
         return res.status(201).json(response.data);
-      } else if (queue) {
+      } else if (newQueueId) {
         // Take from pending queue and put into queue Id
         const queuesResponse = await axios.get(
           `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/lists?${tokenAndKeyParams}`
@@ -351,7 +349,7 @@ export default async function handler(
         );
 
         const response = await axios.put(
-          `${TRELLO_ENDPOINT}/cards/${ticketIdOfFirstInPendingQueue}?${tokenAndKeyParams}&idList=${queue}&pos=bottom`
+          `${TRELLO_ENDPOINT}/cards/${ticketIdOfFirstInPendingQueue}?${tokenAndKeyParams}&idList=${newQueueId}&pos=${position}`
         );
 
         return res.status(201).json(response.data);
@@ -359,7 +357,7 @@ export default async function handler(
       res.json(null);
     } else if (httpMethod === "DELETE") {
       /**
-       * DELETE /ticket
+       * DELETE /tickets
        * - Moves ticket to the bottom of the queue. Used for rejoining the queue
        * @param  {string} id The id of the ticket
        * @return {statusCode: Number } Returns 200 if successful

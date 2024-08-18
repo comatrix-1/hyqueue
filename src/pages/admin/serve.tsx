@@ -51,7 +51,7 @@ const Serve = () => {
 
   const getListsWithCards = async (queueId: string) => {
     const response = await axios.get(
-      `${API_ENDPOINT}/ticket?queueId=${queueId}`
+      `${API_ENDPOINT}/tickets?queueId=${queueId}`
     );
 
     console.log("tickets returned by API", response);
@@ -64,7 +64,7 @@ const Serve = () => {
     setIsSubmitting(true);
     try {
       await axios.put(
-        `${API_ENDPOINT}/ticket?id=${ticket?.id}&newQueue=${EQueueTitles.DONE}`
+        `${API_ENDPOINT}/tickets?id=${ticket?.id}&newQueueName=${EQueueTitles.DONE}`
       );
 
       const searchParams = new URLSearchParams(window.location.search);
@@ -82,7 +82,7 @@ const Serve = () => {
     setIsSubmitting(true);
     try {
       await axios.put(
-        `${API_ENDPOINT}/ticket?id=${ticket?.id}&newQueue=${EQueueTitles.MISSED}`
+        `${API_ENDPOINT}/tickets?id=${ticket?.id}&newQueueName=${EQueueTitles.MISSED}`
       );
 
       const searchParams = new URLSearchParams(window.location.search);
@@ -104,7 +104,7 @@ const Serve = () => {
     const queueIdValue = searchParams.get("queueId") ?? "";
     setIsSubmitting(true);
     try {
-      await axios.put(`${API_ENDPOINT}/ticket?queue=${queueIdValue}`);
+      await axios.put(`${API_ENDPOINT}/tickets?newQueueId=${queueIdValue}`);
 
       await getListsWithCards(queueIdValue);
     } catch {

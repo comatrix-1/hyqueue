@@ -21,7 +21,7 @@ const Dashboard = () => {
   }>({});
 
   const getTickets = async () => {
-    const response = await axios.get(`${API_ENDPOINT}/ticket`);
+    const response = await axios.get(`${API_ENDPOINT}/tickets`);
 
     console.log("getTickets() response: ", response);
     setTickets(response.data.tickets);

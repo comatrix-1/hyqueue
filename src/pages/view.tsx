@@ -36,7 +36,7 @@ const Index = () => {
   }, refreshInterval);
 
   const getTicketsGroupedByQueue = async () => {
-    const tickets = await axios.get(`${API_ENDPOINT}/ticket`);
+    const tickets = await axios.get(`${API_ENDPOINT}/tickets`);
     console.log("returned from API", tickets.data);
 
     const ticketsData: ITrelloList[] = tickets.data;
