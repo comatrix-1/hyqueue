@@ -1,6 +1,8 @@
 const axios = require("axios");
 const { parse: parseUrl } = require("url");
 import type { NextApiRequest, NextApiResponse } from "next";
+import { postLogin } from "../../services/postLogin";
+import { API_ENDPOINT } from "../../constants";
 
 /**
  * Function for Board Trello API calls
@@ -10,37 +12,12 @@ export default async function handler(
   res: NextApiResponse
 ) {
   try {
-    const { method: httpMethod, body: request } = req;
-    const {
-      TRELLO_KEY,
-      REDIRECT_URL,
-      SCOPES,
-      APP_NAME,
-      EXPIRATION_DURATION,
-      IS_TEST,
-      NEXT_PUBLIC_TRELLO_BOARD_ID,
-    } = process.env;
+    const { method: httpMethod } = req;
+    console.log(`${API_ENDPOINT} ${httpMethod}`);
 
     if (httpMethod === "POST") {
-      const scopes = SCOPES || "read,write";
-      const appName = APP_NAME || "QueueUp%20SG";
-      const expiration = EXPIRATION_DURATION || "1hour";
-
-      const redirectUrl = encodeURIComponent(
-        `${REDIRECT_URL || "http://localhost:3000/admin/callback"}?boardId=${
-          request.boardId
-        }&key=${TRELLO_KEY}`
-      );
-
-      if (IS_TEST === "true") {
-        return res.json({
-          authorizeUrl: `http://localhost:3000/admin/callback?boardId=${NEXT_PUBLIC_TRELLO_BOARD_ID}`,
-        });
-      }
-
-      res.json({
-        authorizeUrl: `https://trello.com/1/authorize?expiration=${expiration}&name=${appName}&scope=${scopes}&response_type=token&key=${TRELLO_KEY}&return_url=${redirectUrl}`,
-      });
+      const { status, data } = await postLogin();
+      res.status(status).json(data);
     } else {
       res.status(405).json(null);
     }
