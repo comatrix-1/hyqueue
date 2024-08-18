@@ -2,6 +2,8 @@ const axios = require("axios");
 const { parse: parseUrl } = require("url");
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ITrelloBoardList } from "../../model";
+import { getQueuesById } from "../../services/getQueuesById";
+import { getQueues } from "../../services/getQueues";
 
 /**
  * Function for Queue / List Trello API calls
@@ -27,27 +29,14 @@ export default async function handler(
 
     if (httpMethod === "GET") {
       if (queryStringParameters.id) {
-        const getBoardQueueBelongsTo = await axios.get(
-          `${TRELLO_ENDPOINT}/lists/${queryStringParameters.id}/board?fields=id,name,desc&${tokenAndKeyParams}`
-        );
-
-        const { id, name } = getBoardQueueBelongsTo.data;
-
-        res.status(200).json({
-          id,
-          name,
-        });
+        const { status, data } = await getQueuesById(queryStringParameters.id);
+        res.status(status).json(data);
       } else {
-        const response = await axios.get(
-          `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/lists?${tokenAndKeyParams}`
-        );
-
-        const responseData: ITrelloBoardList[] = response.data;
-
-        res.status(200).json(responseData);
+        const { status, data } = await getQueues();
+        res.status(status).json(data);
       }
     } else {
-      res.status(404).json(null);
+      res.status(405).json(null);
     }
   } catch (err: any) {
     // TODO: change any
