@@ -10,6 +10,7 @@ import {
   Tfoot,
   Select,
   Box,
+  Spinner,
 } from "@chakra-ui/react";
 import { EQueueTitles, ITrelloCard } from "../../model";
 import { useState } from "react";
@@ -19,6 +20,7 @@ interface Props {
   queues: any[]; // TODO: change any
   selectedQueues: { [key: string]: string };
   handleQueueChange: (ticketId: string, newQueueId: string) => void;
+  isSubmitting: boolean;
 }
 
 const DashboardTable = ({
@@ -26,12 +28,13 @@ const DashboardTable = ({
   queues,
   selectedQueues,
   handleQueueChange,
+  isSubmitting,
 }: Props) => {
-  const findQueueNameByCard = (
-    cardId: string,
+  const findQueueNameByListId = (
+    listId: string,
     queues: any[]
   ): string | undefined => {
-    const queue = queues.find((queue: any) => queue.id === cardId);
+    const queue = queues.find((queue: any) => queue.id === listId);
     if (!queue) {
       return undefined;
     }
@@ -52,43 +55,48 @@ const DashboardTable = ({
           </Tr>
         </Thead>
         <Tbody>
-          {tickets.map((ticket, index) => (
-            <Tr key={ticket.id}>
-              <Td>{index + 1}</Td>
-              <Td>{ticket.desc?.name}</Td>
-              <Td>{ticket.desc?.queueNo}</Td>
-              <Td>{ticket.idList}</Td>
-              <Td>
-                <Box position="relative">
-                  <Select
-                    value={selectedQueues[index]}
-                    onChange={(e) =>
-                      handleQueueChange(ticket.id, e.target.value)
-                    }
-                  >
-                    {queues.map((queue) => (
-                      <option value={queue.id} key={queue.id}>
-                        {queue.name}
-                      </option>
-                    ))}
-                  </Select>
-                  {selectedQueues[ticket.id] &&
-                    selectedQueues[ticket.id] !== ticket.idList && (
-                      <Box
-                        position="absolute"
-                        top="50%"
-                        right="-3"
-                        transform="translate(50%, -50%)"
-                        width="8px"
-                        height="8px"
-                        borderRadius="50%"
-                        backgroundColor="red"
-                      />
-                    )}
-                </Box>
-              </Td>
-            </Tr>
-          ))}
+          {isSubmitting ? (
+            <Spinner />
+          ) : (
+            tickets.map((ticket, index) => (
+              <Tr key={ticket.id}>
+                <Td>{ticket.id}</Td>
+                <Td>{ticket.desc?.name}</Td>
+                <Td>{ticket.desc?.queueNo}</Td>
+                <Td>{findQueueNameByListId(ticket?.idList ?? "", queues)}</Td>
+                <Td>
+                  <Box position="relative">
+                    <Select
+                      value={selectedQueues[index]}
+                      onChange={(e) =>
+                        handleQueueChange(ticket.id, e.target.value)
+                      }
+                    >
+                      <option value=""></option>
+                      {queues.map((queue) => (
+                        <option value={queue.id} key={queue.id}>
+                          {queue.name}
+                        </option>
+                      ))}
+                    </Select>
+                    {selectedQueues[ticket.id] &&
+                      selectedQueues[ticket.id] !== ticket.idList && (
+                        <Box
+                          position="absolute"
+                          top="50%"
+                          right="-3"
+                          transform="translate(50%, -50%)"
+                          width="8px"
+                          height="8px"
+                          borderRadius="50%"
+                          backgroundColor="red"
+                        />
+                      )}
+                  </Box>
+                </Td>
+              </Tr>
+            ))
+          )}
         </Tbody>
       </Table>
     </TableContainer>

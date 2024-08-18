@@ -302,7 +302,13 @@ export default async function handler(
         res.json({ ticketId: id, ticketNumber: idShort });
       }
     } else if (httpMethod === "PUT") {
-      const { id, newQueueId, newQueueName, position = "bottom" } = queryStringParameters;
+      const {
+        id,
+        newQueueId,
+        newQueueName,
+        position = "bottom",
+      } = queryStringParameters;
+      const { queueMap } = body;
       if (id && newQueueId) {
         await axios.put(
           `${TRELLO_ENDPOINT}/cards/${id}?${tokenAndKeyParams}&idList=${newQueueId}&pos=${position}`
@@ -353,6 +359,23 @@ export default async function handler(
         );
 
         return res.status(201).json(response.data);
+      } else if (queueMap) {
+        const requests = Object.entries(queueMap).map(
+          ([ticketId, newQueueId]) =>
+            axios.put(
+              `${TRELLO_ENDPOINT}/cards/${ticketId}?${tokenAndKeyParams}&idList=${newQueueId}&pos=bottom`
+            )
+        );
+
+        try {
+          await Promise.all(requests);
+          return res
+            .status(201)
+            .json({ message: "Successfully updated tickets" });
+        } catch (error) {
+          console.error("Error updating cards:", error);
+          return res.status(400);
+        }
       }
       res.json(null);
     } else if (httpMethod === "DELETE") {

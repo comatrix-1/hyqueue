@@ -19,6 +19,7 @@ const Dashboard = () => {
   const [selectedQueues, setSelectedQueues] = useState<{
     [key: string]: string;
   }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const getTickets = async () => {
     const response = await axios.get(`${API_ENDPOINT}/tickets`);
@@ -30,6 +31,11 @@ const Dashboard = () => {
 
   const navigateToAdminPage = () => {
     router.push("/admin");
+  };
+
+  const resetSelectedQueues = () => {
+    console.log("resetSelectedQueues()");
+    setSelectedQueues({});
   };
 
   const handleQueueChange = (ticketId: string, newQueueId: string) => {
@@ -63,12 +69,17 @@ const Dashboard = () => {
               <DashboardActions
                 queues={queues}
                 selectedQueues={selectedQueues}
+                getTickets={getTickets}
+                resetSelectedQueues={resetSelectedQueues}
+                isSubmitting={isSubmitting}
+                setIsSubmitting={setIsSubmitting}
               />
               <DashboardTable
                 tickets={tickets}
                 queues={queues}
                 selectedQueues={selectedQueues}
                 handleQueueChange={handleQueueChange}
+                isSubmitting={isSubmitting}
               />
               <Button
                 bgColor="primary.500"
