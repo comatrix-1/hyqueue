@@ -94,7 +94,7 @@ const Index = () => {
       ticketCookie.ticket &&
       ticketCookie.board
     ) {
-      return `/tickets?queue=${ticketCookie.queue}&ticket=${ticketCookie.ticket}&board=${ticketCookie.board}`;
+      return `/ticket?queue=${ticketCookie.queue}&ticket=${ticketCookie.ticket}&board=${ticketCookie.board}`;
     }
 
     return false;
@@ -216,7 +216,7 @@ const Index = () => {
             editableSettings.waitTimePerTicket
           )}`
         : ""; // TODO: set proper wait time per ticket default
-      const url = `/tickets?queue=${query.id}&board=${boardId}&ticket=${ticketId}${feedback}${waitTime}`;
+      const url = `/ticket?queue=${query.id}&board=${boardId}&ticket=${ticketId}${feedback}${waitTime}`;
       router.push(url, url, { locale: lang });
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err.response) {
