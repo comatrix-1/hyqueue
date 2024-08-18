@@ -49,6 +49,10 @@ const Management = () => {
     router.push(`/admin/serve?queueId=${queueId}`);
   };
 
+  const navigateToAdminPage = () => {
+    router.push("/admin");
+  };
+
   const onSubmit = (
     values: { queueId: string },
     actions: FormikHelpers<{ queueId: string }>
@@ -113,6 +117,18 @@ const Management = () => {
                 )}
               </Formik>
             </Box>
+            <Button
+                bgColor="primary.500"
+                borderRadius="3px"
+                width="100%"
+                color="white"
+                size="lg"
+                variant="solid"
+                marginTop="2rem"
+                onClick={navigateToAdminPage}
+              >
+                Go back to admin page
+              </Button>
           </Center>
         </Main>
       </Container>

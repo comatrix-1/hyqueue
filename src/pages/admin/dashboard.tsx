@@ -1,4 +1,4 @@
-import { Center, Container, Flex } from "@chakra-ui/react";
+import { Button, Center, Container, Flex } from "@chakra-ui/react";
 import DashboardTable from "../../components/Admin/DashboardTable";
 
 import { Navbar } from "../../components/Admin";
@@ -7,6 +7,8 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_ENDPOINT } from "../../constants";
+import DashboardActions from "../../components/Admin/DashboardActions";
+import router from "next/router";
 
 const Dashboard = () => {
   const [tickets, setTickets] = useState<any[]>([]);
@@ -22,6 +24,10 @@ const Dashboard = () => {
     setTickets(response.data.tickets);
     setQueues(response.data.queues);
   };
+
+  const navigateToAdminPage = () => {
+    router.push("/admin");
+  };
   return (
     <>
       <Head>
@@ -32,7 +38,20 @@ const Dashboard = () => {
         <Main minHeight="90vh" width="100%">
           <Center>
             <Flex direction="column" alignItems="center">
+              <DashboardActions queues={queues} />
               <DashboardTable tickets={tickets} queues={queues} />
+              <Button
+                bgColor="primary.500"
+                borderRadius="3px"
+                width="100%"
+                color="white"
+                size="lg"
+                variant="solid"
+                marginTop="2rem"
+                onClick={navigateToAdminPage}
+              >
+                Go back to admin page
+              </Button>
             </Flex>
           </Center>
         </Main>
