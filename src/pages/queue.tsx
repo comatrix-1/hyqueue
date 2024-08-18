@@ -167,12 +167,10 @@ const Index = () => {
         Array.isArray(editableSettings.registrationFields) &&
         editableSettings.registrationFields.includes("nric")
       ) {
-        if (validate(e.target["nric"].value) === false) {
-          setInvalidNRIC(true);
-          return;
-        } else {
-          setInvalidNRIC(false);
-        }
+        const regex = /^\d{3}[A-Za-z]$/;
+        const isValidNRIC = regex.test(e.target["nric"].value);
+        setInvalidNRIC(!isValidNRIC);
+        if (!isValidNRIC) return;
       }
 
       //  Don't submit if it is submitting
@@ -355,16 +353,16 @@ const Index = () => {
                   {editableSettings.registrationFields.includes("nric") && (
                     <>
                       <Text pt="0.5rem" pb="0.5rem" textStyle="subtitle1">
-                        NRIC
+                        Last 4 characters of NRIC (e.g. 567A of S1234567A)
                       </Text>
                       <Input
                         layerStyle="formInput"
                         isInvalid={invalidNRIC} // TODO: ensure styling of error.500
                         onChange={() => setInvalidNRIC(false)}
                         name="nric"
-                        maxLength={9}
-                        minLength={9}
-                        placeholder="SxxxxxxxA"
+                        maxLength={4}
+                        minLength={4}
+                        placeholder="xxxA"
                         required
                       />
                       {invalidNRIC && (

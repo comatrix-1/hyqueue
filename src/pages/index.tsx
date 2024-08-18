@@ -88,7 +88,7 @@ const Index = () => {
                 variant="solid"
                 type="submit"
               >
-                {t('try-the-demo')}
+                {t('join-queue')}
               </Button>
             </Link>
           </Center>
