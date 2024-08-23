@@ -1,10 +1,11 @@
 import axios from "axios";
-import { IApiResponse } from "../model";
+import { IApiResponse, ITicket } from "../model";
+import { INTERNAL_SERVER_ERROR } from "../constants";
 
 export const postTicketsByQueue = async (
   queue: string,
   desc: any
-): Promise<IApiResponse> => {
+): Promise<IApiResponse<ITicket>> => {
   const {
     TRELLO_KEY,
     TRELLO_TOKEN,
@@ -22,7 +23,11 @@ export const postTicketsByQueue = async (
   const queueNo = desc.queueNo ? `-${desc.queueNo}` : "";
   const descString = JSON.stringify(desc);
 
-  if (!queue) return { status: 400, data: null };
+  if (!queue)
+    return {
+      status: 400,
+      data: { message: INTERNAL_SERVER_ERROR, data: null },
+    };
 
   // if contact is provided, search pending queue for duplicate number
   if (contact) {
@@ -40,7 +45,10 @@ export const postTicketsByQueue = async (
     if (match) {
       return {
         status: 200,
-        data: { ticketId: match.id, ticketNumber: match.idShort },
+        data: {
+          message: "Found a ticket",
+          data: { id: match.id, idShort: match.idShort },
+        },
       };
     }
   }
@@ -63,12 +71,15 @@ export const postTicketsByQueue = async (
   if (response.status === 400) {
     return {
       status: 400,
-      data: response.data,
+      data: {
+        message: "Failed to create ticket",
+        data: null,
+      },
     };
   }
 
   return {
     status: 200,
-    data: { ticketId: id, ticketNumber: idShort },
+    data: { message: "Successfully created ticket", data: { id, idShort } },
   };
 };

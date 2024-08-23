@@ -91,10 +91,11 @@ const Index = () => {
       const {
         queueId,
         queueName,
-        ticketDesc,
+        desc: ticketDesc,
         numberOfTicketsAhead,
-        ticketNumber,
+        idShort: ticketNumber,
       } = getTicket.data;
+
       //Update queueId in case ticket has been shifted
       setQueueId(queueId);
 

@@ -1,7 +1,17 @@
 import axios from "axios";
-import { IBoardData, IList, ICard, EQueueTitles, IApiResponse } from "../model";
+import {
+  IBoardData,
+  IList,
+  ICard,
+  EQueueTitles,
+  IApiResponse,
+  ITicket,
+} from "../model";
+import { INTERNAL_SERVER_ERROR } from "../constants";
 
-export const getTicketsById = async (id: string): Promise<IApiResponse> => {
+export const getTicketsById = async (
+  id: string
+): Promise<IApiResponse<ITicket>> => {
   const {
     TRELLO_KEY,
     TRELLO_TOKEN,
@@ -21,7 +31,8 @@ export const getTicketsById = async (id: string): Promise<IApiResponse> => {
     return {
       status: getBoardInfo.status,
       data: {
-        message: "getBoardInfo error",
+        message: INTERNAL_SERVER_ERROR,
+        data: null,
       },
     };
   }
@@ -74,17 +85,24 @@ export const getTicketsById = async (id: string): Promise<IApiResponse> => {
   console.log("cardMap", cardMap);
   const card = cardMap.get(id);
 
-  if (!card) return { status: 400, data: null };
+  if (!card)
+    return {
+      status: 400,
+      data: { message: INTERNAL_SERVER_ERROR, data: null },
+    };
 
   return {
     status: 200,
     data: {
-      queueId: card.idList,
-      queueName: card.queueName,
-      ticketNumber: card.idShort,
-      ticketId: id,
-      ticketDesc: card.desc ? JSON.parse(card.desc) : null,
-      numberOfTicketsAhead: card.numberOfTicketsAhead,
+      message: "",
+      data: {
+        queueId: card.idList,
+        queueName: card.queueName,
+        idShort: card.idShort,
+        id: id,
+        desc: card.desc ? JSON.parse(card.desc) : null,
+        numberOfTicketsAhead: card.numberOfTicketsAhead,
+      },
     },
   };
 };

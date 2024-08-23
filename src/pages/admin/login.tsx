@@ -51,8 +51,8 @@ const Index = () => {
     try {
       setIsLoading(true);
       const response = await axios.post(`${API_ENDPOINT}/login`);
-      if (response.data.authorizeUrl) {
-        window.location.href = response.data.authorizeUrl;
+      if (response.data.data?.authorizeUrl) {
+        window.location.href = response.data.data?.authorizeUrl;
       } else {
         throw Error("Functions Login URL was not defined.");
       }

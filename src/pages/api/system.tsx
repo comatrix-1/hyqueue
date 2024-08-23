@@ -11,7 +11,7 @@ import { putSystem } from "../../services/putSystem";
 const API_ENDPOINT = "/api/system";
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ITrelloBoardSettings | null>
+  res: NextApiResponse
 ) {
   try {
     const { method: httpMethod, body } = req;

@@ -1,8 +1,15 @@
 import axios from "axios";
-import { ITrelloCard, ITicketDescription, IApiResponse } from "../model";
+import {
+  ITrelloCard,
+  ITicketDescription,
+  IApiResponse,
+  IQueue,
+} from "../model";
 import { prepareJsonString } from "../utils";
 
-export const getTicketsByQueueId = async (queueId: string): Promise<IApiResponse> => {
+export const getTicketsByQueueId = async (
+  queueId: string
+): Promise<IApiResponse<IQueue>> => {
   const {
     TRELLO_KEY,
     TRELLO_TOKEN,

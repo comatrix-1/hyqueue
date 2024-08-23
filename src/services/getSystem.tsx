@@ -1,8 +1,8 @@
 import axios from "axios";
-import { IApiResponse, IEditableSettings } from "../model";
+import { IApiResponse, IEditableSettings, IQueueSystem } from "../model";
 import { prepareJsonString } from "../utils";
 
-export const getSystem = async (): Promise<IApiResponse> => {
+export const getSystem = async (): Promise<IApiResponse<IQueueSystem>> => {
   const {
     TRELLO_KEY,
     TRELLO_TOKEN,
@@ -30,15 +30,18 @@ export const getSystem = async (): Promise<IApiResponse> => {
   }
 
   if (!parsedDesc) {
-    return { status: 200, data: null };
+    return { status: 200, data: { message: "Error parsing desc", data: null } };
   } else {
     return {
       status: 200,
       data: {
-        id,
-        name,
-        desc: parsedDesc,
-        shortUrl,
+        message: "",
+        data: {
+          id,
+          name,
+          desc: parsedDesc,
+          shortUrl,
+        },
       },
     };
   }

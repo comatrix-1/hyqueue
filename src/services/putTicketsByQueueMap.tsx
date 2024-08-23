@@ -3,7 +3,7 @@ import { IApiResponse } from "../model";
 
 export const putTicketsByQueueMap = async (queueMap: {
   [key: string]: string;
-}): Promise<IApiResponse> => {
+}): Promise<IApiResponse<null>> => {
   const {
     TRELLO_KEY,
     TRELLO_TOKEN,
@@ -26,13 +26,17 @@ export const putTicketsByQueueMap = async (queueMap: {
       status: 201,
       data: {
         message: "Successfully updated tickets",
+        data: null,
       },
     };
   } catch (error) {
     console.error("Error updating cards:", error);
     return {
       status: 400,
-      data: null,
+      data: {
+        message: "Failed to update tickets",
+        data: null,
+      },
     };
   }
 };

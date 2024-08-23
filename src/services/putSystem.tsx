@@ -1,7 +1,9 @@
 import axios from "axios";
-import { IApiResponse } from "../model";
+import { IApiResponse, IQueueSystem } from "../model";
 
-export const putSystem = async (body: any): Promise<IApiResponse> => {
+export const putSystem = async (
+  body: any
+): Promise<IApiResponse<IQueueSystem>> => {
   const {
     TRELLO_KEY,
     TRELLO_TOKEN,
@@ -25,6 +27,9 @@ export const putSystem = async (body: any): Promise<IApiResponse> => {
 
   return {
     status: response.status,
-    data: response.data,
+    data: {
+      message: "Successfully retrieved queue system information",
+      data: response.data,
+    },
   };
 };

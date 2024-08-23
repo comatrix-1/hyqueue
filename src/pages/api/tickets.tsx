@@ -10,7 +10,7 @@ import { putTicketsByIdAndNewQueueId } from "../../services/putTicketsByIdAndNew
 import { putTicketsByIdAndNewQueueName } from "../../services/putTicketsByIdAndNewQueueName";
 import { putTicketsByNewQueueId } from "../../services/putTicketsByNewQueueId";
 import { putTicketsByQueueMap } from "../../services/putTicketsByQueueMap";
-import { IApiResponse } from "../../model";
+import { IApiResponse, ITicket } from "../../model";
 
 const API_ENDPOINT = "/api/tickets";
 
@@ -27,25 +27,23 @@ export default async function handler(
       case "GET": {
         const { id, queueId } = queryStringParameters;
 
-        let result: IApiResponse;
         if (id) {
-          result = await getTicketsById(id as string);
+          const result = await getTicketsById(id as string);
+          return res.status(result.status).json(result.data);
         } else if (queueId) {
-          result = await getTicketsByQueueId(queueId as string);
+          const result = await getTicketsByQueueId(queueId as string);
+          return res.status(result.status).json(result.data);
         } else {
-          result = await getTickets();
+          const result = await getTickets();
+          return res.status(result.status).json(result.data);
         }
-
-        return res.status(result.status).json(result.data);
       }
 
       case "POST": {
         const { desc } = body;
         const { queue } = queryStringParameters;
-        const { status, data }: IApiResponse = await postTicketsByQueue(
-          queue as string,
-          desc
-        );
+        const { status, data }: IApiResponse<ITicket> =
+          await postTicketsByQueue(queue as string, desc);
         return res.status(status).json(data);
       }
 
@@ -53,31 +51,30 @@ export default async function handler(
         const { id, newQueueId, newQueueName } = queryStringParameters;
         const { queueMap } = body;
 
-        let result: IApiResponse | null = null;
         if (id && newQueueId) {
-          result = await putTicketsByIdAndNewQueueId(
+          const result = await putTicketsByIdAndNewQueueId(
             id as string,
             newQueueId as string
           );
+          return res.status(result.status).json(result.data);
         } else if (id && newQueueName) {
-          result = await putTicketsByIdAndNewQueueName(
+          const result = await putTicketsByIdAndNewQueueName(
             id as string,
             newQueueName as string
           );
+          return res.status(result.status).json(result.data);
         } else if (newQueueId) {
-          result = await putTicketsByNewQueueId(newQueueId as string);
+          const result = await putTicketsByNewQueueId(newQueueId as string);
+          return res.status(result.status).json(result.data);
         } else if (queueMap) {
-          result = await putTicketsByQueueMap(queueMap);
+          const result = await putTicketsByQueueMap(queueMap);
+          return res.status(result.status).json(result.data);
         }
-
-        return result
-          ? res.status(result.status).json(result.data)
-          : res.json(null);
       }
 
       case "DELETE": {
         const { id } = queryStringParameters;
-        const { status, data }: IApiResponse = await deleteTicketsById(
+        const { status, data }: IApiResponse<null> = await deleteTicketsById(
           id as string
         );
         return res.status(status).json(data);

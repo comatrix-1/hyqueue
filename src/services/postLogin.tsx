@@ -1,6 +1,6 @@
-import { IApiResponse } from "../model";
+import { IApiResponse, IAuthorizeUrl } from "../model";
 
-export const postLogin = async (): Promise<IApiResponse> => {
+export const postLogin = async (): Promise<IApiResponse<IAuthorizeUrl>> => {
   const {
     TRELLO_KEY,
     TRELLO_TOKEN,
@@ -33,7 +33,10 @@ export const postLogin = async (): Promise<IApiResponse> => {
   return {
     status: 200,
     data: {
-      authorizeUrl,
+      message: "",
+      data: {
+        authorizeUrl,
+      },
     },
   };
 };

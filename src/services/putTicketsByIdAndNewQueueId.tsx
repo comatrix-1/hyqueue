@@ -1,10 +1,10 @@
 import axios from "axios";
-import { IApiResponse } from "../model";
+import { IApiResponse, ITicket } from "../model";
 
 export const putTicketsByIdAndNewQueueId = async (
   id: string,
   newQueueId: string
-): Promise<IApiResponse> => {
+): Promise<IApiResponse<null>> => {
   const {
     TRELLO_KEY,
     TRELLO_TOKEN,
@@ -21,6 +21,9 @@ export const putTicketsByIdAndNewQueueId = async (
 
   return {
     status: 201,
-    data: null,
+    data: {
+      message: `Successfully updated ticket of ID: ${id}`,
+      data: null,
+    },
   };
 };

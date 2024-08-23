@@ -1,7 +1,7 @@
 import axios from "axios";
-import { IApiResponse } from "../model";
+import { IApiResponse, ITicket } from "../model";
 
-export const getTickets = async (): Promise<IApiResponse> => {
+export const getTickets = async (): Promise<IApiResponse<ITicket[]>> => {
   const {
     TRELLO_KEY,
     TRELLO_TOKEN,
@@ -22,6 +22,7 @@ export const getTickets = async (): Promise<IApiResponse> => {
       status: getBoardInfo.status,
       data: {
         message: "getBoardInfo error",
+        data: null,
       },
     };
   }
@@ -43,6 +44,9 @@ export const getTickets = async (): Promise<IApiResponse> => {
 
   return {
     status: 200,
-    data: { tickets: parsedCardsData, queues: getBoardInfo.data.lists },
+    data: {
+      message: "",
+      data: parsedCardsData,
+    },
   };
 };

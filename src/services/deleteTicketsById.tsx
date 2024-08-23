@@ -1,6 +1,9 @@
 import axios from "axios";
+import { IApiResponse } from "../model";
 
-export const deleteTicketsById = async (id: string) => {
+export const deleteTicketsById = async (
+  id: string
+): Promise<IApiResponse<null>> => {
   const {
     TRELLO_KEY,
     TRELLO_TOKEN,
@@ -31,13 +34,17 @@ export const deleteTicketsById = async (id: string) => {
     }
     return {
       status: 200,
-      data: null,
+      data: {
+        message: `Successfully deleted ticket of ID: ${id}`,
+        data: null,
+      },
     };
   } else {
     return {
       status: 400,
       data: {
         message: "Missing ticket or board id",
+        data: null,
       },
     };
   }

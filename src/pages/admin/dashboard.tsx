@@ -22,11 +22,11 @@ const Dashboard = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const getTickets = async () => {
-    const response = await axios.get(`${API_ENDPOINT}/tickets`);
+    const ticketsResponse = await axios.get(`${API_ENDPOINT}/tickets`);
+    const queuesResponse = await axios.get(`${API_ENDPOINT}/queues`);
 
-    console.log("getTickets() response: ", response);
-    setTickets(response.data.tickets);
-    setQueues(response.data.queues);
+    setTickets(ticketsResponse.data);
+    setQueues(queuesResponse.data);
   };
 
   const navigateToAdminPage = () => {

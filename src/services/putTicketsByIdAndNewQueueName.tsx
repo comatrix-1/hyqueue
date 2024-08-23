@@ -4,7 +4,7 @@ import { IApiResponse, ITrelloBoardList } from "../model";
 export const putTicketsByIdAndNewQueueName = async (
   id: string,
   newQueueName: string
-): Promise<IApiResponse> => {
+): Promise<IApiResponse<null>> => {
   const {
     TRELLO_KEY,
     TRELLO_TOKEN,
@@ -26,12 +26,17 @@ export const putTicketsByIdAndNewQueueName = async (
   );
   const newQueueId = newQueue ? newQueue.id : null;
 
-  const response = await axios.put(
+  await axios.put(
     `${TRELLO_ENDPOINT}/cards/${id}?${tokenAndKeyParams}&idList=${newQueueId}&pos=bottom`
   );
 
+  // TODO: check response status
+
   return {
     status: 201,
-    data: response.data,
+    data: {
+      message: `Successfully updated ticket of ID: ${id}`,
+      data: null,
+    },
   };
 };

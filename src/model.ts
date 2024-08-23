@@ -14,6 +14,26 @@ export interface ITrelloList {
   name: string;
   cards: ITrelloCard[];
 }
+export interface IQueue {
+  // Replaces ITrelloList
+  id: string;
+  name: string;
+  tickets?: ITicket;
+}
+
+export interface ITicket {
+  // Replaces ITrelloCard
+  id: string;
+  queueId?: string;
+  queueName?: string;
+  name?: string;
+  idShort?: number;
+  desc?: any;
+  shortLink?: string;
+  shortUrl?: string;
+  queueNo?: number;
+  numberOfTicketsAhead?: number;
+}
 
 // TODO: remove if not needed
 export interface ITrelloApiResponse {
@@ -61,9 +81,12 @@ export interface IApiConfig {
   key: string;
 }
 
-export interface IApiResponse {
+export interface IApiResponse<T> {
   status: number;
-  data: any;
+  data: {
+    message: string;
+    data: T | null;
+  };
 }
 
 export interface IEditableSettings {
@@ -77,6 +100,14 @@ export interface IEditableSettings {
 }
 
 export interface ITrelloBoardSettings {
+  id?: string;
+  desc?: IEditableSettings;
+  name?: string;
+  shortUrl?: string;
+}
+
+export interface IQueueSystem {
+  // Replaces ITrelloBoardSettings
   id?: string;
   desc?: IEditableSettings;
   name?: string;
@@ -137,4 +168,8 @@ export interface IApiResponseQueue {
   removed: any[]; // TODO: change any
   done: any[]; // TODO: change any
   error: any[]; // TODO: change any
+}
+
+export interface IAuthorizeUrl {
+  authorizeUrl: string;
 }

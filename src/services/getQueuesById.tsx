@@ -1,7 +1,9 @@
 import axios from "axios";
-import { IApiResponse } from "../model";
+import { IApiResponse, IQueue } from "../model";
 
-export const getQueuesById = async (id: string): Promise<IApiResponse> => {
+export const getQueuesById = async (
+  id: string
+): Promise<IApiResponse<IQueue>> => {
   const {
     TRELLO_KEY,
     TRELLO_TOKEN,
@@ -19,8 +21,11 @@ export const getQueuesById = async (id: string): Promise<IApiResponse> => {
   return {
     status: response.status,
     data: {
-      id: response.data?.id,
-      name: response.data?.name,
+      message: "",
+      data: {
+        id: response.data?.id,
+        name: response.data?.name,
+      },
     },
   };
 };
