@@ -1,5 +1,6 @@
 import axios from "axios";
 import { IApiResponse, IEditableSettings } from "../model";
+import { prepareJsonString } from "../utils";
 
 export const getSystem = async (): Promise<IApiResponse> => {
   const {
@@ -22,7 +23,7 @@ export const getSystem = async (): Promise<IApiResponse> => {
 
   let parsedDesc: IEditableSettings | null = null;
   try {
-    parsedDesc = JSON.parse(desc as string);
+    parsedDesc = JSON.parse(prepareJsonString(desc));
     console.log("parsed desc: ", parsedDesc);
   } catch (error) {
     console.log("Error parsing desc");

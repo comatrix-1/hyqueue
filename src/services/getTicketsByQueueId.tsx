@@ -1,5 +1,6 @@
 import axios from "axios";
 import { ITrelloCard, ITicketDescription, IApiResponse } from "../model";
+import { prepareJsonString } from "../utils";
 
 export const getTicketsByQueueId = async (queueId: string): Promise<IApiResponse> => {
   const {
@@ -27,7 +28,7 @@ export const getTicketsByQueueId = async (queueId: string): Promise<IApiResponse
       queueNo: null,
     };
     try {
-      parsedDesc = JSON.parse(card.desc as string);
+      parsedDesc = JSON.parse(prepareJsonString(card.desc));
     } catch (error) {
       console.log("Error parsing desc");
     }

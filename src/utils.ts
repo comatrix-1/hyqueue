@@ -113,3 +113,14 @@ export const isQueueClosed = (openingHours: string[]) => {
 
   return true;
 };
+
+export const prepareJsonString = (input: string) => {
+  console.log("prepareJsonString() input: " + input);
+  const jsonString = input.replace(
+    /"\[.*?\]\((https?:\/\/[^\s]+)\s*\"‌?\"\)"/g,
+    '"$1"'
+  );
+
+  console.log("prepareJsonString() return jsonString: ", jsonString);
+  return jsonString;
+};
