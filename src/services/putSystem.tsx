@@ -26,15 +26,26 @@ export const putSystem = async (
     update
   );
 
-  return {
-    status: response.status,
-    data: {
-      message: "Successfully retrieved queue system information",
+  try {
+    const parsedDesc = JSON.parse(prepareJsonString(response.data.desc));
+    return {
+      status: response.status,
       data: {
-        id: response.data.id,
-        name: response.data.name,
-        desc: JSON.parse(prepareJsonString(response.data.desc)),
+        message: "Successfully updated queue system information",
+        data: {
+          id: response.data.id,
+          name: response.data.name,
+          desc: parsedDesc,
+        },
       },
-    },
-  };
+    };
+  } catch {
+    return {
+      status: response.status,
+      data: {
+        message: "Error parsing desc",
+        data: null,
+      },
+    };
+  }
 };

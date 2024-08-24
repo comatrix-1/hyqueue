@@ -35,7 +35,7 @@ export const getSystem = async (): Promise<IApiResponse<IQueueSystem>> => {
     return {
       status: 200,
       data: {
-        message: "",
+        message: "Successfully retrieved queue system information",
         data: {
           id,
           name,
