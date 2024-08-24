@@ -94,7 +94,7 @@ export const getTicketsById = async (
   return {
     status: 200,
     data: {
-      message: "",
+      message: `Successfully retrieved ticket of ID: ${id}`,
       data: {
         queueId: card.idList,
         queueName: card.queueName,
