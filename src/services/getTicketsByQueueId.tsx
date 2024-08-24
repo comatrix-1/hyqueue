@@ -41,22 +41,25 @@ export const getTicketsByQueueId = async (
     }
 
     return {
-      status: 200,
-      data: {
-        id: card.id,
-        name: card.name,
-        shortLink: card.shortLink,
-        idShort: card.idShort,
-        desc: {
-          category: parsedDesc.category,
-          contact: parsedDesc.contact,
-          name: parsedDesc.name,
-          ticketPrefix: parsedDesc.ticketPrefix,
-          queueNo: parsedDesc.queueNo,
-        },
+      id: card.id,
+      name: card.name,
+      shortLink: card.shortLink,
+      idShort: card.idShort,
+      desc: {
+        category: parsedDesc.category,
+        contact: parsedDesc.contact,
+        name: parsedDesc.name,
+        ticketPrefix: parsedDesc.ticketPrefix,
+        queueNo: parsedDesc.queueNo,
       },
     };
   });
 
-  return cards;
+  return {
+    status: 200,
+    data: {
+      message: `Successfully retrieved tickets by queue ID: ${queueId}`,
+      data: cards,
+    },
+  };
 };
