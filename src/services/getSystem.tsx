@@ -19,7 +19,7 @@ export const getSystem = async (): Promise<IApiResponse<IQueueSystem>> => {
 
   console.log("GET getBoard", getBoard);
 
-  const { id, name, desc, shortUrl } = getBoard.data;
+  const { id, name, desc } = getBoard.data;
 
   let parsedDesc: IEditableSettings | null = null;
   try {
@@ -40,7 +40,6 @@ export const getSystem = async (): Promise<IApiResponse<IQueueSystem>> => {
           id,
           name,
           desc: parsedDesc,
-          shortUrl,
         },
       },
     };

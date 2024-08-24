@@ -14,8 +14,6 @@ import {
 import { Formik, Form, Field, FieldArray } from "formik";
 import {
   IEditableSettings,
-  ITrelloBoardData,
-  ITrelloBoardSettings,
 } from "../../model";
 import DayOpeningHours from "./DayOpeningHours";
 

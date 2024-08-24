@@ -1,5 +1,6 @@
 import axios from "axios";
 import { IApiResponse, IQueueSystem } from "../model";
+import { prepareJsonString } from "../utils";
 
 export const putSystem = async (
   body: any
@@ -29,7 +30,11 @@ export const putSystem = async (
     status: response.status,
     data: {
       message: "Successfully retrieved queue system information",
-      data: response.data,
+      data: {
+        id: response.data.id,
+        name: response.data.name,
+        desc: JSON.parse(prepareJsonString(response.data.desc)),
+      },
     },
   };
 };

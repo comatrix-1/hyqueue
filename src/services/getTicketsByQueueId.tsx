@@ -46,7 +46,6 @@ export const getTicketsByQueueId = async (
         id: card.id,
         name: card.name,
         shortLink: card.shortLink,
-        shortUrl: card.shortUrl,
         idShort: card.idShort,
         desc: {
           category: parsedDesc.category,

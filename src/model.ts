@@ -30,7 +30,6 @@ export interface ITicket {
   idShort?: number;
   desc?: any;
   shortLink?: string;
-  shortUrl?: string;
   queueNo?: number;
   numberOfTicketsAhead?: number;
 }
@@ -103,7 +102,6 @@ export interface ITrelloBoardSettings {
   id?: string;
   desc?: IEditableSettings;
   name?: string;
-  shortUrl?: string;
 }
 
 export interface IQueueSystem {
@@ -111,12 +109,6 @@ export interface IQueueSystem {
   id?: string;
   desc?: IEditableSettings;
   name?: string;
-  shortUrl?: string;
-}
-
-export interface ITrelloBoardData {
-  name: string;
-  shortUrl: string;
 }
 
 export interface ITrelloCard {
@@ -126,7 +118,6 @@ export interface ITrelloCard {
   idShort?: number;
   desc?: any;
   shortLink?: string;
-  shortUrl?: string;
   queueNo?: number;
 }
 export interface ICard extends ITrelloCard {

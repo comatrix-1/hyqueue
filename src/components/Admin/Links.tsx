@@ -5,7 +5,7 @@ import _ from "lodash";
 import router from "next/router";
 import { useState } from "react";
 
-const Links = ({ trelloUrl }: { trelloUrl: string }) => {
+const Links = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const generateReportFeatureFlag = false;
 
@@ -250,16 +250,6 @@ const Links = ({ trelloUrl }: { trelloUrl: string }) => {
           Generate Report
         </Button>
       ) : null}
-      <Button
-        display="flex"
-        colorScheme="blue"
-        borderRadius="3px"
-        color="white"
-        variant="solid"
-        onClick={() => window.open(trelloUrl)}
-      >
-        Go To Trello
-      </Button>
     </ButtonGroup>
   );
 };

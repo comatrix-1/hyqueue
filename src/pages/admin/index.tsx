@@ -30,8 +30,6 @@ import { authentication } from "../../utils";
 import { mapSeries } from "bluebird";
 import {
   IApiConfig,
-  IEditableSettings,
-  ITrelloBoardData,
   ITrelloBoardSettings,
 } from "../../model";
 import { API_ENDPOINT } from "../../constants";
@@ -183,7 +181,7 @@ const Index = () => {
                     value={boardData.name}
                   />
 
-                  <Links trelloUrl={boardData.shortUrl ?? ""} />
+                  <Links />
                 </Flex>
 
                 {boardData?.desc ? (
