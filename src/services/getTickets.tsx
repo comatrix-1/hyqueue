@@ -1,5 +1,7 @@
 import axios from "axios";
 import { IApiResponse, ITicket } from "../model";
+import { prepareJsonString } from "../utils";
+import { INTERNAL_SERVER_ERROR } from "../constants";
 
 export const getTickets = async (): Promise<IApiResponse<ITicket[]>> => {
   const {
@@ -27,25 +29,40 @@ export const getTickets = async (): Promise<IApiResponse<ITicket[]>> => {
     };
   }
 
-  const parseCardsData = (cards: any[]) => {
+  const parseCardsData = (cards: any[]): ITicket[] => {
     return cards.map((card) => {
-      // Parse the desc field into an object
-      const parsedDesc = JSON.parse(card.desc);
-
       // Return a new object with the parsed desc field
       return {
-        ...card,
-        desc: parsedDesc,
+        id: card.id,
+        queueId: card.idList,
+        name: card.name,
+        idShort: card.idShort,
+        desc: JSON.parse(prepareJsonString(card.desc)),
       };
     });
   };
 
-  const parsedCardsData = parseCardsData(getBoardInfo.data.cards);
+  let parsedCardsData: ITicket[] = [];
+  try {
+    parsedCardsData = parseCardsData(getBoardInfo.data.cards);
+  } catch (error) {
+    console.log(error);
+  }
+
+  if (!parsedCardsData.length) {
+    return {
+      status: 200,
+      data: {
+        message: INTERNAL_SERVER_ERROR,
+        data: [],
+      },
+    };
+  }
 
   return {
     status: 200,
     data: {
-      message: "",
+      message: "Successfully retrieved tickets",
       data: parsedCardsData,
     },
   };
