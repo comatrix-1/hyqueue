@@ -29,7 +29,6 @@ export interface ITicket {
   name?: string;
   idShort?: number;
   desc?: any;
-  shortLink?: string;
   queueNo?: number;
   numberOfTicketsAhead?: number;
 }
@@ -117,7 +116,6 @@ export interface ITrelloCard {
   name?: string;
   idShort?: number;
   desc?: any;
-  shortLink?: string;
   queueNo?: number;
 }
 export interface ICard extends ITrelloCard {
