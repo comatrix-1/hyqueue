@@ -37,10 +37,8 @@ const Serve = () => {
     if (!queueIdValue) return;
 
     const response = await axios.get(
-      `${API_ENDPOINT}/queues?id=${queueIdValue}`
+      `${API_ENDPOINT}/system`
     );
-
-    console.log("response", response);
 
     setQueueSystemInfo(response?.data);
   };

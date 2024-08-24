@@ -2,7 +2,6 @@ const axios = require("axios");
 const { parse: parseUrl } = require("url");
 import type { NextApiRequest, NextApiResponse } from "next";
 import { ITrelloBoardList } from "../../model";
-import { getQueuesById } from "../../services/getQueuesById";
 import { getQueues } from "../../services/getQueues";
 
 /**
@@ -28,13 +27,8 @@ export default async function handler(
         : `key=${TRELLO_KEY}&token=${TRELLO_TOKEN}`;
 
     if (httpMethod === "GET") {
-      if (queryStringParameters.id) {
-        const { status, data } = await getQueuesById(queryStringParameters.id);
-        res.status(status).json(data);
-      } else {
-        const { status, data } = await getQueues();
-        res.status(status).json(data);
-      }
+      const { status, data } = await getQueues();
+      res.status(status).json(data);
     } else {
       res.status(405).json(null);
     }
