@@ -25,8 +25,8 @@ const Dashboard = () => {
     const ticketsResponse = await axios.get(`${API_ENDPOINT}/tickets`);
     const queuesResponse = await axios.get(`${API_ENDPOINT}/queues`);
 
-    setTickets(ticketsResponse.data);
-    setQueues(queuesResponse.data);
+    setTickets(ticketsResponse.data.data);
+    setQueues(queuesResponse.data.data);
   };
 
   const navigateToAdminPage = () => {
@@ -45,13 +45,14 @@ const Dashboard = () => {
       const updatedQueues = { ...prev };
 
       if (
-        tickets.find((ticket) => ticket.id === ticketId)?.idList === newQueueId
+        tickets.find((ticket) => ticket.id === ticketId)?.queueId === newQueueId
       ) {
         delete updatedQueues[ticketId]; // Remove from selectedQueues if it matches the original queue
       } else {
         updatedQueues[ticketId] = newQueueId; // Update if it's different
       }
 
+      console.log("handleQueueChange() updatedQueues: ", updatedQueues);
       return updatedQueues;
     });
   };

@@ -77,7 +77,7 @@ const Index = () => {
       const response = await axios.get(`${API_ENDPOINT}/system`);
 
       console.log("getBoard() response: ", response.data);
-      setBoardData(response.data);
+      setBoardData(response.data.data);
     } catch (error) {
       errorHandler(error);
     }

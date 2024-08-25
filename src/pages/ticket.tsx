@@ -54,6 +54,9 @@ const Index = () => {
     const waitTimePerTicketValue = searchParams.get("waitTimePerTicket");
 
     if (ticketValue && queueValue && boardValue) {
+      console.log("ticketValue", ticketValue);
+      console.log("queueValue", queueValue);
+      console.log("boardValue", boardValue);
       setTicketId(ticketValue);
       setBoardId(boardValue);
       getTicketStatus(ticketValue, boardValue);
@@ -87,14 +90,16 @@ const Index = () => {
   const getTicketStatus = async (ticket: string, board: string) => {
     try {
       const getTicket = await axios.get(`${API_ENDPOINT}/tickets?id=${ticket}`);
-      console.log("getTicket", getTicket);
+      const getTicketData = getTicket.data;
+      if (!getTicketData.data) return;
+
       const {
         queueId,
         queueName,
         desc: ticketDesc,
         numberOfTicketsAhead,
         idShort: ticketNumber,
-      } = getTicket.data;
+      } = getTicketData.data;
 
       //Update queueId in case ticket has been shifted
       setQueueId(queueId);

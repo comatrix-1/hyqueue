@@ -41,7 +41,7 @@ const Management = () => {
       console.log("getQueues() :: Failed to get queues");
     }
 
-    setQueues(response.data);
+    setQueues(response.data.data);
   };
 
   const onSelectQueue = (queueId: string) => {

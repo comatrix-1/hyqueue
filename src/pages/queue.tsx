@@ -31,7 +31,9 @@ import { useCookies } from "react-cookie";
 import useTranslation from "next-translate/useTranslation";
 import { API_ENDPOINT } from "../constants";
 import {
+  IApiResponse,
   IEditableSettings,
+  ITicket,
   ITicketDescription,
   ITrelloBoardSettings,
 } from "../model";
@@ -204,11 +206,11 @@ const Index = () => {
       // call netlify function to create a ticket
       // for that queue, return the ticket id and redirect to ticket page
       const query = queryString.parse(location.search);
-      const postJoinQueue = await axios.post(
+      const response = await axios.post(
         `${API_ENDPOINT}/tickets?queue=${query.id}`,
         { desc }
       );
-      const { ticketId } = postJoinQueue.data;
+      const ticketData = response.data?.data;
       const feedback = feedbackLink
         ? `&feedback=${encodeURIComponent(feedbackLink)}`
         : "";
@@ -217,7 +219,7 @@ const Index = () => {
             editableSettings.waitTimePerTicket
           )}`
         : ""; // TODO: set proper wait time per ticket default
-      const url = `/ticket?queue=${query.id}&board=${boardId}&ticket=${ticketId}${feedback}${waitTime}`;
+      const url = `/ticket?queue=${query.id}&board=${boardId}&ticket=${ticketData.id}${feedback}${waitTime}`;
       router.push(url, url, { locale: lang });
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err.response) {

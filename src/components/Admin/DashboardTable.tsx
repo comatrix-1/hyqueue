@@ -12,11 +12,11 @@ import {
   Box,
   Spinner,
 } from "@chakra-ui/react";
-import { EQueueTitles, ITrelloCard } from "../../model";
+import { EQueueTitles, ITicket, ITrelloCard } from "../../model";
 import { useState } from "react";
 
 interface Props {
-  tickets: ITrelloCard[]; // TODO: change any
+  tickets: ITicket[]; // TODO: change any
   queues: any[]; // TODO: change any
   selectedQueues: { [key: string]: string };
   handleQueueChange: (ticketId: string, newQueueId: string) => void;
@@ -30,6 +30,8 @@ const DashboardTable = ({
   handleQueueChange,
   isSubmitting,
 }: Props) => {
+  if (!queues?.length) return;
+
   const findQueueNameByListId = (
     listId: string,
     queues: any[]
@@ -63,7 +65,7 @@ const DashboardTable = ({
                 <Td>{ticket.id}</Td>
                 <Td>{ticket.desc?.name}</Td>
                 <Td>{ticket.desc?.queueNo}</Td>
-                <Td>{findQueueNameByListId(ticket?.idList ?? "", queues)}</Td>
+                <Td>{findQueueNameByListId(ticket?.queueId ?? "", queues)}</Td>
                 <Td>
                   <Box position="relative">
                     <Select
@@ -80,7 +82,7 @@ const DashboardTable = ({
                       ))}
                     </Select>
                     {selectedQueues[ticket.id] &&
-                      selectedQueues[ticket.id] !== ticket.idList && (
+                      selectedQueues[ticket.id] !== ticket.queueId && (
                         <Box
                           position="absolute"
                           top="50%"

@@ -18,6 +18,12 @@ export const getQueues = async (): Promise<IApiResponse<IQueue[]>> => {
 
   return {
     status: response.status,
-    data: response.data,
+    data: {
+      message: "Successfully retrieved queues",
+      data: response.data.map((data: IQueue) => ({
+        id: data.id,
+        name: data.name,
+      })),
+    },
   };
 };
