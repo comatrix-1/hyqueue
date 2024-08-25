@@ -36,6 +36,15 @@ export const putTicketsByNewQueueId = async (
   );
 
   const ticketsResponseData: ITrelloCard[] = ticketsResponse.data;
+  if (ticketsResponseData.length <= 0) {
+    return {
+      status: 200,
+      data: {
+        message: "No tickets found in pending queue",
+        data: null,
+      },
+    };
+  }
   const ticketIdOfFirstInPendingQueue = ticketsResponseData[0].id;
   console.log("ticketIdOfFirstInPendingQueue", ticketIdOfFirstInPendingQueue);
 

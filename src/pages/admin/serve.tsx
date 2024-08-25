@@ -99,11 +99,17 @@ const Serve = () => {
     const queueIdValue = searchParams.get("queueId") ?? "";
     setIsSubmitting(true);
     try {
-      await axios.put(`${API_ENDPOINT}/tickets?newQueueId=${queueIdValue}`);
+      const result = await axios.put(
+        `${API_ENDPOINT}/tickets?newQueueId=${queueIdValue}`
+      );
+      console.log("result", result);
+      if (result.status !== 201) {
+        throw new Error(result.data.message);
+      }
 
       await getListsWithCards(queueIdValue);
-    } catch {
-      console.log("Error completing ticket");
+    } catch (err: any) {
+      alert(err.message ?? "Error occurred");
     } finally {
       setIsSubmitting(false);
     }
