@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
 import queryString from "query-string";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import url from "is-url";
 import { validate } from "nric";
 
@@ -112,8 +112,9 @@ const Index = () => {
       // 1. Verifies that queue actually exists
       // 2. Gets info stored as JSON in board description
 
-      const response = await axios.get(`${API_ENDPOINT}/system`);
-      console.log("API response: " + response.data);
+      const result = await axios.get(`${API_ENDPOINT}/system`);
+      const response = result.data as AxiosResponse;
+      console.log("API response: " + response);
       const boardSettings: ITrelloBoardSettings = response.data;
       console.log("boardSettings: " + boardSettings);
       const boardInfo = boardSettings?.desc;

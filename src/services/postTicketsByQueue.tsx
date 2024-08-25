@@ -16,6 +16,9 @@ export const postTicketsByQueue = async (
   const tokenAndKeyParams =
     IS_PUBLIC_BOARD === "true" ? "" : `key=${TRELLO_KEY}&token=${TRELLO_TOKEN}`;
 
+  console.log("postTicketsByQueue() desc", desc);
+  console.log("postTicketsByQueue() queue", queue);
+
   const prefix = desc.ticketPrefix ? desc.ticketPrefix : "";
   const name = desc.name ? `-${desc.name}` : "";
   const contact = desc.contact ? `-${desc.contact}` : "";
