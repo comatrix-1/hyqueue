@@ -1,84 +1,56 @@
-import {
-  Heading,
-  Center,
-  Box,
-  Button
-} from '@chakra-ui/react'
-import axios from 'axios'
-import { useEffect, useState } from 'react'
-import Link from 'next/link'
-import Head from 'next/head'
-import useTranslation from 'next-translate/useTranslation'
-import queryString from 'query-string'
+import { Heading, Center, Box, Button } from "@chakra-ui/react";
+import axios, { AxiosResponse } from "axios";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import Head from "next/head";
+import useTranslation from "next-translate/useTranslation";
+import queryString from "query-string";
 
-import { Container } from '../components/Container'
-import { Main } from '../components/Main'
-import { Footer } from '../components/Footer'
-import { NavBar } from '../components/Navbar'
+import { Container } from "../components/Container";
+import { Main } from "../components/Main";
+import { Footer } from "../components/Footer";
+import { NavBar } from "../components/Navbar";
 
-import PeopleOnPhones from '../assets/svg/people-on-phones.svg'
-import { API_ENDPOINT } from '../constants'
-import { ITrelloBoardList } from '../model'
+import PeopleOnPhones from "../assets/svg/people-on-phones.svg";
+import { API_ENDPOINT } from "../constants";
+import { EQueueTitles, IQueue, ITrelloBoardList } from "../model";
 
 const Index = () => {
-  const { t, lang } = useTranslation('common')
-  const [queuePendingUrl, setQueuePendingUrl] = useState('')
+  const { t, lang } = useTranslation("common");
+  const [queuePendingUrl, setQueuePendingUrl] = useState("");
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const boardIdValue = searchParams.get('boardId');
-    console.log('boardIdValue', boardIdValue)
+    getQueues();
+  }, []);
 
-    if (boardIdValue) {
-      getBoardLists(boardIdValue)
-    } else {
-      //  Defaults to board id in the netlify env
-      getBoardLists(process.env.NEXT_PUBLIC_TRELLO_BOARD_ID || '')
+  const getQueues = async () => {
+    try {
+      const result = await axios.get(`${API_ENDPOINT}/queues`);
+      const response = result.data as AxiosResponse;
+      console.log("response", response);
+      response.data.forEach((queue: IQueue) => {
+        if (queue.name.indexOf(EQueueTitles.PENDING) > -1) {
+          setQueuePendingUrl(location.origin + `/queue?id=${queue.id}`);
+        }
+      });
+    } catch (error) {
+      console.error(error);
     }
-  }, [])
-
-  /**
-   *  Gets a board with lists
-   */
-  const getBoardLists = async (boardId: string) => {
-    if (boardId) {
-      try {
-        const boardLists = await axios.get(`${API_ENDPOINT}/queues`)
-        console.log('boardLists', boardLists)
-        boardLists.data.forEach((list: ITrelloBoardList) => {
-          if (list.name.indexOf('[PENDING]') > -1) {
-            setQueuePendingUrl(location.origin + `/queue?id=${list.id}`)
-          }
-        })
-      } catch (error) {
-        console.error(error)
-      }
-    }
-  }
+  };
 
   return (
     <Container>
       <NavBar />
       <Main>
         <Box>
-          <Heading
-            textStyle="heading3"
-            textAlign="center"
-            mb={8}
-          >
-            {t('demo-title')}
+          <Heading textStyle="heading3" textAlign="center" mb={8}>
+            {t("demo-title")}
           </Heading>
           <Center>
-            <PeopleOnPhones
-              className="featured-image"
-            />
+            <PeopleOnPhones className="featured-image" />
           </Center>
-          <Center
-            mt="4rem"
-          >
-            <Link
-              href={`${queuePendingUrl}`}
-            >
+          <Center mt="4rem">
+            <Link href={`${queuePendingUrl}`}>
               <Button
                 bgColor="primary.500"
                 borderRadius="3px"
@@ -88,7 +60,7 @@ const Index = () => {
                 variant="solid"
                 type="submit"
               >
-                {t('join-queue')}
+                {t("join-queue")}
               </Button>
             </Link>
           </Center>
@@ -96,7 +68,7 @@ const Index = () => {
       </Main>
       <Footer />
     </Container>
-  )
-}
+  );
+};
 
-export default Index
+export default Index;

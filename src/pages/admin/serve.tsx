@@ -12,7 +12,7 @@ import Head from "next/head";
 import { Navbar } from "../../components/Admin";
 import { Main } from "../../components/Main";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { API_ENDPOINT } from "../../constants";
 import * as _ from "lodash";
 import {
@@ -36,9 +36,7 @@ const Serve = () => {
   const getQueueInfo = async (queueIdValue: string) => {
     if (!queueIdValue) return;
 
-    const response = await axios.get(
-      `${API_ENDPOINT}/system`
-    );
+    const response = await axios.get(`${API_ENDPOINT}/system`);
 
     setQueueSystemInfo(response?.data);
   };
@@ -48,11 +46,10 @@ const Serve = () => {
   };
 
   const getListsWithCards = async (queueId: string) => {
-    const response = await axios.get(
+    const result = await axios.get(
       `${API_ENDPOINT}/tickets?queueId=${queueId}`
     );
-
-    console.log("tickets returned by API", response);
+    const response = result.data as AxiosResponse;
 
     setTicket(response.data[0]);
   };
