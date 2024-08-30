@@ -8,7 +8,7 @@ import {
   Button,
 } from '@chakra-ui/react'
 import Head from 'next/head'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { useEffect, useState } from 'react'
 import queryString from 'query-string'
 
@@ -43,9 +43,12 @@ const Index = () => {
  */
   const getBoard = async () => {
     try {
-      const boardLists = await axios.get(`${API_ENDPOINT}/queues`)
+      const result = await axios.get(`${API_ENDPOINT}/queues`)
+      const response = result.data as AxiosResponse
 
-      boardLists.data.forEach((list: ITrelloBoardList) => {
+      console.log('response', response)
+
+      response.data.forEach((list: ITrelloBoardList) => {
         if (list.name.indexOf(EQueueTitles.PENDING) > -1) {
           setQueueId(list.id)
           console.log(list.id);

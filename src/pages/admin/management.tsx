@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_ENDPOINT } from "../../constants";
 import * as _ from "lodash";
-import { ITrelloBoardList, EQueueTitles } from "../../model";
+import { ITrelloBoardList, EQueueTitles, IQueue } from "../../model";
 import ServerControls from "../../components/Admin/ServerControls";
 import { useRouter } from "next/router";
 import ManWithHourglass from "../../../src/assets/svg/man-with-hourglass.svg";
@@ -79,7 +79,11 @@ const Management = () => {
               <ManWithHourglass className="featured-image" />
             </Flex>
             <Box layerStyle="card">
-              <Formik initialValues={{ queueId: "" }} onSubmit={onSubmit} validateOnBlur>
+              <Formik
+                initialValues={{ queueId: "" }}
+                onSubmit={onSubmit}
+                validateOnBlur
+              >
                 {(props) => (
                   <Form>
                     <Field name="queueId">
@@ -87,14 +91,20 @@ const Management = () => {
                         <FormControl
                           isInvalid={form.errors.name && form.touched.name}
                         >
-                          <FormLabel>Queue name</FormLabel>
+                          <FormLabel>Server name</FormLabel>
                           <Select {...field}>
                             <option value=""></option>
-                            {queues.map((queue: ITrelloBoardList) => (
-                              <option value={queue.id}>{queue.name}</option>
-                            ))}
+                            {queues
+                              .filter((queue: IQueue) =>
+                                queue.name.includes(EQueueTitles.ALERTED)
+                              )
+                              .map((queue: ITrelloBoardList) => (
+                                <option value={queue.id} key={queue.id}>{queue.name}</option>
+                              ))}
                           </Select>
-                          <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                          <FormErrorMessage>
+                            {form.errors.name}
+                          </FormErrorMessage>
                         </FormControl>
                       )}
                     </Field>
@@ -118,17 +128,17 @@ const Management = () => {
               </Formik>
             </Box>
             <Button
-                bgColor="primary.500"
-                borderRadius="3px"
-                width="100%"
-                color="white"
-                size="lg"
-                variant="solid"
-                marginTop="2rem"
-                onClick={navigateToAdminPage}
-              >
-                Go back to admin page
-              </Button>
+              bgColor="primary.500"
+              borderRadius="3px"
+              width="100%"
+              color="white"
+              size="lg"
+              variant="solid"
+              marginTop="2rem"
+              onClick={navigateToAdminPage}
+            >
+              Go back to admin page
+            </Button>
           </Center>
         </Main>
       </Container>

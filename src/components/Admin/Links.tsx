@@ -1,9 +1,11 @@
 import { ButtonGroup, Button } from "@chakra-ui/react";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { mapSeries } from "bluebird";
 import _ from "lodash";
 import router from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getSystem } from "../../services/getSystem";
+import { API_ENDPOINT } from "../../constants";
 
 const Links = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -204,6 +206,15 @@ const Links = () => {
   //       csvExporter.generateCsv(data);
   //     }
   //   };
+
+  useEffect(() => {
+    (async () => {
+      const result = await axios.get(`${API_ENDPOINT}/system`);
+      const response = result.data as AxiosResponse;
+
+      console.log("response", response);
+    })();
+  }, []);
 
   return (
     <ButtonGroup>
