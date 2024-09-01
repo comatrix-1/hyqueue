@@ -1,14 +1,14 @@
 import { Box, Heading, Flex } from "@chakra-ui/react";
 import { getQueueName, getQueueNumber } from "../../utils";
-import { ITrelloList } from "../../model";
+import { ITicket, ITrelloList } from "../../model";
 import useTranslation from "next-translate/useTranslation";
 
 type Props = {
-  missedQueues: ITrelloList[];
+  tickets: ITicket[];
 };
 
-export const CurrentlyServingQueue = ({ missedQueues }: Props) => {
-  console.log("CurrentlyServingQueue() missedQueues: ", missedQueues);
+export const CurrentlyServingQueue = ({ tickets }: Props) => {
+  console.log("CurrentlyServingQueue() tickets: ", tickets);
   const { t, lang } = useTranslation("common");
   return (
     <Box mx={20} my={10}>
@@ -21,30 +21,25 @@ export const CurrentlyServingQueue = ({ missedQueues }: Props) => {
         </Heading>
       </Flex>
 
-      {missedQueues.length === 0 && <Heading textStyle="display2">-</Heading>}
+      {tickets.length === 0 && <Heading textStyle="display2">-</Heading>}
 
-      {missedQueues.map((missedQueue) => {
-        const queueName = getQueueName(missedQueue.name);
-
-        if (queueName.length > 0 && missedQueue.cards.length > 0) {
-          return (
-            <Flex
-              key={missedQueue.id}
-              mt="1.25em"
-              mb="0.25em"
-              px="0.25em"
-              justifyContent="space-between"
-            >
-              <Heading textStyle="heading2" fontSize="5xl" flex={1}>
-                {queueName}
-              </Heading>
-              <Heading textStyle="heading2" fontSize="5xl" flex={1}>
-                #{missedQueue.cards[0].desc.queueNo}
-              </Heading>
-            </Flex>
-          );
-        }
-        return null;
+      {tickets.map((ticket) => {
+        return (
+          <Flex
+            key={ticket.id}
+            mt="1.25em"
+            mb="0.25em"
+            px="0.25em"
+            justifyContent="space-between"
+          >
+            <Heading textStyle="heading2" fontSize="5xl" flex={1}>
+              {getQueueName(ticket.queueName ?? "")}
+            </Heading>
+            <Heading textStyle="heading2" fontSize="5xl" flex={1}>
+              {getQueueNumber(ticket.name ?? "")}
+            </Heading>
+          </Flex>
+        );
       })}
     </Box>
   );

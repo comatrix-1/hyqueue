@@ -10,7 +10,13 @@ import { MissedQueue } from "../components/View/MissedQueue";
 import { ViewHeader } from "../components/View/ViewHeader";
 import { ViewFooter } from "../components/View/ViewFooter";
 import * as _ from "lodash";
-import { EQueueTitles, ITrelloBoardList, ITrelloList } from "../model";
+import {
+  EQueueTitles,
+  IQueue,
+  ITicket,
+  ITrelloBoardList,
+  ITrelloList,
+} from "../model";
 
 const Index = () => {
   const [audio, setAudio] = useState<HTMLAudioElement>();
@@ -18,9 +24,12 @@ const Index = () => {
   const [boardLists, setBoardLists] = useState({});
   const [queuePendingUrl, setQueuePendingUrl] = useState("");
   const [queueAlertIds, setqueueAlertIds] = useState([]);
-  const [ticketsAlerted, setTicketsAlerted] = useState<ITrelloList[]>([]);
+  const [ticketsAlerted, setTicketsAlerted] = useState<ITicket[]>([]);
   const [queueMissedIds, setQueueMissedIds] = useState([]);
-  const [ticketsMissed, setTicketsMissed] = useState<any[]>([]); // TODO: change any
+  const [ticketsMissed, setTicketsMissed] = useState<ITicket[]>([]); // TODO: change any
+  const [ticketsWithQueueNames, setTicketsWithQueueNames] = useState<ITicket[]>(
+    []
+  );
 
   useEffect(() => {
     // getBoard();
@@ -36,42 +45,57 @@ const Index = () => {
   }, refreshInterval);
 
   const getTicketsGroupedByQueue = async () => {
-    const tickets = await axios.get(`${API_ENDPOINT}/tickets`);
-    console.log("returned from API", tickets.data);
+    const ticketsResult = await axios.get(`${API_ENDPOINT}/tickets`);
+    const queuesResult = await axios.get(`${API_ENDPOINT}/queues`);
 
-    const ticketsData: ITrelloList[] = tickets.data;
+    const tickets: ITicket[] = ticketsResult.data.data;
+    const queues: IQueue[] = queuesResult.data.data;
+    const missedQueueId = queues.filter(
+      (queue: IQueue) => queue.name.indexOf(EQueueTitles.MISSED) > -1
+    )[0].id;
+    const alertQueueId = queues.filter(
+      (queue: IQueue) => queue.name.indexOf(EQueueTitles.ALERTED) > -1
+    )[0].id;
+    const pendingQueueId = queues.filter(
+      (queue: IQueue) => queue.name.indexOf(EQueueTitles.PENDING) > -1
+    )[0].id;
+
+    setTicketsWithQueueNames(
+      tickets.map((ticket) => {
+        return {
+          ...ticket,
+          queueName: queues.find((queue: IQueue) => queue.id === ticket.queueId)
+            ?.name,
+        };
+      })
+    );
 
     setTicketsMissed(
-      ticketsData
-        .filter(
-          (list: ITrelloList) => list.name.indexOf(EQueueTitles.MISSED) > -1
-        )[0].cards
+      tickets.filter((ticket: ITicket) => ticket.queueId === missedQueueId)
     );
-    const latestTicketsAlerted: ITrelloList[] = ticketsData.filter(
-      (list: ITrelloList) => list.name.indexOf(EQueueTitles.ALERTED) > -1
+    const latestTicketsAlerted = tickets.filter(
+      (ticket: ITicket) => ticket.queueId === alertQueueId
     );
-    if (hasNewAlerts(ticketsAlerted[0], latestTicketsAlerted[0]) && audio) {
+
+    if (hasNewAlerts(ticketsAlerted, latestTicketsAlerted) && audio) {
       try {
         audio.play();
       } catch (e) {
         console.log("Audio failed to play");
       }
     }
-    setTicketsAlerted(latestTicketsAlerted);
 
-    const pendingQueue = ticketsData.find(
-      (list: ITrelloList) => list.name.indexOf(EQueueTitles.PENDING) > -1
-    );
-    if (pendingQueue) setQueuePendingUrl(pendingQueue.id);
+    setTicketsAlerted(latestTicketsAlerted);
+    setQueuePendingUrl(pendingQueueId);
   };
 
-  const hasNewAlerts = (current: ITrelloList, latest: ITrelloList) => {
+  const hasNewAlerts = (current: ITicket[], latest: ITicket[]) => {
     if (!current || !latest) return false;
-    const currentAlerts = _.flatMap(current.cards).map(
-      (card) => `${card.idList}${card.name}`
+    const currentAlerts = _.flatMap(current).map(
+      (ticket) => `${ticket.queueId}${ticket.name}`
     );
-    const latestAlerts = _.flatMap(latest.cards).map(
-      (card) => `${card.idList}${card.name}`
+    const latestAlerts = _.flatMap(latest).map(
+      (ticket) => `${ticket.queueId}${ticket.name}`
     );
     return (
       _.intersection(currentAlerts, latestAlerts).length < latestAlerts.length
@@ -97,9 +121,7 @@ const Index = () => {
           <ViewHeader board={board} />
         </GridItem>
         <GridItem colSpan={5} rowSpan={14} bg="secondary.300">
-          <CurrentlyServingQueue
-            missedQueues={ticketsAlerted}
-          />
+          <CurrentlyServingQueue tickets={ticketsWithQueueNames} />
         </GridItem>
         <GridItem colSpan={2} rowSpan={14} bg="error.300">
           <MissedQueue
