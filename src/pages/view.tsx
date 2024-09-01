@@ -13,6 +13,7 @@ import * as _ from "lodash";
 import {
   EQueueTitles,
   IQueue,
+  IQueueSystem,
   ITicket,
   ITrelloBoardList,
   ITrelloList,
@@ -20,22 +21,17 @@ import {
 
 const Index = () => {
   const [audio, setAudio] = useState<HTMLAudioElement>();
-  const [board, setBoard] = useState();
-  const [boardLists, setBoardLists] = useState({});
+  const [queueSystem, setQueueSystem] = useState<IQueueSystem>();
   const [queuePendingUrl, setQueuePendingUrl] = useState("");
-  const [queueAlertIds, setqueueAlertIds] = useState([]);
   const [ticketsAlerted, setTicketsAlerted] = useState<ITicket[]>([]);
-  const [queueMissedIds, setQueueMissedIds] = useState([]);
-  const [ticketsMissed, setTicketsMissed] = useState<ITicket[]>([]); // TODO: change any
+  const [ticketsMissed, setTicketsMissed] = useState<ITicket[]>([]);
   const [ticketsWithQueueNames, setTicketsWithQueueNames] = useState<ITicket[]>(
     []
   );
 
   useEffect(() => {
-    // getBoard();
-    // getBoardLists();
     getTicketsGroupedByQueue();
-
+    getQueueSystem();
     setAudio(new Audio("/chime.mp3"));
   }, []);
 
@@ -43,6 +39,12 @@ const Index = () => {
   useInterval(() => {
     getTicketsGroupedByQueue();
   }, refreshInterval);
+
+  const getQueueSystem = async () => {
+    const systemResult = await axios.get(`${API_ENDPOINT}/system`);
+
+    setQueueSystem(systemResult.data.data);
+  };
 
   const getTicketsGroupedByQueue = async () => {
     const ticketsResult = await axios.get(`${API_ENDPOINT}/tickets`);
@@ -118,7 +120,7 @@ const Index = () => {
           bg="secondary.300"
           // height="120px"
         >
-          <ViewHeader board={board} />
+          <ViewHeader queueSystemName={queueSystem?.name} />
         </GridItem>
         <GridItem colSpan={5} rowSpan={14} bg="secondary.300">
           <CurrentlyServingQueue tickets={ticketsWithQueueNames} />
