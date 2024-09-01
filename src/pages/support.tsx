@@ -127,7 +127,7 @@ const Index = () => {
         Join The Queue
       </Text>
       <UrlInput
-        url={`${rootUrl}/queue?id=${queueId}`}
+        url={`${rootUrl}/queue`}
       />
 
       <Text

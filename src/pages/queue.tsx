@@ -62,22 +62,14 @@ const Index = () => {
   });
 
   useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const currentQueueId = searchParams.get("id");
-    const redirectUrl = isUserPartOfQueue(currentQueueId ?? "");
+    const redirectUrl = getRedirectUrlFromUser();
 
     // First check if user already has cookie for this queue id
     if (redirectUrl) {
       router.push(redirectUrl, redirectUrl, { locale: lang });
     }
-    // Based on queue id, check if queue exists
-    else if (currentQueueId) {
-      getQueue(currentQueueId);
-    }
-    //  Queue Id does not exist
-    else {
-      setIsQueueValid(false);
-    }
+
+    getQueue();
   }, []);
 
   /**
@@ -86,13 +78,12 @@ const Index = () => {
    * @param {string} currentQueueId the id of the queue that the user is currently on
    * @returns {string|boolean} url to redirect the user to or FALSE if the user is not part of the current queue
    */
-  const isUserPartOfQueue = (currentQueueId: string) => {
+  const getRedirectUrlFromUser = () => {
     // First check if user already has cookie for this queue id
     const ticketCookie = cookies["ticket"];
     if (
       ticketCookie &&
       ticketCookie.queue &&
-      ticketCookie.queue === currentQueueId &&
       ticketCookie.ticket &&
       ticketCookie.board
     ) {
@@ -107,7 +98,7 @@ const Index = () => {
    *
    * @param {string} queueId
    */
-  const getQueue = async (queueId: string) => {
+  const getQueue = async () => {
     console.log("getQueue()");
     try {
       // Get the board queue belongs to this

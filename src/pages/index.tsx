@@ -30,7 +30,7 @@ const Index = () => {
       console.log("response", response);
       response.data.forEach((queue: IQueue) => {
         if (queue.name.indexOf(EQueueTitles.PENDING) > -1) {
-          setQueuePendingUrl(location.origin + `/queue?id=${queue.id}`);
+          setQueuePendingUrl(location.origin + `/queue`);
         }
       });
     } catch (error) {
