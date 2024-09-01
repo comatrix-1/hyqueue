@@ -265,7 +265,7 @@ const Index = () => {
       return (
         <>
           <Head>
-            <title>{boardName}</title>
+            <title>Join Queue - {boardName}</title>
           </Head>
           <Flex direction="column" alignItems="center">
             <Text

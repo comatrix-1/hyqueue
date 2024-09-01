@@ -25,7 +25,7 @@ const Index = () => {
       // 1. Verifies that queue actually exists
       // 2. Gets info stored as JSON in board description
       const response = await axios.get(`${API_ENDPOINT}/system`);
-      const { name } = response.data;
+      const { name } = response.data.data;
       setBoardName(name);
     } catch (err) {
       console.log("err", err);
@@ -35,7 +35,7 @@ const Index = () => {
   return (
     <>
       <Head>
-        <title>{boardName}</title>
+        <title>QR Code - {boardName}</title>
       </Head>
       <Container>
         <NavBar width="100%" maxWidth="600px" />
