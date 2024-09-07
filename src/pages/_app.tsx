@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }) {
       >
         <CookiesProvider>
           <Head>
-            <title>QueueSG</title>
+            <title>Hyqueue</title>
           </Head>
           <Component {...pageProps} />
         </CookiesProvider>

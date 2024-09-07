@@ -7,7 +7,7 @@
   NEXT_PUBLIC_TRELLO_BOARD_ID="Trello Board ID"
   NEXT_PUBLIC_REFRESH_INTERVAL="Refresh Interval (in milliseconds)"
   NEXT_PUBLIC_WAIT_TIME_MINS="Waiting Time (in minutes)"
-  APP_NAME="Application Name e.g. My QueueUp"
+  APP_NAME="Application Name e.g. Hyqueue"
   TRELLO_KEY="Trello API Key"
   TRELLO_TOKEN="Trello API Token"
   IS_PUBLIC_BOARD="Public Board e.g. false"
@@ -15,7 +15,7 @@
   SCOPES="Trello Scopes e.g. read,write"
   EXPIRATION_DURATION="Authorisation Token Duration e.g. 1hours"
 
-# https://app.netlify.com/start/deploy?repository=https://github.com/opengovsg/queuesg#IS_PUBLIC_BOARD=false&NEXT_PUBLIC_WAIT_TIME_MINS=3&NEXT_PUBLIC_REFRESH_INTERVAL=5000&NEXT_PUBLIC_TRELLO_BOARD_ID=replace_me&TRELLO_KEY=replace_me&TRELLO_TOKEN=replace_me&SCOPES=read,write&EXPIRATION_DURATION=1hours&REDIRECT_URL=https://example.com/admin/callback&APP_NAME=My%20QueueUp
+# https://app.netlify.com/start/deploy?repository=https://github.com/comatrix-1/hyqueue#IS_PUBLIC_BOARD=false&NEXT_PUBLIC_WAIT_TIME_MINS=3&NEXT_PUBLIC_REFRESH_INTERVAL=5000&NEXT_PUBLIC_TRELLO_BOARD_ID=replace_me&TRELLO_KEY=replace_me&TRELLO_TOKEN=replace_me&SCOPES=read,write&EXPIRATION_DURATION=1hours&REDIRECT_URL=https://example.com/admin/callback&APP_NAME=Hyqueue
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

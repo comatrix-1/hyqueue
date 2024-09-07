@@ -1,7 +1,5 @@
-import { Box, Flex, Text } from '@chakra-ui/react'
+import { Box, Flex, Link, Text } from '@chakra-ui/react'
 import useTranslation from 'next-translate/useTranslation'
-
-import LogoOgp from "../../src/assets/svg/logo-ogp.svg"
 
 export const Footer = (props: any) => {
   const { t, lang } = useTranslation('common')
@@ -23,22 +21,7 @@ export const Footer = (props: any) => {
         textStyle="body2"
         mb={4}
       >
-        {t('built-by')}
-      </Text>
-      <a
-        href="https://open.gov.sg"
-        target="_blank"
-        >
-        <LogoOgp
-          width="180px"
-        />
-      </a>
-      <Text
-        color="gray.500"
-        textStyle="body2"
-        mt={4}
-      >
-        {t('copyright')}
+        &copy; Copyright 2024. {t('built-by')} <Link href="https://github.com/comatrix-1" color="gray.300">Comatrix</Link>
       </Text>
     </Box>
 

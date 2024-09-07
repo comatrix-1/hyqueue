@@ -1,6 +1,6 @@
 {
   "lang": "தமிழ்",
-  "demo-title": "Welcome to QueueSG",
+  "demo-title": "Welcome to Hyqueue",
   "queue-welcome-message": "தமிழ்",
   "try-the-demo": "டெமோவை முயற்சிக்கவும்",
   "joining": "Joining...",
@@ -23,7 +23,6 @@
   "wish-you-good-day-ahead": "இந்த நாள் இனிய நாளாக அசைய வாழ்த்துக்கள",
   "variable-example": "Using a variable {{count}}",
   "built-by": "Built by",
-  "copyright": "Open Government Products, Government Technology Agency of Singapore",
   "are-you-sure-you-want-to-leave": "வரிசையில் இருந்து உறுதியாக சவளிகயற விரும்புகிறர்ீகளா?",
   "you-will-need-to-scan-again": "ைீண்டும் இசைவதற்கு நீங்கள் QR குறியட்ீ சை ைீண்டும் ஸ்ககன் சைய்ய கவண்டியிருக்கும்.",
   "yes-leave-the-queue": "ஆம், வரிசைசய விட்டு சவளிகயற்ற",
