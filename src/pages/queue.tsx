@@ -39,6 +39,7 @@ import { useCookies } from "react-cookie";
 import useTranslation from "next-translate/useTranslation";
 import { API_ENDPOINT } from "../constants";
 import {
+  EQueueStatus,
   EQueueTitles,
   IApiResponse,
   IEditableSettings,
@@ -54,11 +55,9 @@ const Index = () => {
   const router = useRouter();
   const [cookies] = useCookies(["ticket"]);
 
-  const [boardName, setBoardName] = useState("");
-  const [isQueueValid, setIsQueueValid] = useState(true);
+  const [queueSystemName, setQueueSystemName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [isQueueInactive, setIsQueueInactive] = useState(true);
-  const [feedbackLink, setFeedbackLink] = useState();
+  const [queueStatus, setQueueStatus] = useState<EQueueStatus>();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [editableSettings, setEditableSettings] = useState<IEditableSettings>({
     registrationFields: [],
@@ -73,88 +72,61 @@ const Index = () => {
   useEffect(() => {
     const redirectUrl = getRedirectUrlFromUser();
 
-    // First check if user already has cookie for this queue id
     if (redirectUrl) {
       router.push(redirectUrl, redirectUrl, { locale: lang });
     }
 
-    getQueue();
+    getQueueSystem();
   }, []);
 
-  /**
-   * Checks if the user is part of the queue
-   *
-   * @param {string} currentQueueId the id of the queue that the user is currently on
-   * @returns {string|boolean} url to redirect the user to or FALSE if the user is not part of the current queue
-   */
   const getRedirectUrlFromUser = () => {
     // First check if user already has cookie for this queue id
     const ticketCookie = cookies["ticket"];
-    if (
-      ticketCookie &&
-      ticketCookie.queue &&
-      ticketCookie.ticket &&
-      ticketCookie.board
-    ) {
+    if (ticketCookie?.queue && ticketCookie?.ticket && ticketCookie?.board) {
       return `/ticket?queue=${ticketCookie.queue}&ticket=${ticketCookie.ticket}&board=${ticketCookie.board}`;
     }
 
     return false;
   };
 
-  /**
-   * Gets the queue Id
-   *
-   * @param {string} queueId
-   */
-  const getQueue = async () => {
-    console.log("getQueue()");
+  const getQueueSystem = async () => {
+    console.log("getQueueSystem()");
     try {
-      // Get the board queue belongs to this
-      // 1. Verifies that queue actually exists
-      // 2. Gets info stored as JSON in board description
-
       const result = await axios.get(`${API_ENDPOINT}/system`);
       const response = result.data as AxiosResponse;
-      console.log("API response: " + response);
-      const boardSettings: ITrelloBoardSettings = response.data;
-      console.log("boardSettings: " + boardSettings);
-      const boardInfo = boardSettings?.desc;
+      const queueSystemSettings = response.data;
+      const editableSettingsDesc = queueSystemSettings?.desc;
 
-      if (!boardInfo) return; // TODO: handle error
-
-      // const cleanedDesc = boardSettings?.desc
-      //   ?.replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1")
-      //   .replace(/\\\"/g, '"');
-      // console.log("parsing JSON", cleanedDesc);
-      // const boardInfo: IEditableSettings = JSON.parse(cleanedDesc ?? "");
-      // console.log("parsed JSON", boardInfo);
+      if (!editableSettingsDesc) throw new Error("");
 
       setEditableSettings({
-        feedbackLink: boardInfo.feedbackLink,
-        privacyPolicyLink: boardInfo.privacyPolicyLink,
-        registrationFields: boardInfo.registrationFields,
-        ticketPrefix: boardInfo.ticketPrefix,
-        categories: boardInfo.categories,
+        ...editableSettingsDesc,
+        categories: editableSettingsDesc.categories
+          ? editableSettingsDesc.categories.split(",")
+          : [],
         waitTimePerTicket:
-          boardInfo.waitTimePerTicket &&
-          !isNaN(Number(boardInfo.waitTimePerTicket))
-            ? boardInfo.waitTimePerTicket
+          editableSettingsDesc.waitTimePerTicket &&
+          !isNaN(Number(editableSettingsDesc.waitTimePerTicket))
+            ? editableSettingsDesc.waitTimePerTicket
             : null,
-        openingHours: boardInfo.openingHours,
       });
 
-      setIsQueueInactive(
-        boardSettings?.name?.includes("[DISABLED]") ||
-          isQueueClosed(boardInfo.openingHours)
+      setQueueStatus(
+        queueSystemSettings?.name?.includes("[DISABLED]") ||
+          isQueueClosed(editableSettingsDesc.openingHours)
+          ? EQueueStatus.INACTIVE
+          : EQueueStatus.VALID
       );
+
       setIsLoading(false);
 
-      const cleanedName = boardSettings?.name?.replace("[DISABLED]", "").trim();
-      setBoardName(cleanedName ?? "");
+      const cleanedName = queueSystemSettings?.name
+        ?.replace("[DISABLED]", "")
+        .trim();
+      setQueueSystemName(cleanedName ?? "");
     } catch (err) {
       console.log(err);
-      setIsQueueValid(false);
+      setQueueStatus(EQueueStatus.INVALID);
     }
   };
 
@@ -202,7 +174,6 @@ const Index = () => {
         desc.ticketPrefix = editableSettings.ticketPrefix;
       }
 
-      // Call API to create a ticket
       const response = await axios.post(`${API_ENDPOINT}/tickets`, { desc });
 
       const ticketData = response.data?.data;
@@ -222,12 +193,8 @@ const Index = () => {
 
   const render = () => {
     if (isLoading) {
-      return (
-        <>
-          <Loading />
-        </>
-      );
-    } else if (!isQueueValid) {
+      return <Loading />;
+    } else if (queueStatus === EQueueStatus.INVALID) {
       return (
         <>
           <Head>
@@ -236,11 +203,11 @@ const Index = () => {
           <NoSuchQueue />
         </>
       );
-    } else if (isQueueInactive) {
+    } else if (queueStatus === EQueueStatus.INACTIVE) {
       return (
         <>
           <Head>
-            <title>{boardName} - Currently Closed</title>
+            <title>{queueSystemName} - Currently Closed</title>
           </Head>
           <Flex direction="column" alignItems="center">
             <Text
@@ -255,7 +222,7 @@ const Index = () => {
             </Text>
             <AlarmClock />
             <Text mt="6px" textStyle="heading1" textAlign="center" pt="5">
-              {boardName}
+              {queueSystemName}
             </Text>
           </Flex>
         </>
@@ -264,7 +231,7 @@ const Index = () => {
       return (
         <>
           <Head>
-            <title>Join Queue - {boardName}</title>
+            <title>Join Queue - {queueSystemName}</title>
           </Head>
           <Flex direction="column" alignItems="center">
             <Text
@@ -281,7 +248,7 @@ const Index = () => {
               fontSize="1.5rem"
               textAlign="center"
             >
-              {boardName}
+              {queueSystemName}
             </Text>
           </Flex>
           <Flex direction="column" alignItems="center">

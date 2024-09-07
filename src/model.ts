@@ -162,3 +162,10 @@ export interface IApiResponseQueue {
 export interface IAuthorizeUrl {
   authorizeUrl: string;
 }
+
+export enum EQueueStatus {
+  INVALID = "invalid",
+  VALID = "valid",
+  INACTIVE = "inactive",
+  CLOSED = "closed",
+}
