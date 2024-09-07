@@ -124,3 +124,59 @@ export const prepareJsonString = (input: string) => {
   console.log("prepareJsonString() return jsonString: ", jsonString);
   return jsonString;
 };
+
+export const validateName = (value: string) => {
+  let error;
+  if (!value) {
+    error = "Name is required";
+  } else if (/\d/.test(value)) {
+    error = "Name should not contain numbers";
+  }
+  return error;
+};
+
+export const validateContact = (value: string) => {
+  let error;
+  if (!value) {
+    error = "Mobile number is required";
+  } else if (!/^(8|9)\d{7}$/.test(value)) {
+    error = "Mobile number should be an 8 digit Singapore number i.e. 8xxxxxxx";
+  }
+  return error;
+};
+
+export const validatePostalCode = (value: string) => {
+  let error;
+  if (!value) {
+    error = "Postal code is required";
+  } else if (!/^\d{6}$/.test(value)) {
+    error = "Postal code should be a 6 digit number";
+  }
+  return error;
+};
+
+export const validateNric = (value: string) => {
+  let error;
+  if (!value) {
+    error = "NRIC is required";
+  } else if (value.length !== 4) {
+    error = "NRIC should be exactly 4 characters";
+  }
+  return error;
+};
+
+export const validateCategory = (value: string) => {
+  let error;
+  if (!value) {
+    error = "Category is required";
+  }
+  return error;
+};
+
+export const validateDescription = (value: string) => {
+  let error;
+  if (value && value.length > 280) {
+    error = "Description should be less than 280 characters";
+  }
+  return error;
+};

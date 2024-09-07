@@ -6,7 +6,15 @@ import axios, { AxiosResponse } from "axios";
 import url from "is-url";
 import { validate } from "nric";
 
-import { isQueueClosed } from "../utils";
+import {
+  isQueueClosed,
+  validateCategory,
+  validateContact,
+  validateDescription,
+  validateName,
+  validateNric,
+  validatePostalCode,
+} from "../utils";
 
 import { Container } from "../components/Container";
 import { Main } from "../components/Main";
@@ -37,6 +45,7 @@ import {
   ITicketDescription,
   ITrelloBoardSettings,
 } from "../model";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 
 const Index = () => {
   const { t, lang } = useTranslation("common");
@@ -50,7 +59,6 @@ const Index = () => {
   const [isQueueInactive, setIsQueueInactive] = useState(true);
   const [feedbackLink, setFeedbackLink] = useState();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [invalidNRIC, setInvalidNRIC] = useState(false);
   const [editableSettings, setEditableSettings] = useState<IEditableSettings>({
     registrationFields: [],
     categories: [],
@@ -151,25 +159,23 @@ const Index = () => {
     }
   };
 
-  const submit = async (e: any) => {
-    // TODO: change any
+  const submit = async (values: any, { setSubmitting, setErrors }: any) => {
     try {
-      e.preventDefault();
-
       // Check if NRIC is valid
       if (
         Array.isArray(editableSettings.registrationFields) &&
         editableSettings.registrationFields.includes("nric")
       ) {
         const regex = /^\d{3}[A-Za-z]$/;
-        const isValidNRIC = regex.test(e.target["nric"].value);
-        setInvalidNRIC(!isValidNRIC);
-        if (!isValidNRIC) return;
+        const isValidNRIC = regex.test(values.nric);
+        if (!isValidNRIC) {
+          setErrors({ nric: "Invalid NRIC" });
+          return;
+        }
       }
 
-      //  Don't submit if it is submitting
+      // Prevent submission if it's already submitting
       if (isSubmitting) return;
-      setIsSubmitting(true);
 
       let desc: ITicketDescription = {
         ticketPrefix: "",
@@ -179,28 +185,31 @@ const Index = () => {
         queueNo: null,
       };
 
+      // Assign form values to `desc`
       editableSettings.registrationFields.forEach((key) => {
-        if (e.target[key].value !== "") {
-          (desc as any)[key] = e.target[key].value;
+        if (values[key] !== "") {
+          (desc as any)[key] = values[key];
         }
       });
+
       if (
         Array.isArray(editableSettings.categories) &&
         editableSettings.categories.length > 0
       ) {
-        desc.category = e.target.category.value;
+        desc.category = values.category;
       }
+
       if (editableSettings.ticketPrefix) {
         desc.ticketPrefix = editableSettings.ticketPrefix;
       }
 
-      // call netlify function to create a ticket
-      // for that queue, return the ticket id and redirect to ticket page
+      // Call API to create a ticket
       const query = queryString.parse(location.search);
       const response = await axios.post(
         `${API_ENDPOINT}/tickets?queue=${query.id}`,
         { desc }
       );
+
       const ticketData = response.data?.data;
       const feedback = feedbackLink
         ? `&feedback=${encodeURIComponent(feedbackLink)}`
@@ -209,7 +218,8 @@ const Index = () => {
         ? `&waitTimePerTicket=${encodeURIComponent(
             editableSettings.waitTimePerTicket
           )}`
-        : ""; // TODO: set proper wait time per ticket default
+        : "";
+
       const url = `/ticket?queue=${query.id}&board=${boardId}&ticket=${ticketData.id}${feedback}${waitTime}`;
       router.push(url, url, { locale: lang });
     } catch (err: unknown) {
@@ -218,6 +228,8 @@ const Index = () => {
       } else {
         console.error("An unknown error occurred:", err);
       }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -290,159 +302,192 @@ const Index = () => {
               <ManWithHourglass className="featured-image" />
             </Flex>
             <Box layerStyle="card">
-              <form onSubmit={submit}>
-                <Flex direction="column">
-                  {editableSettings.registrationFields.includes("name") && (
-                    <>
-                      <Text pb="0.5rem" textStyle="subtitle1">
-                        {t("your-name")}
-                      </Text>
-                      <Input
-                        layerStyle="formInput"
-                        name="name"
-                        pattern="[^0-9]*"
-                        title="Name should not contain numbers"
-                        required
-                      />
-                    </>
-                  )}
-                  {editableSettings.registrationFields.includes("contact") && (
-                    <>
-                      <Text pt="0.5rem" pb="0.5rem" textStyle="subtitle1">
-                        {t("mobile-number")}
-                      </Text>
-                      <Input
-                        layerStyle="formInput"
-                        type="tel"
-                        name="contact"
-                        pattern="^(8|9)(\d{7})$"
-                        maxLength={8}
-                        minLength={8}
-                        required
-                        title="Mobile number should be an 8 digit Singapore number i.e. 8xxxxxxx"
-                      />
-                    </>
-                  )}
-                  {editableSettings.registrationFields.includes(
-                    "postalcode"
-                  ) && (
-                    <>
-                      <Text pt="0.5rem" pb="0.5rem" textStyle="subtitle1">
-                        {t("postal-code")}
-                      </Text>
-                      <Input
-                        layerStyle="formInput"
-                        type="tel"
-                        name="postalcode"
-                        pattern="^(\d{6})$"
-                        maxLength={6}
-                        minLength={6}
-                        placeholder="123456"
-                        required
-                        title="Postal code should be an 6 digit number"
-                      />
-                    </>
-                  )}
+              <Formik
+                initialValues={{
+                  name: "",
+                  contact: "",
+                  postalcode: "",
+                  nric: "",
+                  category: "",
+                  description: "",
+                }}
+                onSubmit={submit}
+              >
+                {({ handleSubmit }) => (
+                  <Form onSubmit={handleSubmit}>
+                    <Flex direction="column">
+                      {editableSettings.registrationFields.includes("name") && (
+                        <>
+                          <Text pb="0.5rem" textStyle="subtitle1">
+                            {t("your-name")}
+                          </Text>
+                          <Field
+                            as={Input}
+                            name="name"
+                            validate={validateName}
+                            layerStyle="formInput"
+                            required
+                          />
+                          <ErrorMessage name="name">
+                            {(msg) => <Text color="error.500">{msg}</Text>}
+                          </ErrorMessage>
+                        </>
+                      )}
 
-                  {editableSettings.registrationFields.includes("nric") && (
-                    <>
-                      <Text pt="0.5rem" pb="0.5rem" textStyle="subtitle1">
-                        Last 4 characters of NRIC (e.g. 567A of S1234567A)
-                      </Text>
-                      <Input
-                        layerStyle="formInput"
-                        isInvalid={invalidNRIC} // TODO: ensure styling of error.500
-                        onChange={() => setInvalidNRIC(false)}
-                        name="nric"
-                        maxLength={4}
-                        minLength={4}
-                        placeholder="xxxA"
-                        required
-                      />
-                      {invalidNRIC && (
-                        <Text color="error.500" mt="-10px">
-                          {" "}
-                          {t("invalid")} NRIC
+                      {editableSettings.registrationFields.includes(
+                        "contact"
+                      ) && (
+                        <>
+                          <Text pt="0.5rem" pb="0.5rem" textStyle="subtitle1">
+                            {t("mobile-number")}
+                          </Text>
+                          <Field
+                            as={Input}
+                            type="tel"
+                            name="contact"
+                            validate={validateContact}
+                            maxLength={8}
+                            minLength={8}
+                            layerStyle="formInput"
+                            required
+                          />
+                          <ErrorMessage name="contact">
+                            {(msg) => <Text color="error.500">{msg}</Text>}
+                          </ErrorMessage>
+                        </>
+                      )}
+
+                      {editableSettings.registrationFields.includes(
+                        "postalcode"
+                      ) && (
+                        <>
+                          <Text pt="0.5rem" pb="0.5rem" textStyle="subtitle1">
+                            {t("postal-code")}
+                          </Text>
+                          <Field
+                            as={Input}
+                            type="tel"
+                            name="postalcode"
+                            validate={validatePostalCode}
+                            maxLength={6}
+                            minLength={6}
+                            layerStyle="formInput"
+                            placeholder="123456"
+                            required
+                          />
+                          <ErrorMessage name="postalCode">
+                            {(msg) => <Text color="error.500">{msg}</Text>}
+                          </ErrorMessage>
+                        </>
+                      )}
+
+                      {editableSettings.registrationFields.includes("nric") && (
+                        <>
+                          <Text pt="0.5rem" pb="0.5rem" textStyle="subtitle1">
+                            Last 4 characters of NRIC (e.g. 567A of S1234567A)
+                          </Text>
+                          <Field
+                            as={Input}
+                            name="nric"
+                            validate={validateNric}
+                            maxLength={4}
+                            minLength={4}
+                            placeholder="xxxA"
+                            layerStyle="formInput"
+                            required
+                          />
+                          <ErrorMessage name="nric">
+                            {(msg) => <Text color="error.500">{msg}</Text>}
+                          </ErrorMessage>
+                        </>
+                      )}
+
+                      {Array.isArray(editableSettings.categories) &&
+                        editableSettings.categories.length > 0 && (
+                          <>
+                            <Text pt="0.5rem" pb="0.5rem" textStyle="subtitle1">
+                              {t("category")}
+                            </Text>
+                            <Field
+                              as={Select}
+                              name="category"
+                              validate={validateCategory}
+                              layerStyle="formSelect"
+                              placeholder={t("select-category")}
+                              required
+                            >
+                              {editableSettings.categories.map((category) => (
+                                <option key={category} value={category}>
+                                  {category}
+                                </option>
+                              ))}
+                            </Field>
+                            <ErrorMessage name="category">
+                              {(msg) => <Text color="error.500">{msg}</Text>}
+                            </ErrorMessage>
+                          </>
+                        )}
+
+                      {editableSettings.registrationFields.includes(
+                        "description"
+                      ) && (
+                        <>
+                          <Text pt="0.5rem" pb="0.5rem" textStyle="subtitle1">
+                            {t("description")}
+                          </Text>
+                          <Field
+                            as={Textarea}
+                            name="description"
+                            validate={validateDescription}
+                            layerStyle="formInput"
+                            maxLength={280}
+                            placeholder={t("description")}
+                            size="sm"
+                            resize="none"
+                          />
+                          <ErrorMessage name="description">
+                            {(msg) => <Text color="error.500">{msg}</Text>}
+                          </ErrorMessage>
+                        </>
+                      )}
+
+                      <Button
+                        isLoading={isSubmitting}
+                        loadingText={t("joining")}
+                        colorScheme="primary"
+                        borderRadius="3px"
+                        width="100%"
+                        color="white"
+                        size="lg"
+                        variant="solid"
+                        marginTop="1.5rem"
+                        type="submit"
+                        isDisabled={
+                          editableSettings.registrationFields.length === 0
+                        }
+                      >
+                        {t("join-queue")}
+                      </Button>
+
+                      {editableSettings.privacyPolicyLink && (
+                        <Text pt="1rem" textStyle="body3">
+                          <Text display="inline-block">
+                            {t("by-joining-this-queue-you-agree-to-our")}&nbsp;
+                          </Text>
+                          <Text display="inline-block" textStyle="link">
+                            <a
+                              href={editableSettings.privacyPolicyLink}
+                              target="_blank"
+                            >
+                              {t("privacy-policy")}
+                            </a>
+                          </Text>
                         </Text>
                       )}
-                    </>
-                  )}
-
-                  {Array.isArray(editableSettings.categories) &&
-                    editableSettings.categories.length > 0 && (
-                      <>
-                        <Text pt="0.5rem" pb="0.5rem" textStyle="subtitle1">
-                          {t("category")}
-                        </Text>
-                        <Flex mb="1rem">
-                          <Select
-                            name="category"
-                            layerStyle="formSelect"
-                            placeholder={t("select-category")}
-                            required
-                          >
-                            {editableSettings.categories.map((category) => (
-                              <option value={category}>{category}</option>
-                            ))}
-                          </Select>
-                        </Flex>
-                      </>
-                    )}
-
-                  {editableSettings.registrationFields.includes(
-                    "description"
-                  ) && (
-                    <>
-                      <Text pt="0.5rem" pb="0.5rem" textStyle="subtitle1">
-                        {t("description")}
-                      </Text>
-                      <Textarea
-                        layerStyle="formInput"
-                        maxLength={280}
-                        name="description"
-                        placeholder={t("description")}
-                        size="sm"
-                        resize={"none"}
-                      />
-                    </>
-                  )}
-                  <Button
-                    isLoading={isSubmitting}
-                    loadingText={t("joining")}
-                    colorScheme="primary"
-                    borderRadius="3px"
-                    width="100%"
-                    color="white"
-                    size="lg"
-                    variant="solid"
-                    marginTop="1.5rem"
-                    type="submit"
-                    isDisabled={
-                      editableSettings.registrationFields.length === 0
-                    }
-                  >
-                    {t("join-queue")}
-                  </Button>
-
-                  {editableSettings.privacyPolicyLink && (
-                    <>
-                      <Text pt="1rem" textStyle="body3">
-                        <Text display="inline-block">
-                          {t("by-joining-this-queue-you-agree-to-our")}&nbsp;
-                        </Text>
-                        <Text display="inline-block" textStyle="link">
-                          <a
-                            href={editableSettings.privacyPolicyLink}
-                            target="_blank"
-                          >
-                            {t("privacy-policy")}
-                          </a>
-                        </Text>
-                      </Text>
-                    </>
-                  )}
-                </Flex>
-              </form>
+                    </Flex>
+                  </Form>
+                )}
+              </Formik>
             </Box>
           </Flex>
         </>
