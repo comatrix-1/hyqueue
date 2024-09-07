@@ -6,7 +6,6 @@ import AlarmBell from "../../assets/svg/alarm-bell.svg";
 interface Props {
   openLeaveModal: () => void;
   ticketId: string | undefined;
-  queueId: string | undefined;
   queueName: string | undefined;
   waitingTime?: number;
 }
@@ -14,7 +13,6 @@ interface Props {
 export const Alerted = ({
   openLeaveModal,
   ticketId,
-  queueId,
   queueName,
   waitingTime = 3,
 }: Props) => {
@@ -59,7 +57,7 @@ export const Alerted = ({
         variant="solid"
         marginTop="2rem"
         onClick={openLeaveModal}
-        disabled={!queueId || !ticketId}
+        disabled={!ticketId}
       >
         {t("leave-the-queue")}
       </Button>

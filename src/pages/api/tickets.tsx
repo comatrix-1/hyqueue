@@ -41,9 +41,8 @@ export default async function handler(
 
       case "POST": {
         const { desc } = body;
-        const { queue } = queryStringParameters;
         const { status, data }: IApiResponse<ITicket> =
-          await postTicketsByQueue(queue as string, desc);
+          await postTicketsByQueue(desc);
         return res.status(status).json(data);
       }
 

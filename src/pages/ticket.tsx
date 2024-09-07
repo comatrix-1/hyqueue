@@ -27,18 +27,16 @@ const Index = () => {
   const router = useRouter();
   const [refreshEnabled, setRefreshEnabled] = useState(true);
 
-  const [waitTimePerTicket, setWaitTimePerTicket] = useState(3);
   const [numberOfTicketsAhead, setNumberOfTicketsAhead] = useState<number>();
-
-  const [boardId, setBoardId] = useState<string>();
+  
   const [ticketState, setTicketState] = useState<ETicketStatus>();
   const [ticketId, setTicketId] = useState<string>();
-  const [queueId, setQueueId] = useState<string>();
   const [queueName, setQueueName] = useState<string>();
   const [ticketNumber, setTicketNumber] = useState<string>();
   const [displayTicketInfo, setDisplayTicketInfo] = useState<string>("");
   const [lastUpdated, setLastUpdated] = useState<string>("");
-  const [feedbackLink, setFeedbackLink] = useState<string>();
+  const [waitTimePerTicket, setWaitTimePerTicket] = useState(3); // TODO
+  const [feedbackLink, setFeedbackLink] = useState<string>(); // TODO
 
   const [cookies, setCookie, removeCookie] = useCookies(["ticket"]);
 
@@ -47,49 +45,35 @@ const Index = () => {
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
-    const ticketValue = searchParams.get("ticket");
-    const queueValue = searchParams.get("queue");
-    const boardValue = searchParams.get("board");
-    const feedbackValue = searchParams.get("feedback");
-    const waitTimePerTicketValue = searchParams.get("waitTimePerTicket");
+    const ticketIdValue = searchParams.get("id");
 
-    if (ticketValue && queueValue && boardValue) {
-      console.log("ticketValue", ticketValue);
-      console.log("queueValue", queueValue);
-      console.log("boardValue", boardValue);
-      setTicketId(ticketValue);
-      setBoardId(boardValue);
-      getTicketStatus(ticketValue, boardValue);
+    if (ticketIdValue) {
+      setTicketId(ticketIdValue);
+      getTicketStatus(ticketIdValue);
 
       // Save ticket info to cookie
       setCookie(
         "ticket",
         {
-          queue: queueValue,
-          ticket: ticketValue,
-          board: boardValue,
+          ticket: ticketIdValue,
         },
         { maxAge: COOKIE_MAX_AGE }
       );
-      //Save feedback link
-      if (feedbackValue) setFeedbackLink(feedbackValue);
-
-      //Save wait time per ticket
-      if (waitTimePerTicketValue && !isNaN(Number(waitTimePerTicketValue)))
-        setWaitTimePerTicket(Number(waitTimePerTicketValue));
     }
   }, []);
 
   const refreshInterval =
     Number(process.env.NEXT_PUBLIC_REFRESH_INTERVAL) || 5000;
   useInterval(() => {
-    if (refreshEnabled && ticketId && boardId)
-      getTicketStatus(ticketId, boardId);
+    if (refreshEnabled && ticketId) getTicketStatus(ticketId);
   }, refreshInterval);
 
-  const getTicketStatus = async (ticket: string, board: string) => {
+  const getTicketStatus = async (ticketId: string) => {
+    if (!ticketId) return;
     try {
-      const getTicket = await axios.get(`${API_ENDPOINT}/tickets?id=${ticket}`);
+      const getTicket = await axios.get(
+        `${API_ENDPOINT}/tickets?id=${ticketId}`
+      );
       const getTicketData = getTicket.data;
       if (!getTicketData.data) return;
 
@@ -100,9 +84,6 @@ const Index = () => {
         numberOfTicketsAhead,
         idShort: ticketNumber,
       } = getTicketData.data;
-
-      //Update queueId in case ticket has been shifted
-      setQueueId(queueId);
 
       setTicketNumber(ticketNumber);
 
@@ -155,11 +136,10 @@ const Index = () => {
 
   const leaveQueue = async () => {
     try {
-      axios.delete(`${API_ENDPOINT}/tickets?id=${ticketId}&boardId=${boardId}`);
+      axios.delete(`${API_ENDPOINT}/tickets?id=${ticketId}`);
       removeCookie("ticket");
       router.push({
         pathname: "/queue",
-        query: { id: queueId },
       });
     } catch (error) {
       console.log(error);
@@ -167,18 +147,10 @@ const Index = () => {
   };
 
   const rejoinQueue = async () => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const ticketValue = searchParams.get("ticket");
-    const queueValue = searchParams.get("queue");
-    const boardIdValue = searchParams.get("boardId");
-
-    if (queueValue && ticketValue && boardIdValue) {
-      // NOTE: Using query string queue as that is the initial queue not the current queue
-      await axios.put(
-        `${API_ENDPOINT}/tickets?id=${ticketId}&newQueueId=${queueValue}`
-      );
-      await getTicketStatus(ticketValue, boardIdValue);
-    }
+    await axios.put(
+      `${API_ENDPOINT}/tickets?id=${ticketId}&newQueueName=${EQueueTitles.PENDING}`
+    );
+    await getTicketStatus(ticketId ?? "");
   };
 
   const renderTicket = () => {
@@ -189,7 +161,6 @@ const Index = () => {
         <Alerted
           waitingTime={waitTimePerTicket}
           openLeaveModal={onOpen}
-          queueId={queueId}
           queueName={queueName}
           ticketId={ticketId}
         />
@@ -214,7 +185,6 @@ const Index = () => {
         <NextInQueue
           waitingTime={waitTimePerTicket}
           openLeaveModal={onOpen}
-          queueId={queueId}
           ticketId={ticketId}
           numberOfTicketsAhead={numberOfTicketsAhead}
         />
@@ -226,7 +196,6 @@ const Index = () => {
         <InQueue
           waitingTime={waitTimePerTicket}
           openLeaveModal={onOpen}
-          queueId={queueId}
           ticketId={ticketId}
           numberOfTicketsAhead={numberOfTicketsAhead}
         />

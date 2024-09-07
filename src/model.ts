@@ -12,7 +12,7 @@ export interface ITrelloBoardList {
 export interface ITrelloList {
   id: string;
   name: string;
-  cards: ITrelloCard[];
+  cards?: ITrelloCard[];
 }
 export interface IQueue {
   // Replaces ITrelloList

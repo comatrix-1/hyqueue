@@ -7,7 +7,6 @@ interface Props {
   openLeaveModal: () => void;
   numberOfTicketsAhead: number;
   ticketId: string | undefined;
-  queueId: string | undefined;
   waitingTime?: number;
 }
 
@@ -15,7 +14,6 @@ export const NextInQueue = ({
   openLeaveModal,
   numberOfTicketsAhead,
   ticketId,
-  queueId,
   waitingTime = 3,
 }: Props) => {
   const { t, lang } = useTranslation("common");
@@ -46,7 +44,7 @@ export const NextInQueue = ({
         variant="solid"
         marginTop="2rem"
         onClick={openLeaveModal}
-        disabled={!queueId || !ticketId}
+        disabled={!ticketId}
       >
         {t("leave-the-queue")}
       </Button>

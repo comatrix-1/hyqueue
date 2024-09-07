@@ -39,8 +39,10 @@ import { useCookies } from "react-cookie";
 import useTranslation from "next-translate/useTranslation";
 import { API_ENDPOINT } from "../constants";
 import {
+  EQueueTitles,
   IApiResponse,
   IEditableSettings,
+  IQueue,
   ITicket,
   ITicketDescription,
   ITrelloBoardSettings,
@@ -52,7 +54,6 @@ const Index = () => {
   const router = useRouter();
   const [cookies] = useCookies(["ticket"]);
 
-  const [boardId, setBoardId] = useState<string>("");
   const [boardName, setBoardName] = useState("");
   const [isQueueValid, setIsQueueValid] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
@@ -121,8 +122,6 @@ const Index = () => {
       const boardInfo = boardSettings?.desc;
 
       if (!boardInfo) return; // TODO: handle error
-
-      setBoardId(boardSettings?.id ?? "");
 
       // const cleanedDesc = boardSettings?.desc
       //   ?.replace(/\[([^\]]+)\]\([^\)]+\)/g, "$1")
@@ -204,23 +203,11 @@ const Index = () => {
       }
 
       // Call API to create a ticket
-      const query = queryString.parse(location.search);
-      const response = await axios.post(
-        `${API_ENDPOINT}/tickets?queue=${query.id}`,
-        { desc }
-      );
+      const response = await axios.post(`${API_ENDPOINT}/tickets`, { desc });
 
       const ticketData = response.data?.data;
-      const feedback = feedbackLink
-        ? `&feedback=${encodeURIComponent(feedbackLink)}`
-        : "";
-      const waitTime = editableSettings.waitTimePerTicket
-        ? `&waitTimePerTicket=${encodeURIComponent(
-            editableSettings.waitTimePerTicket
-          )}`
-        : "";
 
-      const url = `/ticket?queue=${query.id}&board=${boardId}&ticket=${ticketData.id}${feedback}${waitTime}`;
+      const url = `/ticket?id=${ticketData.id}`;
       router.push(url, url, { locale: lang });
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err.response) {

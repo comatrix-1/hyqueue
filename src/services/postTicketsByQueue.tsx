@@ -1,9 +1,8 @@
 import axios from "axios";
-import { IApiResponse, ITicket } from "../model";
+import { EQueueTitles, IApiResponse, ITicket, ITrelloList } from "../model";
 import { INTERNAL_SERVER_ERROR } from "../constants";
 
 export const postTicketsByQueue = async (
-  queue: string,
   desc: any
 ): Promise<IApiResponse<ITicket>> => {
   const {
@@ -16,9 +15,6 @@ export const postTicketsByQueue = async (
   const tokenAndKeyParams =
     IS_PUBLIC_BOARD === "true" ? "" : `key=${TRELLO_KEY}&token=${TRELLO_TOKEN}`;
 
-  console.log("postTicketsByQueue() desc", desc);
-  console.log("postTicketsByQueue() queue", queue);
-
   const prefix = desc.ticketPrefix ? desc.ticketPrefix : "";
   const name = desc.name ? `-${desc.name}` : "";
   const contact = desc.contact ? `-${desc.contact}` : "";
@@ -26,16 +22,27 @@ export const postTicketsByQueue = async (
   const queueNo = desc.queueNo ? `-${desc.queueNo}` : "";
   const descString = JSON.stringify(desc);
 
-  if (!queue)
+  let pendingQueueId = "";
+  try {
+    const trelloListsResponse = await axios.get(
+      `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/lists?${tokenAndKeyParams}`
+    );
+    pendingQueueId = trelloListsResponse.data.filter(
+      (trelloList: ITrelloList) =>
+        trelloList.name.indexOf(EQueueTitles.PENDING) > -1
+    )[0].id;
+  } catch (err) {
+    console.error("postTicketsByQueue() error", err);
     return {
       status: 400,
       data: { message: INTERNAL_SERVER_ERROR, data: null },
     };
+  }
 
   // if contact is provided, search pending queue for duplicate number
   if (contact) {
     const getCardsOnPendingList = await axios.get(
-      `${TRELLO_ENDPOINT}/lists/${queue}/cards?${tokenAndKeyParams}`
+      `${TRELLO_ENDPOINT}/lists/${pendingQueueId}/cards?${tokenAndKeyParams}`
     );
     const ticketsInQueue = getCardsOnPendingList.data;
 
@@ -57,7 +64,7 @@ export const postTicketsByQueue = async (
   }
 
   const createCard = await axios.post(
-    `${TRELLO_ENDPOINT}/cards?${tokenAndKeyParams}&idList=${queue}&desc=${encodeURIComponent(
+    `${TRELLO_ENDPOINT}/cards?${tokenAndKeyParams}&idList=${pendingQueueId}&desc=${encodeURIComponent(
       descString
     )}`
   );
