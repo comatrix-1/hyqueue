@@ -1,6 +1,6 @@
 {
   "lang": "中文",
-  "demo-title": "欢迎来到QueueSG",
+  "demo-title": "欢迎来到Hyqueue",
   "queue-welcome-message": "你正在加入...",
   "joining": "加入队列...",
   "try-the-demo": "尝试演示",
@@ -23,7 +23,6 @@
   "wish-you-good-day-ahead": "祝您有美好的一天.",
   "variable-example": "Using a variable {{count}}",
   "built-by": "Built by",
-  "copyright": "Open Government Products, Government Technology Agency of Singapore",
   "are-you-sure-you-want-to-leave": "您确定要离开队列吗?",
   "you-will-need-to-scan-again": "您将需要再次扫描QR码才能重新加入.",
   "yes-leave-the-queue": "是的，离开队列",

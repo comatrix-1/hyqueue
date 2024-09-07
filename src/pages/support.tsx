@@ -41,7 +41,7 @@ const Index = () => {
               <PeopleOnPhones className="featured-image" />
             </Center>
             <Heading textStyle="heading3" textAlign="center" my={3}>
-              QueueSG Support
+              Hyqueue Support
             </Heading>
             <Text textStyle="body1" textAlign="center" mb={8}>
               Generate the URLs related to your Queue Here.
