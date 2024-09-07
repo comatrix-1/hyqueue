@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import queryString from "query-string";
 import axios, { AxiosResponse } from "axios";
-import url from "is-url";
-import { validate } from "nric";
 
 import {
   isQueueClosed,
@@ -40,13 +37,8 @@ import useTranslation from "next-translate/useTranslation";
 import { API_ENDPOINT } from "../constants";
 import {
   EQueueStatus,
-  EQueueTitles,
-  IApiResponse,
   IEditableSettings,
-  IQueue,
-  ITicket,
   ITicketDescription,
-  ITrelloBoardSettings,
 } from "../model";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
@@ -198,7 +190,7 @@ const Index = () => {
       return (
         <>
           <Head>
-            <title>Queue Not Found - 404</title>
+            <title>{t("queue-not-found")} - 404</title>
           </Head>
           <NoSuchQueue />
         </>
@@ -207,7 +199,7 @@ const Index = () => {
       return (
         <>
           <Head>
-            <title>{queueSystemName} - Currently Closed</title>
+            <title>{queueSystemName} - {t("queue-currently-inactive")}</title>
           </Head>
           <Flex direction="column" alignItems="center">
             <Text
@@ -231,7 +223,7 @@ const Index = () => {
       return (
         <>
           <Head>
-            <title>Join Queue - {queueSystemName}</title>
+            <title>{t("join-queue")} - {queueSystemName}</title>
           </Head>
           <Flex direction="column" alignItems="center">
             <Text
@@ -338,7 +330,7 @@ const Index = () => {
                       {editableSettings.registrationFields.includes("nric") && (
                         <>
                           <Text pt="0.5rem" pb="0.5rem" textStyle="subtitle1">
-                            Last 4 characters of NRIC (e.g. 567A of S1234567A)
+                            {t("NRIC-field-description")}
                           </Text>
                           <Field
                             as={Input}
