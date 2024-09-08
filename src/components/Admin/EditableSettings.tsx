@@ -12,10 +12,12 @@ import {
   Grid,
   Flex,
   Text,
+  Select,
 } from "@chakra-ui/react";
 import { Formik, Form, Field, FieldArray } from "formik";
 import { IEditableSettings } from "../../model";
 import DayOpeningHours from "./DayOpeningHours";
+import moment from "moment-timezone";
 
 const EditableSettings = ({
   editableSettings,
@@ -43,6 +45,8 @@ const EditableSettings = ({
     "Friday",
     "Saturday",
   ];
+
+  const timeZones = moment.tz.names();
 
   if (!editableSettings) return;
 
@@ -243,7 +247,13 @@ const EditableSettings = ({
                       }
                     >
                       <FormLabel>Opening Hours Time Zone</FormLabel>
-                      <Input {...field} placeholder="Opening Hours Time Zone" />
+                      <Select {...field} placeholder="Select Time Zone">
+                        {timeZones.map((timeZone) => (
+                          <option key={timeZone} value={timeZone}>
+                            {timeZone}
+                          </option>
+                        ))}
+                      </Select>
                       <FormErrorMessage>
                         {form.errors.openingHoursTimeZone}
                       </FormErrorMessage>
@@ -253,7 +263,7 @@ const EditableSettings = ({
                 <FieldArray name="openingHours">
                   {() => (
                     <FormControl>
-                      <FormLabel>Opening Hours</FormLabel>
+                      <FormLabel marginTop={4}>Opening Hours</FormLabel>
                       {props.values.openingHours.map((item, index) => (
                         <DayOpeningHours
                           key={index}
