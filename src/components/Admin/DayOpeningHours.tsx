@@ -1,40 +1,27 @@
 import { useMemo } from "react";
-import { Flex, FormControl, FormLabel, Input, Text } from "@chakra-ui/react";
+import { Flex, Input, Text } from "@chakra-ui/react";
 
 interface Props {
   day: string;
-  value: string;
-  onChange: (openingHours: string) => void;
-  style?: any; // TODO: change any
+  value: {
+    startHour: string;
+    endHour: string;
+  };
+  onChange: (newTimes: { startHour: string; endHour: string }) => void;
+  style?: any;
 }
 
-const Index = ({ day, value, onChange, style }: Props) => {
-  /**
-   * `value` should be in the form of "08:00-20:00"
-   */
-  const startTime = useMemo(() => {
-    return value ? value.split("-")[0] || "" : "";
-  }, [value]);
-  const endTime = useMemo(() => {
-    return value ? value.split("-")[1] || "" : "";
-  }, [value]);
+const DayOpeningHours = ({ day, value, onChange, style }: Props) => {
+  const { startHour, endHour } = value;
 
-  /**
-   * Formats into "08:00-20:00"
-   *
-   * @param {*} e
-   */
-  const timeChanged = (e: any) => {
-    // TODO: change any
-    let newOpeningHours = "";
-    if (e.target.id === "start") {
-      newOpeningHours = `${e.target.value || ""}-${endTime ? endTime : ""}`;
+  const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value: timeValue } = e.target;
+
+    if (id === "start") {
+      onChange({ startHour: timeValue, endHour });
     } else {
-      newOpeningHours = `${startTime || ""}-${e.target.value || ""}`;
+      onChange({ startHour, endHour: timeValue });
     }
-
-    console.log(newOpeningHours);
-    onChange(newOpeningHours);
   };
 
   return (
@@ -52,19 +39,17 @@ const Index = ({ day, value, onChange, style }: Props) => {
           <Input
             type="time"
             id="start"
-            value={startTime}
-            max={endTime}
-            onChange={timeChanged}
-            required={endTime !== ""}
+            value={startHour}
+            onChange={handleTimeChange}
+            required={endHour !== ""}
           />
           <Text>&nbsp;to&nbsp;</Text>
           <Input
             type="time"
             id="end"
-            value={endTime}
-            min={startTime}
-            onChange={timeChanged}
-            required={startTime !== ""}
+            value={endHour}
+            onChange={handleTimeChange}
+            required={startHour !== ""}
           />
         </Flex>
       </Flex>
@@ -72,4 +57,4 @@ const Index = ({ day, value, onChange, style }: Props) => {
   );
 };
 
-export default Index;
+export default DayOpeningHours;

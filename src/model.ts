@@ -93,8 +93,14 @@ export interface IEditableSettings {
   feedbackLink: string;
   privacyPolicyLink: string;
   ticketPrefix: string;
-  openingHours: any[]; // TODO: change any
+  openingHours: IOpeningHour[]; // TODO: change any
   waitTimePerTicket: number | null;
+}
+
+export interface IOpeningHour {
+  day: string;
+  startHour?: string;
+  endHour?: string;
 }
 
 export interface ITrelloBoardSettings {

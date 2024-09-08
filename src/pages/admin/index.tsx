@@ -28,10 +28,7 @@ import {
 } from "../../components/Admin";
 import { authentication } from "../../utils";
 import { mapSeries } from "bluebird";
-import {
-  IApiConfig,
-  ITrelloBoardSettings,
-} from "../../model";
+import { IApiConfig, ITrelloBoardSettings } from "../../model";
 import { API_ENDPOINT } from "../../constants";
 import EditableSettings from "../../components/Admin/EditableSettings";
 import Links from "../../components/Admin/Links";
@@ -84,6 +81,7 @@ const Index = () => {
   };
 
   const updateBoard = async (data: ITrelloBoardSettings) => {
+    console.log("updateBoard() data: ", data);
     if (isSubmitting) return;
 
     if (apiConfig && apiConfig.key && apiConfig.token) {

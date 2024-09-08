@@ -46,7 +46,21 @@ const EditableSettings = ({
 
   return (
     <Box layerStyle="card" width="100%">
-      <Formik initialValues={editableSettings} onSubmit={submit}>
+      <Formik
+        initialValues={{
+          ...editableSettings,
+          openingHours: editableSettings.openingHours || [
+            { day: "Monday", startHour: "", endHour: "" },
+            { day: "Tuesday", startHour: "", endHour: "" },
+            { day: "Wednesday", startHour: "", endHour: "" },
+            { day: "Thursday", startHour: "", endHour: "" },
+            { day: "Friday", startHour: "", endHour: "" },
+            { day: "Saturday", startHour: "", endHour: "" },
+            { day: "Sunday", startHour: "", endHour: "" },
+          ],
+        }}
+        onSubmit={submit}
+      >
         {(props) => (
           <Form>
             <Grid templateColumns="repeat(2, 1fr)" gap={6}>
@@ -121,7 +135,7 @@ const EditableSettings = ({
                     </FormControl>
                   )}
                 </Field>
-                
+
                 <Field name="privacyPolicyLink">
                   {({ field, form }: { field: any; form: any }) => (
                     <FormControl
@@ -178,26 +192,32 @@ const EditableSettings = ({
               </Box>
 
               <Box w="100%">
-                <Field name="openingHours">
-                  {({ field, form }: { field: any; form: any }) => (
+                <FieldArray name="openingHours">
+                  {() => (
                     <FormControl>
                       <FormLabel>Opening Hours</FormLabel>
-                      {daysOfTheWeek.map((day, dayNumber) => (
+                      {props.values.openingHours.map((item, index) => (
                         <DayOpeningHours
-                          key={dayNumber}
-                          day={day}
-                          value={form.values.openingHours?.[dayNumber] || ""}
-                          onChange={(dayOpeningHours: string) =>
-                            form.setFieldValue(
-                              `openingHours.${dayNumber}`,
-                              dayOpeningHours
-                            )
+                          key={index}
+                          day={item.day}
+                          value={{
+                            startHour: item.startHour ?? "",
+                            endHour: item.endHour ?? "",
+                          }}
+                          onChange={(newTimes: {
+                            startHour: string;
+                            endHour: string;
+                          }) =>
+                            props.setFieldValue(`openingHours.${index}`, {
+                              ...item,
+                              ...newTimes,
+                            })
                           }
                         />
                       ))}
                     </FormControl>
                   )}
-                </Field>
+                </FieldArray>
               </Box>
             </Grid>
 
