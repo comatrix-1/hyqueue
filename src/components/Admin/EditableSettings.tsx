@@ -10,6 +10,8 @@ import {
   Checkbox,
   Box,
   Grid,
+  Flex,
+  Text,
 } from "@chakra-ui/react";
 import { Formik, Form, Field, FieldArray } from "formik";
 import { IEditableSettings } from "../../model";
@@ -104,21 +106,61 @@ const EditableSettings = ({
                   )}
                 </FieldArray>
 
-                <Field name="categories">
-                  {({ field, form }: { field: any; form: any }) => (
-                    <FormControl
-                      isInvalid={
-                        form.errors.categories && form.touched.categories
-                      }
-                    >
-                      <FormLabel>Categories</FormLabel>
-                      <Textarea {...field} placeholder="Categories" />
+                <FieldArray name="categories">
+                  {({ push, remove, form }) => (
+                    <FormControl>
+                      <Flex alignItems="center" justifyItems="center" my={4}>
+                        <FormLabel>Categories</FormLabel>
+                        <Button
+                          colorScheme="primary"
+                          onClick={() => push("")}
+                          size="sm"
+                        >
+                          +
+                        </Button>
+                      </Flex>
+                      <VStack spacing={2} align="start">
+                        {form.values.categories &&
+                        form.values.categories.length > 0 ? (
+                          form.values.categories.map(
+                            (category: string, index: number) => (
+                              <Flex key={index} align="center">
+                                <Input
+                                  value={category}
+                                  placeholder="Category"
+                                  onChange={(e) =>
+                                    form.setFieldValue(
+                                      `categories[${index}]`,
+                                      e.target.value
+                                    )
+                                  }
+                                />
+                                <Button
+                                  ml={2}
+                                  colorScheme="red"
+                                  onClick={() => remove(index)}
+                                >
+                                  Delete
+                                </Button>
+                              </Flex>
+                            )
+                          )
+                        ) : (
+                          <Text mb={4} fontStyle="italic">
+                            No categories added yet.
+                          </Text>
+                        )}
+                      </VStack>
+
                       <FormErrorMessage>
-                        {form.errors.categories}
+                        {typeof form.errors.categories === "string" &&
+                          form.errors.categories}
+                        {Array.isArray(form.errors.categories) &&
+                          form.errors.categories.join(", ")}
                       </FormErrorMessage>
                     </FormControl>
                   )}
-                </Field>
+                </FieldArray>
 
                 <Field name="feedbackLink">
                   {({ field, form }: { field: any; form: any }) => (
@@ -192,6 +234,22 @@ const EditableSettings = ({
               </Box>
 
               <Box w="100%">
+                <Field name="openingHoursTimeZone">
+                  {({ field, form }: { field: any; form: any }) => (
+                    <FormControl
+                      isInvalid={
+                        form.errors.openingHoursTimeZone &&
+                        form.touched.openingHoursTimeZone
+                      }
+                    >
+                      <FormLabel>Opening Hours Time Zone</FormLabel>
+                      <Input {...field} placeholder="Opening Hours Time Zone" />
+                      <FormErrorMessage>
+                        {form.errors.openingHoursTimeZone}
+                      </FormErrorMessage>
+                    </FormControl>
+                  )}
+                </Field>
                 <FieldArray name="openingHours">
                   {() => (
                     <FormControl>

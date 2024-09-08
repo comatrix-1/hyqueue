@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
-import { EQueueTitles } from "./model";
+import { EQueueTitles, IOpeningHour } from "./model";
+import { toZonedTime, format } from "date-fns-tz";
 
 /**
  * React setInterval Equivalent
@@ -79,39 +80,46 @@ export const authentication = {
   getKey: () => localStorage.getItem("key"),
 };
 
-/**
- * Is the queue open
- *
- * opening hours is
- *  {
- *    "0": "09:00-12:00",
- *    "1": "08:00-22:00",
- *    "2": "09:00-22:00",
- *    "3": "10:00-21:00"
- *  }
- */
-export const isQueueClosed = (openingHours: string[]) => {
-  const date = new Date();
-  const day = date.getDay();
-  const hour = String(date.getHours());
-  const min = String(date.getMinutes());
-  const currentTime = `${hour.padStart(2, "0")}:${min.padStart(2, "0")}`;
+export const isQueueClosed = (
+  nowDate: Date,
+  openingHours: IOpeningHour[],
+  timeZone: string
+): boolean => {
+  const dayNames = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
-  if (typeof openingHours !== "object" || !openingHours[day]) return false;
+  // Convert nowDate to the specified timeZone
+  const zonedDate = toZonedTime(nowDate, timeZone);
+  const currentDay = dayNames[zonedDate.getDay()]; // Get the current day name
+  const currentTime = format(zonedDate, "HH:mm", { timeZone });
 
-  const currentDayOpeningHours = openingHours[day].split("-");
+  console.log("isQueueClosed() currentTime:", currentTime);
 
-  if (
-    Array.isArray(currentDayOpeningHours) &&
-    currentDayOpeningHours.length === 2
-  ) {
-    return (
-      currentTime < currentDayOpeningHours[0] ||
-      currentTime > currentDayOpeningHours[1]
-    );
+  const todayOpeningHours = openingHours.find(
+    (openingHour) => openingHour.day === currentDay
+  );
+
+  if (!todayOpeningHours) {
+    return true; // If no opening hours are set for today, assume closed
   }
 
-  return true;
+  console.log("isQueueClosed() Today's Opening Hours:", todayOpeningHours);
+
+  if (!todayOpeningHours.startHour || !todayOpeningHours.endHour) {
+    return true; // If startHour or endHour is not set, assume closed
+  }
+
+  return (
+    currentTime < todayOpeningHours.startHour ||
+    currentTime > todayOpeningHours.endHour
+  );
 };
 
 export const prepareJsonString = (input: string) => {

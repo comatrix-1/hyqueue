@@ -93,8 +93,10 @@ export interface IEditableSettings {
   feedbackLink: string;
   privacyPolicyLink: string;
   ticketPrefix: string;
-  openingHours: IOpeningHour[]; // TODO: change any
+  openingHours: IOpeningHour[];
+  openingHoursTimeZone: string;
   waitTimePerTicket: number | null;
+  isQueueClosed?: boolean;
 }
 
 export interface IOpeningHour {

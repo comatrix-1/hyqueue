@@ -43,6 +43,7 @@ const Index = () => {
     ticketPrefix: "",
     openingHours: [],
     waitTimePerTicket: null,
+    openingHoursTimeZone: "Asia/Singapore",
   });
 
   const [cookies, setCookie, removeCookie] = useCookies(["ticket"]);

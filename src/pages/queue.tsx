@@ -35,11 +35,7 @@ import {
 import { useCookies } from "react-cookie";
 import useTranslation from "next-translate/useTranslation";
 import { API_ENDPOINT } from "../constants";
-import {
-  EQueueStatus,
-  IEditableSettings,
-  ITicketDescription,
-} from "../model";
+import { EQueueStatus, IEditableSettings, ITicketDescription } from "../model";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 
 const Index = () => {
@@ -59,6 +55,7 @@ const Index = () => {
     ticketPrefix: "",
     openingHours: [],
     waitTimePerTicket: null,
+    openingHoursTimeZone: "Asia/Singapore",
   });
 
   useEffect(() => {
@@ -93,9 +90,9 @@ const Index = () => {
 
       setEditableSettings({
         ...editableSettingsDesc,
-        categories: editableSettingsDesc.categories
-          ? editableSettingsDesc.categories.split(",")
-          : [],
+        // categories: editableSettingsDesc.categories
+        //   ? editableSettingsDesc.categories.split(",")
+        //   : [],
         waitTimePerTicket:
           editableSettingsDesc.waitTimePerTicket &&
           !isNaN(Number(editableSettingsDesc.waitTimePerTicket))
@@ -104,8 +101,7 @@ const Index = () => {
       });
 
       setQueueStatus(
-        queueSystemSettings?.name?.includes("[DISABLED]") ||
-          isQueueClosed(editableSettingsDesc.openingHours)
+        editableSettingsDesc.isQueueClosed
           ? EQueueStatus.INACTIVE
           : EQueueStatus.VALID
       );
@@ -199,7 +195,9 @@ const Index = () => {
       return (
         <>
           <Head>
-            <title>{queueSystemName} - {t("queue-currently-inactive")}</title>
+            <title>
+              {queueSystemName} - {t("queue-currently-inactive")}
+            </title>
           </Head>
           <Flex direction="column" alignItems="center">
             <Text
@@ -223,7 +221,9 @@ const Index = () => {
       return (
         <>
           <Head>
-            <title>{t("join-queue")} - {queueSystemName}</title>
+            <title>
+              {t("join-queue")} - {queueSystemName}
+            </title>
           </Head>
           <Flex direction="column" alignItems="center">
             <Text

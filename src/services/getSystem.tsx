@@ -1,6 +1,6 @@
 import axios from "axios";
 import { IApiResponse, IEditableSettings, IQueueSystem } from "../model";
-import { prepareJsonString } from "../utils";
+import { isQueueClosed, prepareJsonString } from "../utils";
 
 export const getSystem = async (): Promise<IApiResponse<IQueueSystem>> => {
   const {
@@ -24,6 +24,10 @@ export const getSystem = async (): Promise<IApiResponse<IQueueSystem>> => {
   let parsedDesc: IEditableSettings | null = null;
   try {
     parsedDesc = JSON.parse(prepareJsonString(desc));
+    if (!parsedDesc?.openingHours) throw new Error();
+    parsedDesc.isQueueClosed =
+      name?.includes("[DISABLED]") ||
+      isQueueClosed(new Date(), parsedDesc?.openingHours, parsedDesc?.openingHoursTimeZone);
     console.log("parsed desc: ", parsedDesc);
   } catch (error) {
     console.log("Error parsing desc");
