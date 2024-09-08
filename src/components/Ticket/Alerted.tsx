@@ -7,7 +7,7 @@ interface Props {
   openLeaveModal: () => void;
   ticketId: string | undefined;
   queueName: string | undefined;
-  waitingTime?: number;
+  waitingTime?: number | null;
 }
 
 export const Alerted = ({

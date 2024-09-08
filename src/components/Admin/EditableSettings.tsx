@@ -12,9 +12,7 @@ import {
   Grid,
 } from "@chakra-ui/react";
 import { Formik, Form, Field, FieldArray } from "formik";
-import {
-  IEditableSettings,
-} from "../../model";
+import { IEditableSettings } from "../../model";
 import DayOpeningHours from "./DayOpeningHours";
 
 const EditableSettings = ({
@@ -71,13 +69,13 @@ const EditableSettings = ({
                                   key
                                 )}
                                 onChange={(e) => {
-                                  if (e.target.checked) {
+                                  const idx =
+                                    props.values.registrationFields?.indexOf(
+                                      key
+                                    );
+                                  if (e.target.checked && idx === -1) {
                                     push(key);
-                                  } else {
-                                    const idx =
-                                      props.values.registrationFields?.indexOf(
-                                        key
-                                      );
+                                  } else if (!e.target.checked && idx > -1) {
                                     remove(idx);
                                   }
                                 }}
@@ -91,51 +89,94 @@ const EditableSettings = ({
                     </FormControl>
                   )}
                 </FieldArray>
+
                 <Field name="categories">
                   {({ field, form }: { field: any; form: any }) => (
                     <FormControl
-                      isInvalid={form.errors.name && form.touched.name}
+                      isInvalid={
+                        form.errors.categories && form.touched.categories
+                      }
                     >
                       <FormLabel>Categories</FormLabel>
                       <Textarea {...field} placeholder="Categories" />
-                      <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                      <FormErrorMessage>
+                        {form.errors.categories}
+                      </FormErrorMessage>
                     </FormControl>
                   )}
                 </Field>
+
                 <Field name="feedbackLink">
                   {({ field, form }: { field: any; form: any }) => (
                     <FormControl
-                      isInvalid={form.errors.name && form.touched.name}
+                      isInvalid={
+                        form.errors.feedbackLink && form.touched.feedbackLink
+                      }
                     >
                       <FormLabel>Feedback Link</FormLabel>
                       <Input {...field} placeholder="Feedback Link" />
-                      <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                      <FormErrorMessage>
+                        {form.errors.feedbackLink}
+                      </FormErrorMessage>
                     </FormControl>
                   )}
                 </Field>
+                
                 <Field name="privacyPolicyLink">
                   {({ field, form }: { field: any; form: any }) => (
                     <FormControl
-                      isInvalid={form.errors.name && form.touched.name}
+                      isInvalid={
+                        form.errors.privacyPolicyLink &&
+                        form.touched.privacyPolicyLink
+                      }
                     >
                       <FormLabel>Privacy Policy Link</FormLabel>
                       <Input {...field} placeholder="Privacy Policy Link" />
-                      <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                      <FormErrorMessage>
+                        {form.errors.privacyPolicyLink}
+                      </FormErrorMessage>
                     </FormControl>
                   )}
                 </Field>
+
                 <Field name="ticketPrefix">
                   {({ field, form }: { field: any; form: any }) => (
                     <FormControl
-                      isInvalid={form.errors.name && form.touched.name}
+                      isInvalid={
+                        form.errors.ticketPrefix && form.touched.ticketPrefix
+                      }
                     >
                       <FormLabel>Ticket Prefix</FormLabel>
                       <Input {...field} placeholder="Ticket Prefix" />
-                      <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                      <FormErrorMessage>
+                        {form.errors.ticketPrefix}
+                      </FormErrorMessage>
+                    </FormControl>
+                  )}
+                </Field>
+
+                <Field name="waitTimePerTicket">
+                  {({ field, form }: { field: any; form: any }) => (
+                    <FormControl
+                      isInvalid={
+                        form.errors.waitTimePerTicket &&
+                        form.touched.waitTimePerTicket
+                      }
+                    >
+                      <FormLabel>Wait Time Per Ticket</FormLabel>
+                      <Input
+                        {...field}
+                        type="number"
+                        placeholder="Wait Time Per Ticket"
+                      />
+                      <FormErrorMessage>
+                        {form.errors.waitTimePerTicket}
+                      </FormErrorMessage>
                     </FormControl>
                   )}
                 </Field>
               </Box>
+
               <Box w="100%">
                 <Field name="openingHours">
                   {({ field, form }: { field: any; form: any }) => (

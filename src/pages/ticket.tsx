@@ -4,7 +4,7 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
 import queryString from "query-string";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { useCookies } from "react-cookie";
 
 import { useInterval } from "../utils";
@@ -20,7 +20,7 @@ import { Skipped } from "../components/Ticket/Skipped";
 import { Served } from "../components/Ticket/Served";
 import { NotFound } from "../components/Ticket/NotFound";
 import { LeaveModal } from "../components/Ticket/LeaveModal";
-import { EQueueTitles, ETicketStatus } from "../model";
+import { EQueueTitles, ETicketStatus, IEditableSettings } from "../model";
 
 const Index = () => {
   const { t, lang } = useTranslation("common");
@@ -28,15 +28,22 @@ const Index = () => {
   const [refreshEnabled, setRefreshEnabled] = useState(true);
 
   const [numberOfTicketsAhead, setNumberOfTicketsAhead] = useState<number>();
-  
+
   const [ticketState, setTicketState] = useState<ETicketStatus>();
   const [ticketId, setTicketId] = useState<string>();
   const [queueName, setQueueName] = useState<string>();
   const [ticketNumber, setTicketNumber] = useState<string>();
   const [displayTicketInfo, setDisplayTicketInfo] = useState<string>("");
   const [lastUpdated, setLastUpdated] = useState<string>("");
-  const [waitTimePerTicket, setWaitTimePerTicket] = useState(3); // TODO
-  const [feedbackLink, setFeedbackLink] = useState<string>(); // TODO
+  const [editableSettings, setEditableSettings] = useState<IEditableSettings>({
+    registrationFields: [],
+    categories: [],
+    feedbackLink: "",
+    privacyPolicyLink: "",
+    ticketPrefix: "",
+    openingHours: [],
+    waitTimePerTicket: null,
+  });
 
   const [cookies, setCookie, removeCookie] = useCookies(["ticket"]);
 
@@ -60,6 +67,8 @@ const Index = () => {
         { maxAge: COOKIE_MAX_AGE }
       );
     }
+
+    getQueueSystem();
   }, []);
 
   const refreshInterval =
@@ -134,6 +143,30 @@ const Index = () => {
     }
   };
 
+  const getQueueSystem = async () => {
+    console.log("getQueueSystem()");
+    try {
+      const result = await axios.get(`${API_ENDPOINT}/system`);
+      const response = result.data as AxiosResponse;
+      const queueSystemSettings = response.data;
+      const editableSettingsDesc = queueSystemSettings?.desc;
+
+      if (!editableSettingsDesc) throw new Error("");
+
+      setEditableSettings({
+        ...editableSettingsDesc,
+        categories: editableSettingsDesc.categories
+          ? editableSettingsDesc.categories.split(",")
+          : [],
+        waitTimePerTicket:
+          editableSettingsDesc.waitTimePerTicket &&
+          !isNaN(Number(editableSettingsDesc.waitTimePerTicket))
+            ? editableSettingsDesc.waitTimePerTicket
+            : null,
+      });
+    } catch (err) {}
+  };
+
   const leaveQueue = async () => {
     try {
       axios.delete(`${API_ENDPOINT}/tickets?id=${ticketId}`);
@@ -159,7 +192,7 @@ const Index = () => {
     if (ticketState === ETicketStatus.ALERTED) {
       return (
         <Alerted
-          waitingTime={waitTimePerTicket}
+          waitingTime={editableSettings?.waitTimePerTicket}
           openLeaveModal={onOpen}
           queueName={queueName}
           ticketId={ticketId}
@@ -168,7 +201,7 @@ const Index = () => {
     }
     // 2. Served - Ticket is complete
     else if (ticketState === ETicketStatus.SERVED) {
-      return <Served feedbackLink={feedbackLink} />;
+      return <Served feedbackLink={editableSettings?.feedbackLink} />;
     }
     // 3. Missed - Ticket is in [MISSED] / not in the queue / queue doesnt exist
     else if (ticketState === ETicketStatus.MISSED) {
@@ -183,7 +216,7 @@ const Index = () => {
     else if (numberOfTicketsAhead === 0) {
       return (
         <NextInQueue
-          waitingTime={waitTimePerTicket}
+          waitingTime={editableSettings?.waitTimePerTicket}
           openLeaveModal={onOpen}
           ticketId={ticketId}
           numberOfTicketsAhead={numberOfTicketsAhead}
@@ -194,7 +227,7 @@ const Index = () => {
     else if (numberOfTicketsAhead && numberOfTicketsAhead > 0) {
       return (
         <InQueue
-          waitingTime={waitTimePerTicket}
+          waitingTime={editableSettings?.waitTimePerTicket}
           openLeaveModal={onOpen}
           ticketId={ticketId}
           numberOfTicketsAhead={numberOfTicketsAhead}

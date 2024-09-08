@@ -7,7 +7,7 @@ interface Props {
   openLeaveModal: () => void;
   numberOfTicketsAhead: number;
   ticketId: string | undefined;
-  waitingTime?: number;
+  waitingTime?: number | null;
 }
 
 export const NextInQueue = ({
@@ -31,7 +31,7 @@ export const NextInQueue = ({
 
         <Text textStyle="subtitle2">{t("estimated-waiting-time")}</Text>
         <Text textStyle="display3">
-          {waitingTime * numberOfTicketsAhead} {t("minutes")}
+          {(waitingTime ?? 3) * numberOfTicketsAhead} {t("minutes")}
         </Text>
       </Box>
 
