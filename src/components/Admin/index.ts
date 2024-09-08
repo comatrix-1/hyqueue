@@ -4,7 +4,6 @@ import InputEditable from './InputEditable'
 import InputText from './InputText'
 import InputTextarea from './InputTextarea'
 import Navbar from './Navbar'
-import OpeningHours from './OpeningHours'
 
 export {
   DayOpeningHours,
@@ -13,5 +12,4 @@ export {
   InputText,
   InputTextarea,
   Navbar,
-  OpeningHours,
 }

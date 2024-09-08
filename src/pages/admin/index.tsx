@@ -24,7 +24,6 @@ import {
   InputText,
   InputTextarea,
   Navbar,
-  OpeningHours,
 } from "../../components/Admin";
 import { authentication } from "../../utils";
 import { mapSeries } from "bluebird";
