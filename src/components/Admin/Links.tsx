@@ -6,8 +6,13 @@ import router from "next/router";
 import { useEffect, useState } from "react";
 import { getSystem } from "../../services/getSystem";
 import { API_ENDPOINT } from "../../constants";
+import { ITrelloBoardSettings } from "../../model";
 
-const Links = () => {
+interface Props {
+  toggleBoardIsDisabled: () => void;
+}
+
+const Links = ({ toggleBoardIsDisabled }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const generateReportFeatureFlag = false;
 
@@ -218,6 +223,16 @@ const Links = () => {
 
   return (
     <ButtonGroup>
+      <Button
+        display="flex"
+        colorScheme="blue"
+        borderRadius="3px"
+        color="white"
+        variant="solid"
+        onClick={toggleBoardIsDisabled}
+      >
+        Disable/ enable queue system
+      </Button>
       <Button
         display="flex"
         colorScheme="blue"

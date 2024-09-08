@@ -109,13 +109,24 @@ const Index = () => {
 
         console.log("updating settings:", settings);
         await axios.put(`${API_ENDPOINT}/system`, settings);
-        getBoard();
+        window.location.reload();
       } catch (error) {
         errorHandler(error);
       } finally {
         setIsSubmitting(false);
       }
     }
+  };
+
+  const toggleBoardIsDisabled = () => {
+    console.log("toggleBoardIsDisabled()");
+    if (isSubmitting) return;
+
+    const newName = boardData?.name?.includes("[DISABLED]")
+      ? boardData?.name.replace("[DISABLED]", "")
+      : `${boardData?.name || ""} [DISABLED]`;
+
+    updateBoard({ name: newName });
   };
 
   useEffect(() => {
@@ -178,7 +189,7 @@ const Index = () => {
                     value={boardData.name}
                   />
 
-                  <Links />
+                  <Links toggleBoardIsDisabled={toggleBoardIsDisabled} />
                 </Flex>
 
                 {boardData?.desc ? (
