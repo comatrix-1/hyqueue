@@ -27,14 +27,13 @@ const Navbar = (props: any) => {
       as="nav"
       align="center"
       justify="space-between"
-      w="400px"
       maxW="100%"
       pt={4}
       pb={8}
       px={4}
       bg="base.100"
       {...props}>
-      <Box w="400px">
+      <Flex>
         <a href="/admin" style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
           <LogoQueue
             height="40px"
@@ -42,7 +41,7 @@ const Navbar = (props: any) => {
           />
           <Text textStyle="heading1" color="primary.500">&nbsp;&nbsp;Admin</Text>
         </a>
-      </Box>
+      </Flex>
       <Box
         display={"block"}
         flexBasis={"auto"}
