@@ -11,8 +11,8 @@ export const ViewHeader = ({ queueSystemName }: Props) => {
     <Grid w="100%" h="100%" bg="base.100" templateColumns="repeat(6, 1fr)">
       <GridItem colSpan={3}>
         <Flex h="100%" alignContent="center" mx="6">
-          <Center>
-            <LogoQueue height="60px" />
+          <Center h={50} p={1}>
+            <LogoQueue />
           </Center>
         </Flex>
       </GridItem>
