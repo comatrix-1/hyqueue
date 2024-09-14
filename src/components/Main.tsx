@@ -6,7 +6,7 @@ export const Main = (props: any) => (
     maxW="100%"
     px={4}
     minHeight="calc(100vh - 84px)"
-    justifyContent="space-evenly"
+    justifyContent="center"
     {...props}
   />
 )

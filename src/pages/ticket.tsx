@@ -273,6 +273,7 @@ const Index = () => {
                 textStyle="body2"
                 fontSize="1.5rem"
                 letterSpacing="0.1rem"
+                marginBottom="2rem"
               >
                 {displayTicketInfo}
               </Text>
