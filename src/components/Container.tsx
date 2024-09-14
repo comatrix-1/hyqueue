@@ -13,7 +13,6 @@ export const Container = (props: any) => {
         justifyContent="center"
         alignItems="center"
         direction="column"
-        color='primary.600'
         {...props}
       />
     </Flex>

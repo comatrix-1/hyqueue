@@ -225,7 +225,7 @@ const Index = () => {
             <Text
               textStyle="body2"
               fontSize="1.25rem"
-              color="primary.500"
+              color="gray.800"
               textAlign="center"
             >
               {t("queue-welcome-message")}
