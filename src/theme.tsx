@@ -105,10 +105,6 @@ const textStyles = extendTheme({
 
 const theme = extendTheme({
   colors: {
-    base: {
-      100: '#FEFBF8',
-      500: '#F7D1A4'
-    },
     black: '#16161D',
     accent: {
       500: '#029EDC'
@@ -170,6 +166,9 @@ const theme = extendTheme({
         height: "160px",
         maxWidth: "100%",
       },
+      body: {
+        backgroundColor: "gray.100"
+      }
     }
   },
 })

@@ -40,7 +40,6 @@ export const NavBar = (props: any) => {
       pt={4}
       pb={8}
       px={4}
-      bg="base.100"
       color={"white"}
       {...props}>
       <Box>

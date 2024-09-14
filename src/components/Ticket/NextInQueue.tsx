@@ -18,7 +18,7 @@ export const NextInQueue = ({
 
   return (
     <>
-      <Box layerStyle="card" bgColor="base.500">
+      <Box layerStyle="card" bgColor="secondary.300">
         <Text textStyle="subtitle2">{t("queue-position")}</Text>
         <Text textStyle="display3" mb="2rem">
           {t("youre-next")}

@@ -31,7 +31,6 @@ const Navbar = (props: any) => {
       pt={4}
       pb={8}
       px={4}
-      bg="base.100"
       {...props}>
       <Flex>
         <a href="/admin" style={{display: "flex", flexDirection: "row", alignItems: "center"}}>

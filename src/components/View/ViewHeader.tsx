@@ -8,7 +8,7 @@ interface Props {
 
 export const ViewHeader = ({ queueSystemName }: Props) => {
   return (
-    <Grid w="100%" h="100%" bg="base.100" templateColumns="repeat(6, 1fr)">
+    <Grid w="100%" h="100%" templateColumns="repeat(6, 1fr)">
       <GridItem colSpan={3}>
         <Flex h="100%" alignContent="center" mx="6">
           <Center h={50} p={1}>
