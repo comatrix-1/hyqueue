@@ -1,140 +1,140 @@
-import { extendTheme } from '@chakra-ui/react'
+import { extendTheme } from "@chakra-ui/react";
 
 const fonts = {
   body: `'Inter', sans-serif`,
   heading: `'Inter', sans-serif`,
-  mono: `'Menlo', monospace`
-}
+  mono: `'Menlo', monospace`,
+};
 
 const breakpoints = {
-  sm: '40em',
-  md: '52em',
-  lg: '64em',
-  xl: '80em',
-}
+  sm: "40em",
+  md: "52em",
+  lg: "64em",
+  xl: "80em",
+};
 
 const layerStyles = extendTheme({
   card: {
-    boxShadow: '0px 0px 10px rgba(216, 222, 235, 0.5)',
-    borderRadius: '20px',
-    backgroundColor: 'white',
-    padding: '1.5rem',
+    boxShadow: "0px 0px 10px rgba(216, 222, 235, 0.5)",
+    borderRadius: "20px",
+    backgroundColor: "white",
+    padding: "1.5rem",
     width: "360px",
-    maxWidth: '100%',
-    marginBottom: '2em',
+    maxWidth: "100%",
+    marginBottom: "2em",
   },
   formInput: {
-    width: '100%',
-    borderRadius: '3px',
-    border: '1px solid #D2D3D6',
-    marginBottom: '1rem',
+    width: "100%",
+    borderRadius: "3px",
+    border: "1px solid #D2D3D6",
+    marginBottom: "1rem",
   },
   formSelect: {
-    width: '100%',
-    borderRadius: '3px',
-    border: '1px solid #D2D3D6',
-  }
-})
+    width: "100%",
+    borderRadius: "3px",
+    border: "1px solid #D2D3D6",
+  },
+});
 
 const textStyles = extendTheme({
   display1: {
-    fontSize: ['3.5rem'],
-    lineHeight: ['4rem'],
-    fontWeight: 'bold',
-    letterSpacing: '-0.022rem',
-    color: 'primary.600',
+    fontSize: ["3.5rem"],
+    lineHeight: ["4rem"],
+    fontWeight: "bold",
+    letterSpacing: "-0.022rem",
+    color: "primary.600",
   },
   display2: {
-    fontSize: ['2.5rem'],
-    lineHeight: ['3.5rem'],
-    fontWeight: 'semibold',
-    letterSpacing: '-0.022rem',
-    color: 'primary.600',
+    fontSize: ["2.5rem"],
+    lineHeight: ["3.5rem"],
+    fontWeight: "semibold",
+    letterSpacing: "-0.022rem",
+    color: "primary.600",
   },
   display3: {
-    fontSize: ['1.5rem'],
-    lineHeight: ['2rem'],
-    fontWeight: 'semibold',
-    letterSpacing: '0.019rem',
-    color: 'primary.600',
+    fontSize: ["1.5rem"],
+    lineHeight: ["2rem"],
+    fontWeight: "semibold",
+    letterSpacing: "0.019rem",
+    color: "primary.600",
   },
   heading1: {
-    fontSize: ['1rem', '1.5rem'],
-    lineHeight: ['1.5rem', '2rem'],
-    fontWeight: ['semibold', 'bold'],
-    letterSpacing: ['0.08rem', '0.1rem'],
-    color: 'primary.600',
+    fontSize: ["1rem", "1.5rem"],
+    lineHeight: ["1.5rem", "2rem"],
+    fontWeight: ["semibold", "bold"],
+    letterSpacing: ["0.08rem", "0.1rem"],
+    color: "primary.600",
   },
   heading2: {
-    fontSize: ['1.75rem'],
-    lineHeight: ['2rem'],
-    fontWeight: ['bold'],
-    letterSpacing: ['-0.014rem'],
-    color: 'primary.600',
+    fontSize: ["1.75rem"],
+    lineHeight: ["2rem"],
+    fontWeight: ["bold"],
+    letterSpacing: ["-0.014rem"],
+    color: "primary.600",
   },
   subtitle1: {
-    fontSize: ['1rem'],
-    lineHeight: ['1.5rem'],
-    fontWeight: ['semibold'],
-    letterSpacing: ['-0.011rem'],
-    color: 'primary.600',
+    fontSize: ["1rem"],
+    lineHeight: ["1.5rem"],
+    fontWeight: ["semibold"],
+    letterSpacing: ["-0.011rem"],
+    color: "primary.600",
   },
   body1: {
-    fontSize: ['1rem'],
-    lineHeight: ['1.5rem'],
-    letterSpacing: ['-0.011rem'],
-    color: 'primary.600',
+    fontSize: ["1rem"],
+    lineHeight: ["1.5rem"],
+    letterSpacing: ["-0.011rem"],
+    color: "primary.600",
   },
   body2: {
-    fontSize: ['0.875rem'],
-    lineHeight: ['1.5rem'],
-    letterSpacing: ['-0.006rem'],
-    color: 'primary.600',
+    fontSize: ["0.875rem"],
+    lineHeight: ["1.5rem"],
+    letterSpacing: ["-0.006rem"],
+    color: "primary.600",
   },
   body3: {
-    fontSize: ['0.8125rem'],
-    lineHeight: ['1rem'],
-    letterSpacing: ['-0.025rem'],
-    color: 'primary.600',
+    fontSize: ["0.8125rem"],
+    lineHeight: ["1rem"],
+    letterSpacing: ["-0.025rem"],
+    color: "primary.600",
   },
   link: {
-    textDecoration: 'underline',
-    color: 'blue.600',
+    textDecoration: "underline",
+    color: "blue.600",
   },
-})
+});
 
 const theme = extendTheme({
   colors: {
-    black: '#16161D',
+    black: "#16161D",
     accent: {
-      500: '#029EDC'
+      500: "#029EDC",
     },
     primary: {
-      500: '#294DB4',
-      600: '#363182',
+      500: "#0bacea",
+      600: "#029edc",
     },
     secondary: {
-      300: '#BFF0C8',
-      400: '#6EECCF',
-      500: '#4DA59E',
-      600: '#4DA59E',
+      300: "#15e4ba",
+      400: "#00d8aa",
+      500: "#00cd9b",
+      600: "#00be8d",
     },
     error: {
-      100: '#FFF8F8',
-      300: '#E8C1C1',
-      500: '#C05050',
-      600: '#AD4848'
+      100: "#FFF8F8",
+      300: "#E8C1C1",
+      500: "#C05050",
+      600: "#AD4848",
     },
     gray: {
-      100: '#FBFCFD',
-      200: '#F0F0F1',
-      300: '#E1E2E4',
-      400: '#D2D3D6',
-      500: '#ABADB2',
-      600: '#999B9F',
-      700: '#636467',
-      800: '#48494B',
-    }
+      100: "#FBFCFD",
+      200: "#F0F0F1",
+      300: "#E1E2E4",
+      400: "#D2D3D6",
+      500: "#ABADB2",
+      600: "#999B9F",
+      700: "#636467",
+      800: "#48494B",
+    },
   },
   fonts,
   breakpoints,
@@ -155,7 +155,7 @@ const theme = extendTheme({
           />
         </svg>
       ),
-      viewBox: '0 0 3000 3163',
+      viewBox: "0 0 3000 3163",
     },
   },
   textStyles,
@@ -167,10 +167,10 @@ const theme = extendTheme({
         maxWidth: "100%",
       },
       body: {
-        backgroundColor: "gray.100"
-      }
-    }
+        backgroundColor: "gray.100",
+      },
+    },
   },
-})
+});
 
-export default theme
+export default theme;
