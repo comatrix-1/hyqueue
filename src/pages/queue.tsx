@@ -20,9 +20,6 @@ import { NavBar } from "../components/Navbar";
 import { NoSuchQueue } from "../components/View/NoSuchQueue";
 import { Loading } from "../components/Common/Loading";
 
-import ManWithHourglass from "../../src/assets/svg/man-with-hourglass.svg";
-import AlarmClock from "../../src/assets/svg/alarm-clock.svg";
-
 import {
   Box,
   Button,
@@ -210,7 +207,6 @@ const Index = () => {
             >
               {t("queue-currently-inactive")}
             </Text>
-            <AlarmClock />
             <Text mt="6px" textStyle="heading1" textAlign="center" pt="5">
               {queueSystemName}
             </Text>
@@ -244,9 +240,6 @@ const Index = () => {
             </Text>
           </Flex>
           <Flex direction="column" alignItems="center">
-            <Flex direction="column" alignItems="center">
-              <ManWithHourglass className="featured-image" />
-            </Flex>
             <Box layerStyle="card">
               <Formik
                 initialValues={{

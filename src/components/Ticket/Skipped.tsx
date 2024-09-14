@@ -9,8 +9,6 @@ import {
 } from "@chakra-ui/react";
 import useTranslation from "next-translate/useTranslation";
 
-import AlarmClock from "../../assets/svg/alarm-clock.svg";
-
 interface Props {
   rejoinQueue: () => void;
 }
@@ -21,9 +19,6 @@ export const Skipped = ({ rejoinQueue }: Props) => {
   return (
     <>
       <Center>
-        <Flex direction="column">
-          <AlarmClock className="featured-image" />
-        </Flex>
       </Center>
       <Box layerStyle="card">
         <Text my={6} textStyle="body1" textAlign="center">

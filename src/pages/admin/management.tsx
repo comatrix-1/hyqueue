@@ -22,7 +22,6 @@ import * as _ from "lodash";
 import { ITrelloBoardList, EQueueTitles, IQueue } from "../../model";
 import ServerControls from "../../components/Admin/ServerControls";
 import { useRouter } from "next/router";
-import ManWithHourglass from "../../../src/assets/svg/man-with-hourglass.svg";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 
 const Management = () => {
@@ -75,9 +74,6 @@ const Management = () => {
             <Text textStyle="heading2" pb="10">
               QueueUp SG - Admin
             </Text>
-            <Flex direction="column" alignItems="center">
-              <ManWithHourglass className="featured-image" />
-            </Flex>
             <Box layerStyle="card">
               <Formik
                 initialValues={{ queueId: "" }}

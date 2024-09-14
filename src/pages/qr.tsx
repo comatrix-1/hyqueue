@@ -8,7 +8,6 @@ import QRCode from "qrcode.react";
 import { Container } from "../components/Container";
 import { Main } from "../components/Main";
 import { NavBar } from "../components/Navbar";
-import PeopleOnPhones from "../assets/svg/people-on-phones.svg";
 import { API_ENDPOINT } from "../constants";
 const Index = () => {
   const [url, setUrl] = useState("");
@@ -60,9 +59,6 @@ const Index = () => {
             </Text>
           </Box>
         </Main>
-        <Center marginTop="-40px" zIndex="0">
-          <PeopleOnPhones width="500px" />
-        </Center>
       </Container>
     </>
   );

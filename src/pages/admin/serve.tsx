@@ -24,7 +24,6 @@ import {
 import ServerControls from "../../components/Admin/ServerControls";
 import { Alerted } from "../../components/Ticket/Alerted";
 import { useRouter } from "next/router";
-import ManWithHourglass from "../../../src/assets/svg/man-with-hourglass.svg";
 
 const Serve = () => {
   const [tickets, setTickets] = useState<ITrelloCard[]>([]);
@@ -147,9 +146,6 @@ const Serve = () => {
               <Heading textStyle="heading1" fontSize="1.5rem">
                 You are serving queue number:
               </Heading>
-              <Flex direction="column" alignItems="center">
-                <ManWithHourglass className="featured-image" />
-              </Flex>
               {isSubmitting ? (
                 <Spinner />
               ) : (

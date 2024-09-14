@@ -7,7 +7,6 @@ import {
 } from '@chakra-ui/react'
 import { ArrowBackIcon } from '@chakra-ui/icons'
 import useTranslation from 'next-translate/useTranslation'
-import NotFound from '../../assets/svg/not-found.svg'
 
 export const NoSuchQueue = () => {
   const { t, lang } = useTranslation('common')
@@ -23,11 +22,6 @@ export const NoSuchQueue = () => {
     <Center
       flexDirection="column"
     >
-      <Center>
-        <NotFound
-          className="featured-image"
-        />
-      </Center>
       <Box textAlign="center">
         <Heading textStyle="display3" my={4}>
           {t("we-cant-seem-to-find-the-page-you-are-looking-for")}

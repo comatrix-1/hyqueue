@@ -1,8 +1,6 @@
 import { Box, Button, Center, Text } from "@chakra-ui/react";
 import useTranslation from "next-translate/useTranslation";
 
-import AlarmBell from "../../assets/svg/alarm-bell.svg";
-
 interface Props {
   openLeaveModal: () => void;
   ticketId: string | undefined;
@@ -20,9 +18,6 @@ export const Alerted = ({
 
   return (
     <>
-      <Center>
-        <AlarmBell className="featured-image" />
-      </Center>
       <Box layerStyle="card" bgColor="secondary.600">
         <Text textStyle="subtitle2" color="white">
           {t("queue-position")}

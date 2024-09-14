@@ -1,8 +1,6 @@
 import { Box, Button, Center, Text } from "@chakra-ui/react";
 import useTranslation from "next-translate/useTranslation";
 
-import PeopleOnPhones from "../../assets/svg/people-on-phones.svg";
-
 interface Props {
   openLeaveModal: () => void;
   numberOfTicketsAhead: number;
@@ -20,9 +18,6 @@ export const NextInQueue = ({
 
   return (
     <>
-      <Center>
-        <PeopleOnPhones className="featured-image" />
-      </Center>
       <Box layerStyle="card" bgColor="base.500">
         <Text textStyle="subtitle2">{t("queue-position")}</Text>
         <Text textStyle="display3" mb="2rem">

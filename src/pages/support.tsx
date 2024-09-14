@@ -17,9 +17,6 @@ import { Main } from "../components/Main";
 import { Footer } from "../components/Footer";
 import { NavBar } from "../components/Navbar";
 import { UrlInput } from "../components/Support/UrlInput";
-import { API_ENDPOINT } from "../constants";
-import PeopleOnPhones from "../assets/svg/people-on-phones.svg";
-import { EQueueTitles, ITrelloBoardList } from "../model";
 
 const Index = () => {
   const [rootUrl, setRootUrl] = useState("");
@@ -37,9 +34,6 @@ const Index = () => {
         <NavBar w="100vw" px={8} />
         <Main w="100vw" px={8}>
           <Box>
-            <Center>
-              <PeopleOnPhones className="featured-image" />
-            </Center>
             <Heading textStyle="heading3" textAlign="center" my={3}>
               Hyqueue Support
             </Heading>

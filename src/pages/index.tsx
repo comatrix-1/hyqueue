@@ -11,7 +11,6 @@ import { Main } from "../components/Main";
 import { Footer } from "../components/Footer";
 import { NavBar } from "../components/Navbar";
 
-import PeopleOnPhones from "../assets/svg/people-on-phones.svg";
 import { API_ENDPOINT } from "../constants";
 import { EQueueTitles, IQueue, ITrelloBoardList } from "../model";
 
@@ -46,9 +45,6 @@ const Index = () => {
           <Heading textStyle="heading3" textAlign="center" mb={8}>
             {t("demo-title")}
           </Heading>
-          <Center>
-            <PeopleOnPhones className="featured-image" />
-          </Center>
           <Center mt="4rem">
             <Link href={`${queuePendingUrl}`}>
               <Button

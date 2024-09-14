@@ -22,7 +22,6 @@ import { Container } from "../../components/Container";
 import { Main } from "../../components/Main";
 import { InputText, Navbar } from "../../components/Admin";
 
-import ManWithHourglass from "../../assets/svg/man-with-hourglass.svg";
 import { API_ENDPOINT } from "../../constants";
 import { useRouter } from "next/router";
 
@@ -79,9 +78,6 @@ const Index = () => {
             <Text textStyle="heading2" pb="10">
               QueueUp SG - Admin
             </Text>
-            <Flex direction="column" alignItems="center">
-              <ManWithHourglass className="featured-image" />
-            </Flex>
             <Box layerStyle="card">
               <form onSubmit={authoriseApp}>
                 <InputText
