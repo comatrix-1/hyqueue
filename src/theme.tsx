@@ -21,7 +21,7 @@ const layerStyles = extendTheme({
     padding: "1.5rem",
     width: "360px",
     maxWidth: "100%",
-    marginBottom: "2em",
+    marginTop: "1em",
   },
   formInput: {
     width: "100%",

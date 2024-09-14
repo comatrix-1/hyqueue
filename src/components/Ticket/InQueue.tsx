@@ -1,11 +1,14 @@
-import { Box, Button, Center, Text } from "@chakra-ui/react";
+import { Box, Button, Center, Divider, Text } from "@chakra-ui/react";
 import useTranslation from "next-translate/useTranslation";
+import { ITicket } from "../../model";
+import TicketInfo from "./TicketInfo";
 
 interface Props {
   openLeaveModal: () => void;
   numberOfTicketsAhead: number;
   ticketId: string | undefined;
   waitingTime?: number | null; // optional prop for estimated waiting time in seconds (default 3 seconds)
+  ticket?: ITicket;
 }
 
 export const InQueue = ({
@@ -13,6 +16,7 @@ export const InQueue = ({
   numberOfTicketsAhead,
   ticketId,
   waitingTime = 3,
+  ticket,
 }: Props) => {
   const { t, lang } = useTranslation("common");
 
@@ -25,9 +29,16 @@ export const InQueue = ({
         </Text>
 
         <Text textStyle="subtitle2">{t("estimated-waiting-time")}</Text>
-        <Text textStyle="display3">
+        <Text textStyle="display3" mb="2rem">
           {(waitingTime ?? 3) * numberOfTicketsAhead} {t("minutes")}
         </Text>
+
+        {ticket ? (
+          <>
+            <Divider my="2rem" />
+            <TicketInfo ticket={ticket} />
+          </>
+        ) : null}
       </Box>
 
       <Button

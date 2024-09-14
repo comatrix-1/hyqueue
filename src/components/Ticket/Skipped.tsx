@@ -6,24 +6,34 @@ import {
   Text,
   theme,
   Flex,
+  Divider,
 } from "@chakra-ui/react";
 import useTranslation from "next-translate/useTranslation";
+import { ITicket } from "../../model";
+import TicketInfo from "./TicketInfo";
 
 interface Props {
   rejoinQueue: () => void;
+  ticket?: ITicket;
 }
 
-export const Skipped = ({ rejoinQueue }: Props) => {
+export const Skipped = ({ rejoinQueue, ticket }: Props) => {
   const { t, lang } = useTranslation("common");
 
   return (
     <>
-      <Center>
-      </Center>
+      <Center></Center>
       <Box layerStyle="card">
         <Text my={6} textStyle="body1" textAlign="center">
           {t("your-queue-number-was")}
         </Text>
+
+        {ticket ? (
+          <>
+            <Divider my="2rem" />
+            <TicketInfo ticket={ticket} />
+          </>
+        ) : null}
       </Box>
 
       <Button

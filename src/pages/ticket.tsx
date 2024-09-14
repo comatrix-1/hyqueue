@@ -20,7 +20,13 @@ import { Skipped } from "../components/Ticket/Skipped";
 import { Served } from "../components/Ticket/Served";
 import { NotFound } from "../components/Ticket/NotFound";
 import { LeaveModal } from "../components/Ticket/LeaveModal";
-import { EQueueTitles, ETicketStatus, IEditableSettings } from "../model";
+import {
+  EQueueTitles,
+  ETicketStatus,
+  IEditableSettings,
+  ITicket,
+} from "../model";
+import TicketInfo from "../components/Ticket/TicketInfo";
 
 const Index = () => {
   const { t, lang } = useTranslation("common");
@@ -34,6 +40,7 @@ const Index = () => {
   const [queueName, setQueueName] = useState<string>();
   const [ticketNumber, setTicketNumber] = useState<string>();
   const [displayTicketInfo, setDisplayTicketInfo] = useState<string>("");
+  const [ticket, setTicket] = useState<ITicket>();
   const [lastUpdated, setLastUpdated] = useState<string>("");
   const [editableSettings, setEditableSettings] = useState<IEditableSettings>({
     registrationFields: [],
@@ -87,6 +94,12 @@ const Index = () => {
       const getTicketData = getTicket.data;
       if (!getTicketData.data) return;
 
+      const retrievedTicket = {
+        ...getTicketData.data,
+        ticketDesc: getTicketData.data.desc,
+        ticketNumber: getTicketData.data.idShort,
+      };
+
       const {
         queueId,
         queueName,
@@ -95,6 +108,7 @@ const Index = () => {
         idShort: ticketNumber,
       } = getTicketData.data;
 
+      setTicket(retrievedTicket);
       setTicketNumber(ticketNumber);
 
       if (ticketDesc !== "") {
@@ -197,6 +211,7 @@ const Index = () => {
           openLeaveModal={onOpen}
           queueName={queueName}
           ticketId={ticketId}
+          ticket={ticket}
         />
       );
     }
@@ -206,7 +221,7 @@ const Index = () => {
     }
     // 3. Missed - Ticket is in [MISSED] / not in the queue / queue doesnt exist
     else if (ticketState === ETicketStatus.MISSED) {
-      return <Skipped rejoinQueue={rejoinQueue} />;
+      return <Skipped rejoinQueue={rejoinQueue}  ticket={ticket}/>;
     } else if (
       ticketState === ETicketStatus.ERROR ||
       numberOfTicketsAhead === -1
@@ -221,6 +236,7 @@ const Index = () => {
           openLeaveModal={onOpen}
           ticketId={ticketId}
           numberOfTicketsAhead={numberOfTicketsAhead}
+          ticket={ticket}
         />
       );
     }
@@ -232,6 +248,7 @@ const Index = () => {
           openLeaveModal={onOpen}
           ticketId={ticketId}
           numberOfTicketsAhead={numberOfTicketsAhead}
+          ticket={ticket}
         />
       );
     }
@@ -257,7 +274,7 @@ const Index = () => {
         <Main>
           {ticketState != ETicketStatus.ERROR && (
             <Flex direction="column" alignItems="center">
-              <Heading textStyle="heading1" fontSize="1.5rem">
+              <Heading textStyle="heading1" fontSize="1.5rem" color="primary.500">
                 Queue Number
               </Heading>
               <Heading
@@ -265,18 +282,10 @@ const Index = () => {
                 textStyle="heading1"
                 fontSize="3.5rem"
                 letterSpacing="0.2rem"
+                color="primary.500"
               >
                 {ticketNumber}
               </Heading>
-              <Text
-                mt="24px"
-                textStyle="body2"
-                fontSize="1.5rem"
-                letterSpacing="0.1rem"
-                marginBottom="2rem"
-              >
-                {displayTicketInfo}
-              </Text>
             </Flex>
           )}
 

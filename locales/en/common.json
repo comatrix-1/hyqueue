@@ -7,6 +7,10 @@
 	"demo-title": "Welcome to Hyqueue",
 	"description": "Description",
 	"estimated-waiting-time": "Estimated waiting time",
+	"field-category-label": "Category",
+	"field-name-label": "Name",
+	"field-nric-label": "Partial NRIC",
+	"field-contact-label": "Contact",
 	"go-back": "Go Back",
 	"invalid": "Invalid",
 	"its-your-turn": "It's your turn!",
@@ -45,5 +49,6 @@
 	"your-queue-number-was": " Your queue number was already called and has since expired.",
 	"your-queue-number-may-not-be-called-in-sequence": "Your queue number may not be called in sequence",
 	"your-queue-number-will-be-held-for": "Your queue number will be held for",
+	"your-ticket-information": "Your ticket information",
 	"youre-next": "You're next!"
 }

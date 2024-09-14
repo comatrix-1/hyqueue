@@ -38,7 +38,7 @@ export function LeaveModal({ isOpen, onOpen, onClose, leaveQueue }: Props) {
           <Text textStyle="body1">{t("you-will-need-to-scan-again")}</Text>
           <Flex direction="column" marginTop="2rem">
             <Button
-              bgColor="error.500"
+              bgColor="primary.500"
               borderRadius="3px"
               width="100%"
               color="white"
@@ -52,9 +52,9 @@ export function LeaveModal({ isOpen, onOpen, onClose, leaveQueue }: Props) {
             <Button
               borderRadius="3px"
               width="100%"
-              color="primary.600"
+              color="primary.500"
               size="lg"
-              variant="ghost"
+              variant="outline"
               marginTop="0.5rem"
               onClick={onClose}
             >
