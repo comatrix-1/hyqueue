@@ -32,14 +32,9 @@ const Index = () => {
   const { t, lang } = useTranslation("common");
   const router = useRouter();
   const [refreshEnabled, setRefreshEnabled] = useState(true);
-
-  const [numberOfTicketsAhead, setNumberOfTicketsAhead] = useState<number>();
-
   const [ticketState, setTicketState] = useState<ETicketStatus>();
   const [ticketId, setTicketId] = useState<string>();
-  const [queueName, setQueueName] = useState<string>();
   const [ticketNumber, setTicketNumber] = useState<string>();
-  const [displayTicketInfo, setDisplayTicketInfo] = useState<string>("");
   const [ticket, setTicket] = useState<ITicket>();
   const [lastUpdated, setLastUpdated] = useState<string>("");
   const [editableSettings, setEditableSettings] = useState<IEditableSettings>({
@@ -94,30 +89,13 @@ const Index = () => {
       const getTicketData = getTicket.data;
       if (!getTicketData.data) return;
 
-      const retrievedTicket = {
-        ...getTicketData.data,
-        ticketDesc: getTicketData.data.desc,
-      };
+      const retrievedTicket = getTicketData.data;
 
-      const {
-        queueId,
-        queueName,
-        desc: ticketDesc,
-        numberOfTicketsAhead,
-        ticketNumber,
-      } = getTicketData.data;
+      console.log("retrievedTicket: ", retrievedTicket);
 
       setTicket(retrievedTicket);
       setTicketNumber(ticketNumber);
 
-      if (ticketDesc !== "") {
-        setDisplayTicketInfo(
-          `${ticketDesc.name ? ticketDesc.name : ""} ${
-            ticketDesc.contact ? ticketDesc.contact : ""
-          }`
-        );
-      }
-      setNumberOfTicketsAhead(numberOfTicketsAhead);
       // // Update timestamp
       const timestamp = new Date().toLocaleString("en-UK", {
         hour: "numeric",
@@ -129,16 +107,15 @@ const Index = () => {
       // Hack: Check whether to alert the user based on if the
       // queue name contains the word 'alert'
       // USING THE CONSTANT BREAKS I18N? IDK HOW
-      if (queueName.includes(EQueueTitles.ALERTED)) {
-        setQueueName(queueName.replace(EQueueTitles.ALERTED, "").trim());
+      if (retrievedTicket?.queueName.includes(EQueueTitles.ALERTED)) {
         setTicketState(ETicketStatus.ALERTED);
-      } else if (queueName.includes(EQueueTitles.DONE)) {
+      } else if (retrievedTicket?.queueName.includes(EQueueTitles.DONE)) {
         setTicketState(ETicketStatus.SERVED);
         setRefreshEnabled(false);
         removeCookie("ticket"); // Remove cookie so they can join the queue again
-      } else if (queueName.includes(EQueueTitles.MISSED)) {
+      } else if (retrievedTicket?.queueName.includes(EQueueTitles.MISSED)) {
         setTicketState(ETicketStatus.MISSED);
-      } else if (numberOfTicketsAhead === -1) {
+      } else if (retrievedTicket?.numberOfTicketsAhead === -1) {
         throw new Error("Ticket not found");
       } else {
         setTicketState(ETicketStatus.PENDING);
@@ -167,17 +144,7 @@ const Index = () => {
 
       if (!editableSettingsDesc) throw new Error("");
 
-      setEditableSettings({
-        ...editableSettingsDesc,
-        categories: editableSettingsDesc.categories
-          ? editableSettingsDesc.categories.split(",")
-          : [],
-        waitTimePerTicket:
-          editableSettingsDesc.waitTimePerTicket &&
-          !isNaN(Number(editableSettingsDesc.waitTimePerTicket))
-            ? editableSettingsDesc.waitTimePerTicket
-            : null,
-      });
+      setEditableSettings(editableSettingsDesc);
     } catch (err) {}
   };
 
@@ -205,13 +172,17 @@ const Index = () => {
     // 1. Alerted - Ticket is called by admin
     if (ticketState === ETicketStatus.ALERTED) {
       return (
-        <Alerted
-          waitingTime={editableSettings?.waitTimePerTicket}
-          openLeaveModal={onOpen}
-          queueName={queueName}
-          ticketId={ticketId}
-          ticket={ticket}
-        />
+        <>
+          <a onClick={() => console.log(editableSettings)}>
+            check editable settings
+          </a>
+          <Alerted
+            waitingTime={editableSettings?.waitTimePerTicket}
+            openLeaveModal={onOpen}
+            ticketId={ticketId}
+            ticket={ticket}
+          />
+        </>
       );
     }
     // 2. Served - Ticket is complete
@@ -220,33 +191,33 @@ const Index = () => {
     }
     // 3. Missed - Ticket is in [MISSED] / not in the queue / queue doesnt exist
     else if (ticketState === ETicketStatus.MISSED) {
-      return <Skipped rejoinQueue={rejoinQueue}  ticket={ticket}/>;
+      return <Skipped rejoinQueue={rejoinQueue} ticket={ticket} />;
     } else if (
       ticketState === ETicketStatus.ERROR ||
-      numberOfTicketsAhead === -1
+      ticket?.numberOfTicketsAhead === -1
     ) {
       return <NotFound />;
     }
     // 4. Next - Ticket 1st in line
-    else if (numberOfTicketsAhead === 0) {
+    else if (ticket?.numberOfTicketsAhead === 0) {
       return (
         <NextInQueue
           waitingTime={editableSettings?.waitTimePerTicket}
           openLeaveModal={onOpen}
           ticketId={ticketId}
-          numberOfTicketsAhead={numberOfTicketsAhead}
+          numberOfTicketsAhead={ticket?.numberOfTicketsAhead}
           ticket={ticket}
         />
       );
     }
     // 5. Line - Ticket is behind at least 1 person
-    else if (numberOfTicketsAhead && numberOfTicketsAhead > 0) {
+    else if (ticket?.numberOfTicketsAhead && ticket?.numberOfTicketsAhead > 0) {
       return (
         <InQueue
           waitingTime={editableSettings?.waitTimePerTicket}
           openLeaveModal={onOpen}
           ticketId={ticketId}
-          numberOfTicketsAhead={numberOfTicketsAhead}
+          numberOfTicketsAhead={ticket?.numberOfTicketsAhead}
           ticket={ticket}
         />
       );
@@ -273,7 +244,11 @@ const Index = () => {
         <Main>
           {ticketState != ETicketStatus.ERROR && (
             <Flex direction="column" alignItems="center">
-              <Heading textStyle="heading1" fontSize="1.5rem" color="primary.500">
+              <Heading
+                textStyle="heading1"
+                fontSize="1.5rem"
+                color="primary.500"
+              >
                 Queue Number
               </Heading>
               <Heading

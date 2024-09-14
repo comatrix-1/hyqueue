@@ -2,12 +2,11 @@ import { Box, Button, Center, Divider, Text } from "@chakra-ui/react";
 import useTranslation from "next-translate/useTranslation";
 import { ReactNode } from "react";
 import TicketInfo from "./TicketInfo";
-import { ITicket } from "../../model";
+import { EQueueTitles, ITicket } from "../../model";
 
 interface Props {
   openLeaveModal: () => void;
   ticketId: string | undefined;
-  queueName: string | undefined;
   waitingTime?: number | null;
   ticket?: ITicket;
 }
@@ -15,11 +14,12 @@ interface Props {
 export const Alerted = ({
   openLeaveModal,
   ticketId,
-  queueName,
   waitingTime = 3,
   ticket,
 }: Props) => {
   const { t, lang } = useTranslation("common");
+
+  const queueName = ticket?.queueName?.replace(EQueueTitles.ALERTED, "").trim();
 
   return (
     <>
