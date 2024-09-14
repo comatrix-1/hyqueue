@@ -91,6 +91,7 @@ const Dashboard = () => {
                 variant="solid"
                 marginTop="2rem"
                 onClick={navigateToAdminPage}
+                mb="2rem"
               >
                 Go back to admin page
               </Button>
