@@ -27,7 +27,7 @@ export interface ITicket {
   queueId?: string;
   queueName?: string;
   name?: string;
-  idShort?: number;
+  ticketNumber?: number;
   desc?: any;
   queueNo?: number;
   numberOfTicketsAhead?: number;

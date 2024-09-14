@@ -57,7 +57,7 @@ export const postTicketsByQueue = async (
         status: 200,
         data: {
           message: "Found a ticket",
-          data: { id: match.id, idShort: match.idShort },
+          data: { id: match.id, ticketNumber: match.idShort },
         },
       };
     }
@@ -90,6 +90,9 @@ export const postTicketsByQueue = async (
 
   return {
     status: 200,
-    data: { message: "Successfully created ticket", data: { id, idShort } },
+    data: {
+      message: "Successfully created ticket",
+      data: { id, ticketNumber: idShort },
+    },
   };
 };

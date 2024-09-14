@@ -98,7 +98,7 @@ export const getTicketsById = async (
       data: {
         queueId: card.idList,
         queueName: card.queueName,
-        idShort: card.idShort,
+        ticketNumber: card.idShort,
         id: id,
         desc: card.desc ? JSON.parse(card.desc) : null,
         numberOfTicketsAhead: card.numberOfTicketsAhead,

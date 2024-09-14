@@ -97,7 +97,6 @@ const Index = () => {
       const retrievedTicket = {
         ...getTicketData.data,
         ticketDesc: getTicketData.data.desc,
-        ticketNumber: getTicketData.data.idShort,
       };
 
       const {
@@ -105,7 +104,7 @@ const Index = () => {
         queueName,
         desc: ticketDesc,
         numberOfTicketsAhead,
-        idShort: ticketNumber,
+        ticketNumber,
       } = getTicketData.data;
 
       setTicket(retrievedTicket);

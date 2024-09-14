@@ -20,14 +20,15 @@ import {
   EQueueTitles,
   ITrelloCard,
   ITrelloList,
+  ITicket,
 } from "../../model";
 import ServerControls from "../../components/Admin/ServerControls";
 import { Alerted } from "../../components/Ticket/Alerted";
 import { useRouter } from "next/router";
 
 const Serve = () => {
-  const [tickets, setTickets] = useState<ITrelloCard[]>([]);
-  const [ticket, setTicket] = useState<ITrelloCard>();
+  const [tickets, setTickets] = useState<ITicket[]>([]);
+  const [ticket, setTicket] = useState<ITicket>();
   const [queueSystemInfo, setQueueSystemInfo] = useState<ITrelloList>();
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -156,7 +157,7 @@ const Serve = () => {
                     fontSize="3.5rem"
                     letterSpacing="0.2rem"
                   >
-                    {ticket?.idShort ?? "-"}
+                    {ticket?.ticketNumber ?? "-"}
                   </Heading>
                   <Text
                     mt="24px"

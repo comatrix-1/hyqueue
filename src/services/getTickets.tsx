@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IApiResponse, ITicket } from "../model";
+import { IApiResponse, ITicket, ITrelloCard } from "../model";
 import { prepareJsonString } from "../utils";
 import { INTERNAL_SERVER_ERROR } from "../constants";
 
@@ -29,14 +29,14 @@ export const getTickets = async (): Promise<IApiResponse<ITicket[]>> => {
     };
   }
 
-  const parseCardsData = (cards: any[]): ITicket[] => {
+  const parseCardsData = (cards: ITrelloCard[]): ITicket[] => {
     return cards.map((card) => {
       // Return a new object with the parsed desc field
       return {
         id: card.id,
         queueId: card.idList,
         name: card.name,
-        idShort: card.idShort,
+        ticketNumber: card.idShort,
         desc: JSON.parse(prepareJsonString(card.desc)),
       };
     });

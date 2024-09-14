@@ -51,7 +51,7 @@ const DashboardTable = ({
           <Tr>
             <Th>ID</Th>
             <Th>Name</Th>
-            <Th>Queue No.</Th>
+            <Th>Ticket number</Th>
             <Th>Queue name</Th>
             <Th>New queue</Th>
           </Tr>
@@ -64,7 +64,7 @@ const DashboardTable = ({
               <Tr key={ticket.id}>
                 <Td>{ticket.id}</Td>
                 <Td>{ticket.desc?.name}</Td>
-                <Td>{ticket.desc?.queueNo}</Td>
+                <Td>{ticket.ticketNumber}</Td>
                 <Td>{findQueueNameByListId(ticket?.queueId ?? "", queues)}</Td>
                 <Td>
                   <Box position="relative">

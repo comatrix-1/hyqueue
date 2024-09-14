@@ -43,7 +43,7 @@ export const getTicketsByQueueId = async (
     return {
       id: card.id,
       name: card.name,
-      idShort: card.idShort,
+      ticketNumber: card.idShort,
       desc: {
         category: parsedDesc.category,
         contact: parsedDesc.contact,
