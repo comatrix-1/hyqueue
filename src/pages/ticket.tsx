@@ -284,7 +284,7 @@ const Index = () => {
               {renderTicket()}
             </Flex>
             <Flex direction="column" py={4} w="360px" maxW="100%">
-              <Text textAlign="center" textStyle="body2" color="gray.500">
+              <Text textAlign="center" textStyle="body2" color="gray.600">
                 {t("last-updated-automatically-at")} {lastUpdated}
               </Text>
             </Flex>
