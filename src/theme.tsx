@@ -110,8 +110,8 @@ const theme = extendTheme({
       500: "#029EDC",
     },
     primary: {
-      500: "#0bacea",
-      600: "#029edc",
+      500: "#294eb4",
+      600: "#2246aa",
       900: "#005b94"
     },
     secondary: {
