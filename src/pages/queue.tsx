@@ -43,7 +43,6 @@ const Index = () => {
   const [queueSystemName, setQueueSystemName] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [queueStatus, setQueueStatus] = useState<EQueueStatus>();
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [editableSettings, setEditableSettings] = useState<IEditableSettings>({
     registrationFields: [],
     categories: [],
@@ -68,8 +67,8 @@ const Index = () => {
   const getRedirectUrlFromUser = () => {
     // First check if user already has cookie for this queue id
     const ticketCookie = cookies["ticket"];
-    if (ticketCookie?.queue && ticketCookie?.ticket && ticketCookie?.board) {
-      return `/ticket?queue=${ticketCookie.queue}&ticket=${ticketCookie.ticket}&board=${ticketCookie.board}`;
+    if (ticketCookie?.id) {
+      return `/ticket?id=${ticketCookie.id}`;
     }
 
     return false;
@@ -117,6 +116,8 @@ const Index = () => {
 
   const submit = async (values: any, { setSubmitting, setErrors }: any) => {
     try {
+      setSubmitting(true);
+
       // Check if NRIC is valid
       if (
         Array.isArray(editableSettings.registrationFields) &&
@@ -129,9 +130,6 @@ const Index = () => {
           return;
         }
       }
-
-      // Prevent submission if it's already submitting
-      if (isSubmitting) return;
 
       let desc: ITicketDescription = {
         ticketPrefix: "",
@@ -252,7 +250,7 @@ const Index = () => {
                 }}
                 onSubmit={submit}
               >
-                {({ handleSubmit }) => (
+                {({ handleSubmit, isSubmitting }) => (
                   <Form onSubmit={handleSubmit}>
                     <Flex direction="column">
                       {editableSettings.registrationFields.includes("name") && (

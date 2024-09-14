@@ -70,7 +70,7 @@ const Index = () => {
       setCookie(
         "ticket",
         {
-          ticket: ticketIdValue,
+          id: ticketIdValue,
         },
         { maxAge: COOKIE_MAX_AGE }
       );
