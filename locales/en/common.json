@@ -11,6 +11,8 @@
 	"field-name-label": "Name",
 	"field-nric-label": "Partial NRIC",
 	"field-contact-label": "Contact",
+	"field-postalcode-label": "Postal code",
+	"field-description-label": "Description",
 	"go-back": "Go Back",
 	"invalid": "Invalid",
 	"its-your-turn": "It's your turn!",
