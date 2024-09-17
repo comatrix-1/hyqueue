@@ -43,6 +43,16 @@ const TicketInfo = ({ ticket, color }: Props) => {
             {t("field-nric-label")}: {ticket.desc.nric}
           </Text>
         ) : null}
+        {ticket?.desc?.postalcode ? (
+          <Text>
+            {t("field-nric-label")}: {ticket.desc.nric}
+          </Text>
+        ) : null}
+        {ticket?.desc?.description ? (
+          <Text>
+            {t("field-nric-label")}: {ticket.desc.nric}
+          </Text>
+        ) : null}
       </Flex>
     </>
   );
