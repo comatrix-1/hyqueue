@@ -52,31 +52,24 @@ const Index = () => {
 
     const tickets: ITicket[] = ticketsResult.data.data;
     const queues: IQueue[] = queuesResult.data.data;
-    const missedQueueId = queues.filter(
-      (queue: IQueue) => queue.name.indexOf(EQueueTitles.MISSED) > -1
-    )[0].id;
-    const alertQueueId = queues.filter(
-      (queue: IQueue) => queue.name.indexOf(EQueueTitles.ALERTED) > -1
-    )[0].id;
+
+    const tmpTicketsWithQueueNames = tickets.map((ticket) => {
+      return {
+        ...ticket,
+        queueName: queues.find((queue: IQueue) => queue.id === ticket.queueId)
+          ?.name,
+      };
+    });
+
     const pendingQueueId = queues.filter(
       (queue: IQueue) => queue.name.indexOf(EQueueTitles.PENDING) > -1
     )[0].id;
 
-    setTicketsWithQueueNames(
-      tickets.map((ticket) => {
-        return {
-          ...ticket,
-          queueName: queues.find((queue: IQueue) => queue.id === ticket.queueId)
-            ?.name,
-        };
-      })
-    );
-
-    setTicketsMissed(
-      tickets.filter((ticket: ITicket) => ticket.queueId === missedQueueId)
-    );
-    const latestTicketsAlerted = tickets.filter(
-      (ticket: ITicket) => ticket.queueId === alertQueueId
+    const latestTicketsAlerted = tmpTicketsWithQueueNames.filter(
+      (ticket: ITicket) =>
+        ticket?.queueName?.indexOf(EQueueTitles.ALERTED)
+          ? ticket?.queueName?.indexOf(EQueueTitles.ALERTED) > -1
+          : true
     );
 
     if (hasNewAlerts(ticketsAlerted, latestTicketsAlerted) && audio) {
@@ -87,6 +80,15 @@ const Index = () => {
       }
     }
 
+    setTicketsWithQueueNames(tmpTicketsWithQueueNames);
+
+    setTicketsMissed(
+      tmpTicketsWithQueueNames.filter((ticket: ITicket) =>
+        ticket?.queueName?.indexOf(EQueueTitles.MISSED)
+          ? ticket?.queueName?.indexOf(EQueueTitles.MISSED) > -1
+          : true
+      )
+    );
     setTicketsAlerted(latestTicketsAlerted);
     setQueuePendingUrl(pendingQueueId);
   };
@@ -117,13 +119,11 @@ const Index = () => {
         <GridItem
           colSpan={7}
           rowSpan={1}
-          bg="secondary.300"
-          // height="120px"
         >
           <ViewHeader queueSystemName={queueSystem?.name} />
         </GridItem>
         <GridItem colSpan={5} rowSpan={14} bg="secondary.300">
-          <CurrentlyServingQueue tickets={ticketsWithQueueNames} />
+          <CurrentlyServingQueue tickets={ticketsAlerted} />
         </GridItem>
         <GridItem colSpan={2} rowSpan={14} bg="error.300">
           <MissedQueue

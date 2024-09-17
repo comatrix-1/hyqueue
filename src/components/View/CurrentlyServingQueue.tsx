@@ -33,7 +33,7 @@ export const CurrentlyServingQueue = ({ tickets }: Props) => {
             justifyContent="space-between"
           >
             <Heading textStyle="heading2" fontSize="5xl" flex={1}>
-              {getQueueName(ticket.queueName ?? "")}
+              {getQueueName(ticket?.queueName ?? "")}
             </Heading>
             <Heading textStyle="heading2" fontSize="5xl" flex={1}>
               {getQueueNumber(ticket.name ?? "")}
