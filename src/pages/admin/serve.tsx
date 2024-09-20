@@ -25,9 +25,9 @@ import {
 import ServerControls from "../../components/Admin/ServerControls";
 import { Alerted } from "../../components/Ticket/Alerted";
 import { useRouter } from "next/router";
+import withProtectedRoute from "../../components/withProtectedRoute";
 
 const Serve = () => {
-  const [tickets, setTickets] = useState<ITicket[]>([]);
   const [ticket, setTicket] = useState<ITicket>();
   const [queueSystemInfo, setQueueSystemInfo] = useState<ITrelloList>();
   const router = useRouter();
@@ -123,8 +123,6 @@ const Serve = () => {
     getListsWithCards(queueIdValue);
   }, []);
 
-  if (!tickets) return;
-
   return (
     <>
       <Head>
@@ -189,4 +187,4 @@ const Serve = () => {
   );
 };
 
-export default Serve;
+export default withProtectedRoute(Serve);

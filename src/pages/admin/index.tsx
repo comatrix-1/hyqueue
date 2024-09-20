@@ -32,6 +32,7 @@ import { API_ENDPOINT } from "../../constants";
 import EditableSettings from "../../components/Admin/EditableSettings";
 import Links from "../../components/Admin/Links";
 import { FormikHelpers } from "formik";
+import withProtectedRoute from "../../components/withProtectedRoute";
 
 const Index = () => {
   const router = useRouter();
@@ -209,4 +210,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default withProtectedRoute(Index);

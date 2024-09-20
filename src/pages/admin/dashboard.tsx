@@ -9,6 +9,7 @@ import axios from "axios";
 import { API_ENDPOINT } from "../../constants";
 import DashboardActions from "../../components/Admin/DashboardActions";
 import router from "next/router";
+import withProtectedRoute from "../../components/withProtectedRoute";
 
 const Dashboard = () => {
   const [tickets, setTickets] = useState<any[]>([]);
@@ -103,4 +104,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default withProtectedRoute(Dashboard);

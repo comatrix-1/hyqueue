@@ -63,21 +63,28 @@ export const getCustomerName = (name: string) => {
   return name.split("-")[1];
 };
 
-/**
- * Authentication
- */
 export const authentication = {
   login: (key: string, token: string) => {
-    localStorage.setItem("key", key);
-    localStorage.setItem("token", token);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("key", key);
+      localStorage.setItem("token", token);
+    }
   },
   logout: () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("key");
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("token");
+      localStorage.removeItem("key");
+    }
   },
-  getToken: () => localStorage.getItem("token"),
-  setKey: (key: string) => localStorage.setItem("key", key),
-  getKey: () => localStorage.getItem("key"),
+  getToken: () =>
+    typeof window !== "undefined" ? localStorage.getItem("token") : null,
+  setKey: (key: string) => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("key", key);
+    }
+  },
+  getKey: () =>
+    typeof window !== "undefined" ? localStorage.getItem("key") : null,
 };
 
 export const isQueueClosed = (

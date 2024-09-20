@@ -23,6 +23,7 @@ import { ITrelloBoardList, EQueueTitles, IQueue } from "../../model";
 import ServerControls from "../../components/Admin/ServerControls";
 import { useRouter } from "next/router";
 import { Field, Form, Formik, FormikHelpers } from "formik";
+import withProtectedRoute from "../../components/withProtectedRoute";
 
 const Management = () => {
   const [queues, setQueues] = useState([]);
@@ -142,4 +143,4 @@ const Management = () => {
   );
 };
 
-export default Management;
+export default withProtectedRoute(Management);

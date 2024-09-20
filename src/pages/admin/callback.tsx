@@ -7,6 +7,7 @@ import { Container } from "../../components/Container";
 import { Main } from "../../components/Main";
 import { Navbar } from "../../components/Admin";
 import { authentication } from "../../utils";
+import withProtectedRoute from "../../components/withProtectedRoute";
 
 const Index = () => {
   const router = useRouter();
@@ -39,4 +40,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default withProtectedRoute(Index);
