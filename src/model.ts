@@ -127,15 +127,6 @@ export enum ETicketStatus {
   ERROR = "error",
 }
 
-export interface IApiResponseQueue {
-  servers: any[]; // TODO: change any
-  served: any[]; // TODO: change any
-  pending: any[]; // TODO: change any
-  removed: any[]; // TODO: change any
-  done: any[]; // TODO: change any
-  error: any[]; // TODO: change any
-}
-
 export interface IAuthorizeUrl {
   authorizeUrl: string;
 }
