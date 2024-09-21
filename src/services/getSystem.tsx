@@ -1,6 +1,7 @@
 import axios from "axios";
 import { IApiResponse, IEditableSettings, IQueueSystem } from "../model";
 import { isQueueClosed, prepareJsonString } from "../utils";
+import { logger } from "../logger";
 
 export const getSystem = async (): Promise<IApiResponse<IQueueSystem>> => {
   const {
@@ -17,7 +18,7 @@ export const getSystem = async (): Promise<IApiResponse<IQueueSystem>> => {
     `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}?${tokenAndKeyParams}`
   );
 
-  console.log("GET getBoard", getBoard);
+  logger.info("GET getBoard", getBoard);
 
   const { name, desc } = getBoard.data;
 
@@ -32,9 +33,9 @@ export const getSystem = async (): Promise<IApiResponse<IQueueSystem>> => {
         parsedDesc?.openingHours,
         parsedDesc?.openingHoursTimeZone
       );
-    console.log("parsed desc: ", parsedDesc);
+    logger.info("parsed desc: ", parsedDesc);
   } catch (error) {
-    console.log("Error parsing desc");
+    logger.info("Error parsing desc");
   }
 
   if (!parsedDesc) {

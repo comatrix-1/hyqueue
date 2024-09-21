@@ -8,6 +8,7 @@ import {
   IList,
   ITicket,
 } from "../model";
+import { logger } from "../logger";
 
 export const getTicketsById = async (
   id: string
@@ -26,7 +27,7 @@ export const getTicketsById = async (
   const getBoardInfo = await axios.get(
     `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/?fields=id,name,desc&cards=visible&card_fields=id,idList,name,idShort,desc&lists=open&list_fields=id,name&${tokenAndKeyParams}`
   );
-  console.log("getBoardInfo", getBoardInfo);
+  logger.info("getBoardInfo", getBoardInfo);
   if (getBoardInfo.status !== 200) {
     return {
       status: getBoardInfo.status,
@@ -43,15 +44,15 @@ export const getTicketsById = async (
     data.lists.forEach((list: IList) => {
       listMap[list.id] = { ...list, cards: [] };
     });
-    console.log("populated listMap: ", listMap);
+    logger.info("populated listMap: ", listMap);
 
     data.cards.forEach((card: ICard) => {
-      console.log("card", card);
+      logger.info("card", card);
       const queueId = card.idList ?? "";
 
       // Get the name of the queue the card resides in
       const queueName = listMap[queueId].name;
-      console.log("queueName", queueName);
+      logger.info("queueName", queueName);
 
       let numberOfTicketsAhead = -1;
       if (
@@ -63,7 +64,7 @@ export const getTicketsById = async (
       ) {
         // Get card position based on length of list before
         numberOfTicketsAhead = listMap[queueId].cards.length;
-        console.log("numberOfTicketsAhead", numberOfTicketsAhead);
+        logger.info("numberOfTicketsAhead", numberOfTicketsAhead);
       }
 
       card = { ...card, numberOfTicketsAhead, queueName };
@@ -77,12 +78,12 @@ export const getTicketsById = async (
       cardMap.set(card.id, card);
     });
 
-    console.log("populated cardMap: ", cardMap);
+    logger.info("populated cardMap: ", cardMap);
     return { listMap, cardMap };
   };
 
   const { cardMap } = parseBoardData(getBoardInfo.data);
-  console.log("cardMap", cardMap);
+  logger.info("cardMap", cardMap);
   const card = cardMap.get(id);
 
   if (!card)

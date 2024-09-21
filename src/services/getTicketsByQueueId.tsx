@@ -6,6 +6,7 @@ import {
   ITrelloCard,
 } from "../model";
 import { prepareJsonString } from "../utils";
+import { logger } from "../logger";
 
 export const getTicketsByQueueId = async (
   queueId: string
@@ -24,7 +25,7 @@ export const getTicketsByQueueId = async (
     `${TRELLO_ENDPOINT}/lists/${queueId}/cards?${tokenAndKeyParams}`
   );
 
-  console.log("cardsResponse", cardsResponse.data);
+  logger.info("cardsResponse", cardsResponse.data);
 
   const cards = cardsResponse.data.map((card: ITrelloCard) => {
     let parsedDesc: ITicketDescription = {
@@ -37,7 +38,7 @@ export const getTicketsByQueueId = async (
     try {
       parsedDesc = JSON.parse(prepareJsonString(card.desc));
     } catch (error) {
-      console.log("Error parsing desc");
+      logger.info("Error parsing desc");
     }
 
     return {

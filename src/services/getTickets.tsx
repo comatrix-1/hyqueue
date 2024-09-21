@@ -2,6 +2,7 @@ import axios from "axios";
 import { INTERNAL_SERVER_ERROR } from "../constants";
 import { IApiResponse, ITicket, ITrelloCard } from "../model";
 import { prepareJsonString } from "../utils";
+import { logger } from "../logger";
 
 export const getTickets = async (): Promise<IApiResponse<ITicket[]>> => {
   const {
@@ -18,7 +19,7 @@ export const getTickets = async (): Promise<IApiResponse<ITicket[]>> => {
     `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/?fields=id,name,desc&cards=visible&card_fields=id,idList,name,idShort,desc&lists=open&list_fields=id,name&${tokenAndKeyParams}
 `
   );
-  console.log("getBoardInfo TEST", getBoardInfo.data);
+  logger.info("getBoardInfo TEST", getBoardInfo.data);
   if (getBoardInfo.status !== 200) {
     return {
       status: getBoardInfo.status,
@@ -46,7 +47,7 @@ export const getTickets = async (): Promise<IApiResponse<ITicket[]>> => {
   try {
     parsedCardsData = parseCardsData(getBoardInfo.data.cards);
   } catch (error) {
-    console.log(error);
+    logger.info(error);
   }
 
   if (!parsedCardsData.length) {

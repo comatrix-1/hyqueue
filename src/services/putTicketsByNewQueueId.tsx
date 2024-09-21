@@ -5,6 +5,7 @@ import {
   ITrelloBoardList,
   ITrelloCard,
 } from "../model";
+import { logger } from "../logger";
 
 export const putTicketsByNewQueueId = async (
   newQueueId: string
@@ -46,7 +47,7 @@ export const putTicketsByNewQueueId = async (
     };
   }
   const ticketIdOfFirstInPendingQueue = ticketsResponseData[0].id;
-  console.log("ticketIdOfFirstInPendingQueue", ticketIdOfFirstInPendingQueue);
+  logger.info("ticketIdOfFirstInPendingQueue", ticketIdOfFirstInPendingQueue);
 
   const response = await axios.put(
     `${TRELLO_ENDPOINT}/cards/${ticketIdOfFirstInPendingQueue}?${tokenAndKeyParams}&idList=${newQueueId}&pos=bottom`

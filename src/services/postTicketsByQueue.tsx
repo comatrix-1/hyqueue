@@ -1,6 +1,7 @@
 import axios from "axios";
 import { INTERNAL_SERVER_ERROR } from "../constants";
 import { EQueueTitles, IApiResponse, ITicket, ITrelloList } from "../model";
+import { logger } from "../logger";
 
 export const postTicketsByQueue = async (
   desc: any
@@ -46,7 +47,7 @@ export const postTicketsByQueue = async (
     );
     const ticketsInQueue = getCardsOnPendingList.data;
 
-    console.log("ticketsInQueue", ticketsInQueue);
+    logger.info("ticketsInQueue", ticketsInQueue);
 
     const match = ticketsInQueue.find((ticket: any) =>
       ticket.name.includes(contact)
