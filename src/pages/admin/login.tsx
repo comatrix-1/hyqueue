@@ -67,14 +67,14 @@ const Index = () => {
   return (
     <>
       <Head>
-        <title>Login to Admin - QueueUp SG</title>
+        <title>Login to Admin - Hyqueue</title>
       </Head>
       <Container>
         <Navbar width="100%" />
         <Main justifyContent="start" width="100%">
           <Center flexDirection="column" alignItems="center" minHeight="75vh">
             <Text textStyle="heading2" pb="10">
-              QueueUp SG - Admin
+              Hyqueue - Admin
             </Text>
             <Box layerStyle="card">
               <form onSubmit={authoriseApp}>

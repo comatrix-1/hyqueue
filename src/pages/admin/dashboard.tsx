@@ -57,7 +57,7 @@ const Dashboard = () => {
   return (
     <>
       <Head>
-        <title>Dashboard - QueueUp Sg</title>
+        <title>Dashboard - Hyqueue</title>
       </Head>
       <Container>
         <Navbar />

@@ -16,7 +16,7 @@ export const postLogin = async (): Promise<IApiResponse<IAuthorizeUrl>> => {
     IS_PUBLIC_BOARD === "true" ? "" : `key=${TRELLO_KEY}&token=${TRELLO_TOKEN}`;
 
   const scopes = SCOPES || "read,write";
-  const appName = APP_NAME || "HyQueue%20SG";
+  const appName = APP_NAME || "Hyqueue%20SG";
   const expiration = EXPIRATION_DURATION || "1hour";
 
   const redirectUrl = encodeURIComponent(

@@ -55,14 +55,14 @@ const Management = () => {
   return (
     <>
       <Head>
-        <title>Queue Management - QueueUp Sg</title>
+        <title>Queue Management - Hyqueue</title>
       </Head>
       <Container>
         <Navbar />
         <Main justifyContent="start" width="100%">
           <Center flexDirection="column" alignItems="center" minHeight="75vh">
             <Text textStyle="heading2" pb="10">
-              QueueUp SG - Admin
+              Hyqueue - Admin
             </Text>
             <Box layerStyle="card">
               <Formik

@@ -114,7 +114,7 @@ const Serve = () => {
   return (
     <>
       <Head>
-        <title>Queue Management - QueueUp Sg</title>
+        <title>Queue Management - Hyqueue</title>
       </Head>
       <Container>
         <Navbar />

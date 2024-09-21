@@ -220,7 +220,7 @@ const Index = () => {
   return (
     <>
       <Head>
-        <title>QueueUp SG</title>
+        <title>Hyqueue</title>
       </Head>
       <Container>
         <LeaveModal

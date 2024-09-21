@@ -140,7 +140,7 @@ const Index = () => {
   return (
     <>
       <Head>
-        <title>Admin - QueueUp Sg</title>
+        <title>Admin - Hyqueue</title>
       </Head>
       <Container>
         <Navbar />
