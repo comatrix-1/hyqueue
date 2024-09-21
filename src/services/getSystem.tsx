@@ -19,7 +19,7 @@ export const getSystem = async (): Promise<IApiResponse<IQueueSystem>> => {
 
   console.log("GET getBoard", getBoard);
 
-  const { id, name, desc } = getBoard.data;
+  const { name, desc } = getBoard.data;
 
   let parsedDesc: IEditableSettings | null = null;
   try {
@@ -41,7 +41,6 @@ export const getSystem = async (): Promise<IApiResponse<IQueueSystem>> => {
       data: {
         message: "Successfully retrieved queue system information",
         data: {
-          id,
           name,
           desc: parsedDesc,
         },

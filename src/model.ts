@@ -28,7 +28,7 @@ export interface ITicket {
   queueName?: string;
   name?: string;
   ticketNumber?: number;
-  desc?: any;
+  desc?: ITicketDescription;
   queueNo?: number;
   numberOfTicketsAhead?: number;
 }
@@ -39,6 +39,9 @@ export interface ITicketDescription {
   contact: string | null;
   category: string | null;
   queueNo: string | null;
+  nric?: string;
+  postalcode?: string;
+  description?: string;
 }
 
 export interface IApiConfig {
@@ -55,8 +58,8 @@ export interface IApiResponse<T> {
 }
 
 export interface IEditableSettings {
-  registrationFields: any[]; // TODO: change any
-  categories: any[]; // TODO: change any
+  registrationFields: Array<keyof ITicketDescription>;
+  categories: string[];
   feedbackLink: string;
   privacyPolicyLink: string;
   ticketPrefix: string;
@@ -80,7 +83,6 @@ export interface ITrelloBoardSettings {
 
 export interface IQueueSystem {
   // Replaces ITrelloBoardSettings
-  id?: string;
   desc?: IEditableSettings;
   name?: string;
 }

@@ -4,7 +4,6 @@ import {
   Input,
   FormErrorMessage,
   Button,
-  Textarea,
   CheckboxGroup,
   VStack,
   Checkbox,
@@ -15,7 +14,7 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { Formik, Form, Field, FieldArray } from "formik";
-import { IEditableSettings } from "../../model";
+import { IEditableSettings, ITicketDescription } from "../../model";
 import DayOpeningHours from "./DayOpeningHours";
 import moment from "moment-timezone";
 
@@ -28,23 +27,13 @@ const EditableSettings = ({
 }) => {
   console.log("EditableSettings() editableSettings: ", editableSettings);
 
-  const options = {
+  const options: Partial<ITicketDescription> = {
     name: "Full Name",
     contact: "Phone Number",
     nric: "NRIC",
     postalcode: "Postal Code",
     description: "Description",
   };
-
-  const daysOfTheWeek = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
 
   const timeZones = moment.tz.names();
 
@@ -81,28 +70,32 @@ const EditableSettings = ({
                       >
                         <VStack alignItems="flex-start">
                           {Object.entries(options).map(
-                            ([key, value], index) => (
-                              <Checkbox
-                                key={index}
-                                value={key}
-                                isChecked={props.values.registrationFields?.includes(
-                                  key
-                                )}
-                                onChange={(e) => {
-                                  const idx =
-                                    props.values.registrationFields?.indexOf(
-                                      key
-                                    );
-                                  if (e.target.checked && idx === -1) {
-                                    push(key);
-                                  } else if (!e.target.checked && idx > -1) {
-                                    remove(idx);
-                                  }
-                                }}
-                              >
-                                {value}
-                              </Checkbox>
-                            )
+                            ([key, value], index) => {
+                              const typedKey = key as keyof ITicketDescription;
+
+                              return (
+                                <Checkbox
+                                  key={index}
+                                  value={key}
+                                  isChecked={props.values.registrationFields?.includes(
+                                    typedKey
+                                  )}
+                                  onChange={(e) => {
+                                    const idx =
+                                      props.values.registrationFields?.indexOf(
+                                        typedKey
+                                      );
+                                    if (e.target.checked && idx === -1) {
+                                      push(key);
+                                    } else if (!e.target.checked && idx > -1) {
+                                      remove(idx);
+                                    }
+                                  }}
+                                >
+                                  {value}
+                                </Checkbox>
+                              );
+                            }
                           )}
                         </VStack>
                       </CheckboxGroup>
