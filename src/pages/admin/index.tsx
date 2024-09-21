@@ -119,8 +119,8 @@ const Index = () => {
     }
   };
 
-  const toggleBoardIsDisabled = () => {
-    console.log("toggleBoardIsDisabled()");
+  const toggleQueueIsDisabled = () => {
+    console.log("toggleQueueIsDisabled()");
     if (isSubmitting) return;
 
     const newName = boardData?.name?.includes("[DISABLED]")
@@ -190,7 +190,7 @@ const Index = () => {
                     value={boardData.name}
                   />
 
-                  <Links toggleBoardIsDisabled={toggleBoardIsDisabled} />
+                  <Links toggleQueueIsDisabled={toggleQueueIsDisabled} />
                 </Flex>
 
                 {boardData?.desc ? (

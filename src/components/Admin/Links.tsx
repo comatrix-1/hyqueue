@@ -9,10 +9,10 @@ import { API_ENDPOINT } from "../../constants";
 import { ITrelloBoardSettings } from "../../model";
 
 interface Props {
-  toggleBoardIsDisabled: () => void;
+  toggleQueueIsDisabled: () => void;
 }
 
-const Links = ({ toggleBoardIsDisabled }: Props) => {
+const Links = ({ toggleQueueIsDisabled }: Props) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const generateReportFeatureFlag = false;
 
@@ -229,7 +229,7 @@ const Links = ({ toggleBoardIsDisabled }: Props) => {
         borderRadius="3px"
         color="white"
         variant="solid"
-        onClick={toggleBoardIsDisabled}
+        onClick={toggleQueueIsDisabled}
       >
         Disable/ enable queue system
       </Button>
