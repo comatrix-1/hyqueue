@@ -210,4 +210,4 @@ const Index = () => {
   );
 };
 
-export default withProtectedRoute(Index);
+export default Index;
