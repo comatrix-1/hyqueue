@@ -33,39 +33,6 @@ export interface ITicket {
   numberOfTicketsAhead?: number;
 }
 
-// TODO: remove if not needed
-export interface ITrelloApiResponse {
-  status: number;
-  statusText: string;
-  headers: {
-    "content-encoding": string;
-    "content-type": string;
-    date: string;
-    etag: string;
-    vary: string;
-  };
-  config: {
-    url: string;
-    method: string;
-    headers: {
-      Accept: string;
-    };
-    transformRequest: null[];
-    transformResponse: null[];
-    timeout: number;
-    xsrfCookieName: string;
-    xsrfHeaderName: string;
-    maxContentLength: number;
-    maxBodyLength: number;
-    transitional: {
-      silentJSONParsing: boolean;
-      forcedJSONParsing: boolean;
-      clarifyTimeoutError: boolean;
-    };
-  };
-  request: {};
-}
-
 export interface ITicketDescription {
   ticketPrefix: string | null;
   name: string | null;
