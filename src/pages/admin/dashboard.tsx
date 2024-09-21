@@ -35,13 +35,10 @@ const Dashboard = () => {
   };
 
   const resetSelectedQueues = () => {
-    console.log("resetSelectedQueues()");
     setSelectedQueues({});
   };
 
   const handleQueueChange = (ticketId: string, newQueueId: string) => {
-    console.log("handleQueueChange() ticketId: ", ticketId);
-    console.log("handleQueueChange() newQueueId: ", newQueueId);
     setSelectedQueues((prev) => {
       const updatedQueues = { ...prev };
 
@@ -52,8 +49,7 @@ const Dashboard = () => {
       } else {
         updatedQueues[ticketId] = newQueueId; // Update if it's different
       }
-
-      console.log("handleQueueChange() updatedQueues: ", updatedQueues);
+      
       return updatedQueues;
     });
   };

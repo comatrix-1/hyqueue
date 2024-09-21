@@ -29,10 +29,14 @@ const DashboardActions = ({
           queueMap: selectedQueues,
         });
 
-        if (response.status === 201) router.reload();
+        if (response.status === 201) {
+          router.reload();
+        } else {
+          throw new Error("");
+        }
       })();
     } catch (error) {
-      console.log(error);
+      alert("Failed to update tickets to new queues");
     } finally {
       setIsSubmitting(false);
     }

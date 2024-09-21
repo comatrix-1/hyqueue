@@ -9,7 +9,6 @@ type Props = {
 };
 
 export const MissedQueue = ({ tickets = [], queuePendingUrl }: Props) => {
-  console.log("tickets", tickets);
   return (
     <Flex
       mx={12}

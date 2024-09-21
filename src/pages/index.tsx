@@ -24,7 +24,6 @@ const Index = () => {
     try {
       const result = await axios.get(`${API_ENDPOINT}/queues`);
       const response = result.data as AxiosResponse;
-      console.log("response", response);
       response.data.forEach((queue: IQueue) => {
         if (queue.name.indexOf(EQueueTitles.PENDING) > -1) {
           setQueuePendingUrl(location.origin + `/queue`);

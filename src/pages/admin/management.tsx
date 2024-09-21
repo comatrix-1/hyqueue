@@ -34,15 +34,10 @@ const Management = () => {
     const response = await axios.get(`${API_ENDPOINT}/queues`);
 
     if (!response?.data) {
-      console.log("getQueues() :: Failed to get queues");
+      alert("Failed to get queues");
     }
 
     setQueues(response.data.data);
-  };
-
-  const onSelectQueue = (queueId: string) => {
-    console.log("onSelectQueue()", queueId);
-    router.push(`/admin/serve?queueId=${queueId}`);
   };
 
   const navigateToAdminPage = () => {
@@ -53,8 +48,6 @@ const Management = () => {
     values: { queueId: string },
     actions: FormikHelpers<{ queueId: string }>
   ) => {
-    console.log("values", values);
-    console.log("actions", actions);
     if (!values.queueId) return;
     router.push(`/admin/serve?queueId=${values.queueId}`);
   };

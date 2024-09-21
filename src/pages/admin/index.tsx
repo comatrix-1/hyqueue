@@ -52,7 +52,6 @@ const Index = () => {
     try {
       const response = await axios.get(`${API_ENDPOINT}/system`);
 
-      console.log("getBoard() response: ", response.data);
       setBoardData(response.data.data);
     } catch (error) {
       errorHandler(error);
@@ -60,7 +59,6 @@ const Index = () => {
   };
 
   const updateBoard = async (data: ITrelloBoardSettings) => {
-    console.log("updateBoard() data: ", data);
     if (isSubmitting) return;
 
     if (apiConfig && apiConfig.key && apiConfig.token) {
@@ -87,7 +85,6 @@ const Index = () => {
           };
         }
 
-        console.log("updating settings:", settings);
         await axios.put(`${API_ENDPOINT}/system`, settings);
         window.location.reload();
       } catch (error) {
@@ -99,7 +96,6 @@ const Index = () => {
   };
 
   const toggleQueueIsDisabled = () => {
-    console.log("toggleQueueIsDisabled()");
     if (isSubmitting) return;
 
     const newName = boardData?.name?.includes("[DISABLED]")
@@ -135,7 +131,6 @@ const Index = () => {
   const submit = async (e: any) => {
     // TODO: change any
     try {
-      console.log("submit, e", e);
       await updateBoard({ desc: e });
     } catch (error) {
       console.error(error);

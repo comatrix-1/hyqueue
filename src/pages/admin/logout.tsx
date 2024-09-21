@@ -25,7 +25,6 @@ const Index = () => {
       );
 
       if (response.status < 300 && response.status >= 200) {
-        console.log("deleted", response.status);
         authentication.logout();
       }
     } catch (error) {

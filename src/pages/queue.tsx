@@ -74,7 +74,6 @@ const Index = () => {
   };
 
   const getQueueSystem = async () => {
-    console.log("getQueueSystem()");
     try {
       const result = await axios.get(`${API_ENDPOINT}/system`);
       const response = result.data as AxiosResponse;
@@ -108,7 +107,6 @@ const Index = () => {
         .trim();
       setQueueSystemName(cleanedName ?? "");
     } catch (err) {
-      console.log(err);
       setQueueStatus(EQueueStatus.INVALID);
     }
   };
@@ -164,7 +162,7 @@ const Index = () => {
       router.push(url, url, { locale: lang });
     } catch (err: unknown) {
       if (axios.isAxiosError(err) && err.response) {
-        console.log(err.response.status);
+        alert("Error creating ticket");
       } else {
         console.error("An unknown error occurred:", err);
       }

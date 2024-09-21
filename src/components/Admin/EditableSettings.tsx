@@ -25,8 +25,6 @@ const EditableSettings = ({
   editableSettings: IEditableSettings;
   submit: (e: any) => void;
 }) => {
-  console.log("EditableSettings() editableSettings: ", editableSettings);
-
   const options: Partial<ITicketDescription> = {
     name: "Full Name",
     contact: "Phone Number",

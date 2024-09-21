@@ -107,8 +107,6 @@ export const isQueueClosed = (
   const currentDay = dayNames[zonedDate.getDay()]; // Get the current day name
   const currentTime = format(zonedDate, "HH:mm", { timeZone });
 
-  console.log("isQueueClosed() currentTime:", currentTime);
-
   const todayOpeningHours = openingHours.find(
     (openingHour) => openingHour.day === currentDay
   );
@@ -116,8 +114,6 @@ export const isQueueClosed = (
   if (!todayOpeningHours) {
     return true; // If no opening hours are set for today, assume closed
   }
-
-  console.log("isQueueClosed() Today's Opening Hours:", todayOpeningHours);
 
   if (!todayOpeningHours.startHour || !todayOpeningHours.endHour) {
     return true; // If startHour or endHour is not set, assume closed
@@ -130,13 +126,11 @@ export const isQueueClosed = (
 };
 
 export const prepareJsonString = (input: string) => {
-  console.log("prepareJsonString() input: " + input);
   const jsonString = input.replace(
     /"\[.*?\]\((https?:\/\/[^\s]+)\s*\"‌?\"\)"/g,
     '"$1"'
   );
 
-  console.log("prepareJsonString() return jsonString: ", jsonString);
   return jsonString;
 };
 

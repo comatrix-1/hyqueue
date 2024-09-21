@@ -89,8 +89,6 @@ const Index = () => {
 
       const retrievedTicket = getTicketData.data;
 
-      console.log("retrievedTicket: ", retrievedTicket);
-
       setTicket(retrievedTicket);
       setTicketNumber(ticketNumber);
 
@@ -123,7 +121,6 @@ const Index = () => {
       // Check if err is status 429 i.e. Trello rate limit
       // if so do nothing, will retry on the next interval
       if (err.response && err.response.status === 429) {
-        console.log("429 detected");
         return;
       }
       setTicketState(ETicketStatus.ERROR);
@@ -133,7 +130,6 @@ const Index = () => {
   };
 
   const getQueueSystem = async () => {
-    console.log("getQueueSystem()");
     try {
       const result = await axios.get(`${API_ENDPOINT}/system`);
       const response = result.data as AxiosResponse;
@@ -154,7 +150,7 @@ const Index = () => {
         pathname: "/queue",
       });
     } catch (error) {
-      console.log(error);
+      alert("Failed to leave queue");
     }
   };
 
@@ -170,17 +166,12 @@ const Index = () => {
     // 1. Alerted - Ticket is called by admin
     if (ticketState === ETicketStatus.ALERTED) {
       return (
-        <>
-          <a onClick={() => console.log(editableSettings)}>
-            check editable settings
-          </a>
-          <Alerted
-            waitingTime={editableSettings?.waitTimePerTicket}
-            openLeaveModal={onOpen}
-            ticketId={ticketId}
-            ticket={ticket}
-          />
-        </>
+        <Alerted
+          waitingTime={editableSettings?.waitTimePerTicket}
+          openLeaveModal={onOpen}
+          ticketId={ticketId}
+          ticket={ticket}
+        />
       );
     }
     // 2. Served - Ticket is complete

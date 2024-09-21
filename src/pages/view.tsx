@@ -68,7 +68,7 @@ const Index = () => {
       try {
         audio.play();
       } catch (e) {
-        console.log("Audio failed to play");
+        console.error("Audio failed to play");
       }
     }
 

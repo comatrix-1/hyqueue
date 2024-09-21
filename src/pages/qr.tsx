@@ -10,7 +10,7 @@ import { NavBar } from "../components/Navbar";
 import { API_ENDPOINT } from "../constants";
 const Index = () => {
   const [url, setUrl] = useState("");
-  const [boardName, setBoardName] = useState("");
+  const [queueName, setQueueName] = useState("");
 
   useEffect(() => {
     setUrl(`${location.origin}/queue`);
@@ -24,16 +24,16 @@ const Index = () => {
       // 2. Gets info stored as JSON in board description
       const response = await axios.get(`${API_ENDPOINT}/system`);
       const { name } = response.data.data;
-      setBoardName(name);
+      setQueueName(name);
     } catch (err) {
-      console.log("err", err);
+      alert("Failed to get queue");
     }
   };
 
   return (
     <>
       <Head>
-        <title>QR Code - {boardName}</title>
+        <title>QR Code - {queueName}</title>
       </Head>
       <Container>
         <NavBar width="100%" maxWidth="600px" />
@@ -44,7 +44,7 @@ const Index = () => {
               textStyle="display3"
               color="primary.500"
             >
-              {boardName}
+              {queueName}
             </Heading>
             <Heading mt="24px" textAlign="center" textStyle="display2">
               Scan QR Code to join the queue

@@ -8,7 +8,6 @@ type Props = {
 };
 
 export const CurrentlyServingQueue = ({ tickets }: Props) => {
-  console.log("CurrentlyServingQueue() tickets: ", tickets);
   const { t, lang } = useTranslation("common");
   return (
     <Box mx={20} my={10}>

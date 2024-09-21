@@ -47,7 +47,6 @@ const Serve = () => {
   };
 
   const onComplete = async () => {
-    console.log("onComplete ticket: ", ticket);
     setIsSubmitting(true);
     try {
       await axios.put(
@@ -58,14 +57,13 @@ const Serve = () => {
       const queueIdValue = searchParams.get("queueId") ?? "";
       await getListsWithCards(queueIdValue);
     } catch {
-      console.log("Error completing ticket");
+      alert("Error updating ticket as complete");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const onMissed = async () => {
-    console.log("onMissed ticket: ", ticket);
     setIsSubmitting(true);
     try {
       await axios.put(
@@ -76,7 +74,7 @@ const Serve = () => {
       const queueIdValue = searchParams.get("queueId") ?? "";
       await getListsWithCards(queueIdValue);
     } catch {
-      console.log("Error completing ticket");
+      alert("Error updating ticket as missed");
     } finally {
       setIsSubmitting(false);
     }
@@ -86,7 +84,6 @@ const Serve = () => {
     if (ticket?.id) {
       await onComplete();
     }
-    console.log("onTakeFromPending()");
     const searchParams = new URLSearchParams(window.location.search);
     const queueIdValue = searchParams.get("queueId") ?? "";
     setIsSubmitting(true);
@@ -94,7 +91,6 @@ const Serve = () => {
       const result = await axios.put(
         `${API_ENDPOINT}/tickets?newQueueId=${queueIdValue}`
       );
-      console.log("result", result);
       if (result.status !== 201) {
         throw new Error(result.data.message);
       }

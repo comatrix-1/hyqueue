@@ -212,8 +212,6 @@ const Links = ({ toggleQueueIsDisabled }: Props) => {
     (async () => {
       const result = await axios.get(`${API_ENDPOINT}/system`);
       const response = result.data as AxiosResponse;
-
-      console.log("response", response);
     })();
   }, []);
 
