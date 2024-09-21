@@ -1,6 +1,6 @@
-import axios from "axios";
-import { parse as parseUrl } from "url";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { parse as parseUrl } from "url";
+import { IApiResponse, ITicket } from "../../model";
 import { deleteTicketsById } from "../../services/deleteTicketsById";
 import { getTickets } from "../../services/getTickets";
 import { getTicketsById } from "../../services/getTicketsById";
@@ -10,7 +10,6 @@ import { putTicketsByIdAndNewQueueId } from "../../services/putTicketsByIdAndNew
 import { putTicketsByIdAndNewQueueName } from "../../services/putTicketsByIdAndNewQueueName";
 import { putTicketsByNewQueueId } from "../../services/putTicketsByNewQueueId";
 import { putTicketsByQueueMap } from "../../services/putTicketsByQueueMap";
-import { IApiResponse, ITicket } from "../../model";
 import { withErrorHandling } from "../../withErrorHandling";
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -35,9 +34,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     case "POST": {
       const { desc } = body;
-      const { status, data }: IApiResponse<ITicket> = await postTicketsByQueue(
-        desc
-      );
+      const { status, data }: IApiResponse<ITicket> =
+        await postTicketsByQueue(desc);
       return res.status(status).json(data);
     }
 

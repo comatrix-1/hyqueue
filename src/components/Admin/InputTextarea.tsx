@@ -1,10 +1,9 @@
 import {
   Flex,
   FormControl,
-  FormLabel,
   FormHelperText,
+  FormLabel,
   Textarea,
-  TextProps,
   TextareaProps,
 } from "@chakra-ui/react";
 

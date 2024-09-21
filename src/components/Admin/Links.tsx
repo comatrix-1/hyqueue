@@ -1,12 +1,8 @@
-import { ButtonGroup, Button } from "@chakra-ui/react";
+import { Button, ButtonGroup } from "@chakra-ui/react";
 import axios, { AxiosResponse } from "axios";
-import { mapSeries } from "bluebird";
-import _ from "lodash";
 import router from "next/router";
 import { useEffect, useState } from "react";
-import { getSystem } from "../../services/getSystem";
 import { API_ENDPOINT } from "../../constants";
-import { ITrelloBoardSettings } from "../../model";
 
 interface Props {
   toggleQueueIsDisabled: () => void;

@@ -1,6 +1,6 @@
 import { Flex, Text } from "@chakra-ui/react";
-import { ITicket } from "../../model";
 import useTranslation from "next-translate/useTranslation";
+import { ITicket } from "../../model";
 
 interface Props {
   ticket: ITicket | undefined;

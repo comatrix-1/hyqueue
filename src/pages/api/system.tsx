@@ -1,6 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { IEditableSettings, ITrelloBoardSettings } from "../../model";
-import axios from "axios";
 import { getSystem } from "../../services/getSystem";
 import { putSystem } from "../../services/putSystem";
 import { withErrorHandling } from "../../withErrorHandling";

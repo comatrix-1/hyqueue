@@ -1,4 +1,4 @@
-import { Box, Center, Text, Flex, Button } from "@chakra-ui/react";
+import { Box, Button, Center, Text } from "@chakra-ui/react";
 import useTranslation from "next-translate/useTranslation";
 
 interface Props {
@@ -10,8 +10,7 @@ export const Served = ({ feedbackLink }: Props) => {
 
   return (
     <>
-      <Center>
-      </Center>
+      <Center></Center>
       <Box layerStyle="card" textAlign="center" mt={3}>
         <Text textStyle="display3" mb={4}>
           {t("thanks-for-coming")}

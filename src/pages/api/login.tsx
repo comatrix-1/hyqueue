@@ -2,8 +2,6 @@ const axios = require("axios");
 const { parse: parseUrl } = require("url");
 import type { NextApiRequest, NextApiResponse } from "next";
 import { postLogin } from "../../services/postLogin";
-import { API_ENDPOINT } from "../../constants";
-import { logger } from "../../logger";
 import { withErrorHandling } from "../../withErrorHandling";
 
 /**

@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react'
+import { Flex } from "@chakra-ui/react";
 
 export const Container = (props: any) => {
   return (
@@ -16,6 +16,5 @@ export const Container = (props: any) => {
         {...props}
       />
     </Flex>
-
-  )
-}
+  );
+};

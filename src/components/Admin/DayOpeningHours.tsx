@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { Flex, Input, Text } from "@chakra-ui/react";
 
 interface Props {

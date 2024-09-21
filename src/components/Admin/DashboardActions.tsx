@@ -1,10 +1,7 @@
-import { ButtonGroup, Button, Select } from "@chakra-ui/react";
+import { Button, ButtonGroup } from "@chakra-ui/react";
 import axios from "axios";
-import { mapSeries } from "bluebird";
-import _ from "lodash";
 import router from "next/router";
-import { Dispatch, SetStateAction, useState } from "react";
-import { EQueueTitles } from "../../model";
+import { Dispatch, SetStateAction } from "react";
 import { API_ENDPOINT } from "../../constants";
 
 interface Props {

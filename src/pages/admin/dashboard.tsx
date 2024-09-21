@@ -1,15 +1,15 @@
 import { Button, Center, Container, Flex } from "@chakra-ui/react";
 import DashboardTable from "../../components/Admin/DashboardTable";
 
-import { Navbar } from "../../components/Admin";
-import { Main } from "../../components/Main";
-import Head from "next/head";
-import { useEffect, useState } from "react";
 import axios from "axios";
-import { API_ENDPOINT } from "../../constants";
-import DashboardActions from "../../components/Admin/DashboardActions";
+import Head from "next/head";
 import router from "next/router";
+import { useEffect, useState } from "react";
+import { Navbar } from "../../components/Admin";
+import DashboardActions from "../../components/Admin/DashboardActions";
+import { Main } from "../../components/Main";
 import withProtectedRoute from "../../components/withProtectedRoute";
+import { API_ENDPOINT } from "../../constants";
 
 const Dashboard = () => {
   const [tickets, setTickets] = useState<any[]>([]);

@@ -1,26 +1,26 @@
-import { useEffect, useState } from 'react'
-import { Box, Text, Flex, Button } from '@chakra-ui/react'
-import { useRouter } from 'next/router'
+import { Box, Button, Flex, Text } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
-import LogoQueue from '../../assets/svg/logo-queue.svg'
-import { authentication } from '../../utils'
+import LogoQueue from "../../assets/svg/logo-queue.svg";
+import { authentication } from "../../utils";
 
 const Navbar = (props: any) => {
-  const router = useRouter()
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const router = useRouter();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    setIsLoggedIn(!!authentication.getKey() && !!authentication.getToken())
-  }, [])
+    setIsLoggedIn(!!authentication.getKey() && !!authentication.getToken());
+  }, []);
 
   /**
    * Confirm with the user that she/he wants to logout
    */
-   const confirmLogout = () => {
-    if(confirm('Please confirm that you would like to logout?')) {
-      router.push('/admin/logout')
+  const confirmLogout = () => {
+    if (confirm("Please confirm that you would like to logout?")) {
+      router.push("/admin/logout");
     }
-  }
+  };
 
   return (
     <Flex
@@ -31,23 +31,25 @@ const Navbar = (props: any) => {
       pt={4}
       pb={8}
       px={4}
-      {...props}>
+      {...props}
+    >
       <Flex>
-        <a href="/admin" style={{display: "flex", flexDirection: "row", alignItems: "center"}}>
-          <LogoQueue
-            height="40px"
-            width="40px"
-          />
-          <Text textStyle="heading1" color="primary.500">&nbsp;&nbsp;Admin</Text>
+        <a
+          href="/admin"
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <LogoQueue height="40px" width="40px" />
+          <Text textStyle="heading1" color="primary.500">
+            &nbsp;&nbsp;Admin
+          </Text>
         </a>
       </Flex>
-      <Box
-        display={"block"}
-        flexBasis={"auto"}
-      >
-        {
-          isLoggedIn
-          ?
+      <Box display={"block"} flexBasis={"auto"}>
+        {isLoggedIn ? (
           <Button
             display="flex"
             colorScheme="red"
@@ -59,12 +61,10 @@ const Navbar = (props: any) => {
           >
             Logout
           </Button>
-          :
-          null
-        }
+        ) : null}
       </Box>
     </Flex>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

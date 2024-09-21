@@ -27,7 +27,11 @@ export const getSystem = async (): Promise<IApiResponse<IQueueSystem>> => {
     if (!parsedDesc?.openingHours) throw new Error();
     parsedDesc.isQueueClosed =
       name?.includes("[DISABLED]") ||
-      isQueueClosed(new Date(), parsedDesc?.openingHours, parsedDesc?.openingHoursTimeZone);
+      isQueueClosed(
+        new Date(),
+        parsedDesc?.openingHours,
+        parsedDesc?.openingHoursTimeZone
+      );
     console.log("parsed desc: ", parsedDesc);
   } catch (error) {
     console.log("Error parsing desc");

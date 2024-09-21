@@ -1,32 +1,30 @@
-import { useEffect, useState } from "react";
-import { Text, Flex, Heading, useDisclosure } from "@chakra-ui/react";
+import { Flex, Heading, Text, useDisclosure } from "@chakra-ui/react";
+import axios, { AxiosResponse } from "axios";
+import useTranslation from "next-translate/useTranslation";
 import Head from "next/head";
 import { useRouter } from "next/router";
-import useTranslation from "next-translate/useTranslation";
-import queryString from "query-string";
-import axios, { AxiosResponse } from "axios";
+import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 
-import { useInterval } from "../utils";
-import { COOKIE_MAX_AGE, API_ENDPOINT } from "../constants";
 import { Container } from "../components/Container";
-import { Main } from "../components/Main";
 import { Footer } from "../components/Footer";
+import { Main } from "../components/Main";
 import { NavBar } from "../components/Navbar";
-import { InQueue } from "../components/Ticket/InQueue";
-import { NextInQueue } from "../components/Ticket/NextInQueue";
 import { Alerted } from "../components/Ticket/Alerted";
-import { Skipped } from "../components/Ticket/Skipped";
-import { Served } from "../components/Ticket/Served";
-import { NotFound } from "../components/Ticket/NotFound";
+import { InQueue } from "../components/Ticket/InQueue";
 import { LeaveModal } from "../components/Ticket/LeaveModal";
+import { NextInQueue } from "../components/Ticket/NextInQueue";
+import { NotFound } from "../components/Ticket/NotFound";
+import { Served } from "../components/Ticket/Served";
+import { Skipped } from "../components/Ticket/Skipped";
+import { API_ENDPOINT, COOKIE_MAX_AGE } from "../constants";
 import {
   EQueueTitles,
   ETicketStatus,
   IEditableSettings,
   ITicket,
 } from "../model";
-import TicketInfo from "../components/Ticket/TicketInfo";
+import { useInterval } from "../utils";
 
 const Index = () => {
   const { t, lang } = useTranslation("common");

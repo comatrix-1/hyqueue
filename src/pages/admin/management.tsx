@@ -3,27 +3,23 @@ import {
   Button,
   Center,
   Container,
-  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Heading,
   Select,
   Text,
 } from "@chakra-ui/react";
 
-import Head from "next/head";
-import { InputText, Navbar } from "../../components/Admin";
-import { Main } from "../../components/Main";
-import { useEffect, useState } from "react";
 import axios from "axios";
-import { API_ENDPOINT } from "../../constants";
-import * as _ from "lodash";
-import { ITrelloBoardList, EQueueTitles, IQueue } from "../../model";
-import ServerControls from "../../components/Admin/ServerControls";
-import { useRouter } from "next/router";
 import { Field, Form, Formik, FormikHelpers } from "formik";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { Navbar } from "../../components/Admin";
+import { Main } from "../../components/Main";
 import withProtectedRoute from "../../components/withProtectedRoute";
+import { API_ENDPOINT } from "../../constants";
+import { EQueueTitles, IQueue, ITrelloBoardList } from "../../model";
 
 const Management = () => {
   const [queues, setQueues] = useState([]);
@@ -96,7 +92,9 @@ const Management = () => {
                                 queue.name.includes(EQueueTitles.ALERTED)
                               )
                               .map((queue: ITrelloBoardList) => (
-                                <option value={queue.id} key={queue.id}>{queue.name}</option>
+                                <option value={queue.id} key={queue.id}>
+                                  {queue.name}
+                                </option>
                               ))}
                           </Select>
                           <FormErrorMessage>

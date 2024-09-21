@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IApiResponse, ITicket } from "../model";
+import { IApiResponse } from "../model";
 
 export const putTicketsByIdAndNewQueueId = async (
   id: string,

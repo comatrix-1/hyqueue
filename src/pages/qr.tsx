@@ -1,9 +1,8 @@
+import { Box, Center, Heading, Text } from "@chakra-ui/react";
 import axios from "axios";
-import { useEffect, useState } from "react";
 import Head from "next/head";
-import { Heading, Box, Center, Text } from "@chakra-ui/react";
-import queryString from "query-string";
 import QRCode from "qrcode.react";
+import { useEffect, useState } from "react";
 
 import { Container } from "../components/Container";
 import { Main } from "../components/Main";

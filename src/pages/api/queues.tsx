@@ -1,9 +1,7 @@
 const axios = require("axios");
 const { parse: parseUrl } = require("url");
 import type { NextApiRequest, NextApiResponse } from "next";
-import { ITrelloBoardList } from "../../model";
 import { getQueues } from "../../services/getQueues";
-import { logger } from "../../logger";
 import { withErrorHandling } from "../../withErrorHandling";
 
 /**
@@ -12,7 +10,7 @@ import { withErrorHandling } from "../../withErrorHandling";
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { method: httpMethod } = req;
 
-  if (httpMethod === 'GET') {
+  if (httpMethod === "GET") {
     const { status, data } = await getQueues();
     return res.status(status).json(data);
   } else {

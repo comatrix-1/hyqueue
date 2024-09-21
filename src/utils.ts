@@ -1,6 +1,6 @@
+import { format, toZonedTime } from "date-fns-tz";
 import { useEffect, useRef } from "react";
 import { EQueueTitles, IOpeningHour } from "./model";
-import { toZonedTime, format } from "date-fns-tz";
 
 /**
  * React setInterval Equivalent

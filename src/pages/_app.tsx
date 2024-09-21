@@ -1,15 +1,15 @@
-import { ChakraProvider, ColorModeProvider } from '@chakra-ui/react'
-import { CookiesProvider } from 'react-cookie';
-import theme from '../theme'
-import Head from 'next/head'
-import { AppProps } from 'next/app';
+import { ChakraProvider, ColorModeProvider } from "@chakra-ui/react";
+import { AppProps } from "next/app";
+import Head from "next/head";
+import { CookiesProvider } from "react-cookie";
+import theme from "../theme";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ChakraProvider resetCSS theme={theme}>
       <ColorModeProvider
         options={{
-          initialColorMode: 'light',
+          initialColorMode: "light",
         }}
       >
         <CookiesProvider>
@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         </CookiesProvider>
       </ColorModeProvider>
     </ChakraProvider>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;

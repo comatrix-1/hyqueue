@@ -1,3 +1,4 @@
+import { CheckIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
 import {
   ButtonGroup,
   Editable,
@@ -8,7 +9,6 @@ import {
   Spinner,
   useEditableControls,
 } from "@chakra-ui/react";
-import { CheckIcon, CloseIcon, EditIcon } from "@chakra-ui/icons";
 
 const Index = ({
   color = "",

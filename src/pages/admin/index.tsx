@@ -1,38 +1,17 @@
+import { Center, Flex, Spinner } from "@chakra-ui/react";
 import axios from "axios";
-import * as _ from "lodash";
-import { useEffect, useState } from "react";
-import queryString from "query-string";
-import { useRouter } from "next/router";
-import { ExportToCsv } from "export-to-csv";
 import Head from "next/head";
-import moment from "moment";
-import {
-  Box,
-  Button,
-  ButtonGroup,
-  Center,
-  Flex,
-  Grid,
-  Spinner,
-} from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
-import { Container } from "../../components/Container";
-import { Main } from "../../components/Main";
-import {
-  InputCheckbox,
-  InputEditable,
-  InputText,
-  InputTextarea,
-  Navbar,
-} from "../../components/Admin";
-import { authentication } from "../../utils";
-import { mapSeries } from "bluebird";
-import { IApiConfig, ITrelloBoardSettings } from "../../model";
-import { API_ENDPOINT } from "../../constants";
+import { InputEditable, Navbar } from "../../components/Admin";
 import EditableSettings from "../../components/Admin/EditableSettings";
 import Links from "../../components/Admin/Links";
-import { FormikHelpers } from "formik";
-import withProtectedRoute from "../../components/withProtectedRoute";
+import { Container } from "../../components/Container";
+import { Main } from "../../components/Main";
+import { API_ENDPOINT } from "../../constants";
+import { IApiConfig, ITrelloBoardSettings } from "../../model";
+import { authentication } from "../../utils";
 
 const Index = () => {
   const router = useRouter();

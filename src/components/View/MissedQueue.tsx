@@ -1,7 +1,7 @@
-import { Flex, Box, Heading } from "@chakra-ui/react";
-import { QrCode } from "./QrCode";
-import { getQueueNumber } from "../../utils";
+import { Box, Flex, Heading } from "@chakra-ui/react";
 import { ITrelloCard } from "../../model";
+import { getQueueNumber } from "../../utils";
+import { QrCode } from "./QrCode";
 
 type Props = {
   tickets: ITrelloCard[];

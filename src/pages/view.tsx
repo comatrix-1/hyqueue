@@ -1,23 +1,15 @@
 import { Grid, GridItem } from "@chakra-ui/react";
+import axios from "axios";
+import * as _ from "lodash";
 import Head from "next/head";
 import { useEffect, useState } from "react";
-import queryString from "query-string";
-import axios from "axios";
-import { API_ENDPOINT } from "../constants";
-import { useInterval } from "../utils";
 import { CurrentlyServingQueue } from "../components/View/CurrentlyServingQueue";
 import { MissedQueue } from "../components/View/MissedQueue";
-import { ViewHeader } from "../components/View/ViewHeader";
 import { ViewFooter } from "../components/View/ViewFooter";
-import * as _ from "lodash";
-import {
-  EQueueTitles,
-  IQueue,
-  IQueueSystem,
-  ITicket,
-  ITrelloBoardList,
-  ITrelloList,
-} from "../model";
+import { ViewHeader } from "../components/View/ViewHeader";
+import { API_ENDPOINT } from "../constants";
+import { EQueueTitles, IQueue, IQueueSystem, ITicket } from "../model";
+import { useInterval } from "../utils";
 
 const Index = () => {
   const [audio, setAudio] = useState<HTMLAudioElement>();
@@ -116,10 +108,7 @@ const Index = () => {
         templateColumns="repeat(7, 1fr)"
         templateRows="repeat(16, 1fr)"
       >
-        <GridItem
-          colSpan={7}
-          rowSpan={1}
-        >
+        <GridItem colSpan={7} rowSpan={1}>
           <ViewHeader queueSystemName={queueSystem?.name} />
         </GridItem>
         <GridItem colSpan={5} rowSpan={14} bg="secondary.300">

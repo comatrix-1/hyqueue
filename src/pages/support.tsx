@@ -1,20 +1,10 @@
-import {
-  Heading,
-  Center,
-  Box,
-  Text,
-  Flex,
-  Input,
-  Button,
-} from "@chakra-ui/react";
+import { Box, Center, Flex, Heading, Text } from "@chakra-ui/react";
 import Head from "next/head";
-import axios, { AxiosResponse } from "axios";
 import { useEffect, useState } from "react";
-import queryString from "query-string";
 
 import { Container } from "../components/Container";
-import { Main } from "../components/Main";
 import { Footer } from "../components/Footer";
+import { Main } from "../components/Main";
 import { NavBar } from "../components/Navbar";
 import { UrlInput } from "../components/Support/UrlInput";
 

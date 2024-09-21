@@ -1,7 +1,4 @@
-import { ButtonGroup, Button } from "@chakra-ui/react";
-import axios from "axios";
-import router from "next/router";
-import { API_ENDPOINT } from "../../constants";
+import { Button, ButtonGroup } from "@chakra-ui/react";
 
 interface Props {
   onComplete: () => void;

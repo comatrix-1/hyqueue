@@ -1,19 +1,13 @@
 import {
-  Box,
   Button,
-  Center,
-  Heading,
-  Text,
-  theme,
   Flex,
-  useDisclosure,
+  Heading,
   Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
   ModalBody,
-  ModalFooter,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
+  Text,
 } from "@chakra-ui/react";
 import useTranslation from "next-translate/useTranslation";
 

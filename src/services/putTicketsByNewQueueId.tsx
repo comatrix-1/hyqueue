@@ -1,9 +1,9 @@
 import axios from "axios";
 import {
-  ITrelloBoardList,
   EQueueTitles,
-  ITrelloCard,
   IApiResponse,
+  ITrelloBoardList,
+  ITrelloCard,
 } from "../model";
 
 export const putTicketsByNewQueueId = async (

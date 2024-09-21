@@ -1,19 +1,16 @@
 import {
-  TableContainer,
+  Box,
+  Select,
+  Spinner,
   Table,
-  TableCaption,
-  Thead,
-  Tr,
-  Th,
+  TableContainer,
   Tbody,
   Td,
-  Tfoot,
-  Select,
-  Box,
-  Spinner,
+  Th,
+  Thead,
+  Tr,
 } from "@chakra-ui/react";
-import { EQueueTitles, ITicket, ITrelloCard } from "../../model";
-import { useState } from "react";
+import { ITicket } from "../../model";
 
 interface Props {
   tickets: ITicket[]; // TODO: change any

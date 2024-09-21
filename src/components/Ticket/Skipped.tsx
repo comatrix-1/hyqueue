@@ -1,13 +1,4 @@
-import {
-  Box,
-  Button,
-  Center,
-  Heading,
-  Text,
-  theme,
-  Flex,
-  Divider,
-} from "@chakra-ui/react";
+import { Box, Button, Center, Divider, Text } from "@chakra-ui/react";
 import useTranslation from "next-translate/useTranslation";
 import { ITicket } from "../../model";
 import TicketInfo from "./TicketInfo";

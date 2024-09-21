@@ -1,13 +1,13 @@
 import axios from "axios";
+import { INTERNAL_SERVER_ERROR } from "../constants";
 import {
-  IBoardData,
-  IList,
-  ICard,
   EQueueTitles,
   IApiResponse,
+  IBoardData,
+  ICard,
+  IList,
   ITicket,
 } from "../model";
-import { INTERNAL_SERVER_ERROR } from "../constants";
 
 export const getTicketsById = async (
   id: string

@@ -1,7 +1,7 @@
-import { Box, Heading, Flex } from "@chakra-ui/react";
-import { getQueueName, getQueueNumber } from "../../utils";
-import { ITicket, ITrelloList } from "../../model";
+import { Box, Flex, Heading } from "@chakra-ui/react";
 import useTranslation from "next-translate/useTranslation";
+import { ITicket } from "../../model";
+import { getQueueName } from "../../utils";
 
 type Props = {
   tickets: ITicket[];

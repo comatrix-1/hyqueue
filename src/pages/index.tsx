@@ -1,18 +1,16 @@
-import { Heading, Center, Box, Button } from "@chakra-ui/react";
+import { Box, Button, Center, Heading } from "@chakra-ui/react";
 import axios, { AxiosResponse } from "axios";
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import Head from "next/head";
 import useTranslation from "next-translate/useTranslation";
-import queryString from "query-string";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 import { Container } from "../components/Container";
-import { Main } from "../components/Main";
 import { Footer } from "../components/Footer";
+import { Main } from "../components/Main";
 import { NavBar } from "../components/Navbar";
 
 import { API_ENDPOINT } from "../constants";
-import { EQueueTitles, IQueue, ITrelloBoardList } from "../model";
+import { EQueueTitles, IQueue } from "../model";
 
 const Index = () => {
   const { t, lang } = useTranslation("common");

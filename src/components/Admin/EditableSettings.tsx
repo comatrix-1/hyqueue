@@ -1,22 +1,22 @@
 import {
-  FormControl,
-  FormLabel,
-  Input,
-  FormErrorMessage,
-  Button,
-  CheckboxGroup,
-  VStack,
-  Checkbox,
   Box,
-  Grid,
+  Button,
+  Checkbox,
+  CheckboxGroup,
   Flex,
-  Text,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+  Grid,
+  Input,
   Select,
+  Text,
+  VStack,
 } from "@chakra-ui/react";
-import { Formik, Form, Field, FieldArray } from "formik";
+import { Field, FieldArray, Form, Formik } from "formik";
+import moment from "moment-timezone";
 import { IEditableSettings, ITicketDescription } from "../../model";
 import DayOpeningHours from "./DayOpeningHours";
-import moment from "moment-timezone";
 
 const EditableSettings = ({
   editableSettings,

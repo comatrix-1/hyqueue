@@ -1,4 +1,4 @@
-import { Stack } from '@chakra-ui/react'
+import { Stack } from "@chakra-ui/react";
 
 export const Main = (props: any) => (
   <Stack
@@ -9,4 +9,4 @@ export const Main = (props: any) => (
     justifyContent="center"
     {...props}
   />
-)
+);

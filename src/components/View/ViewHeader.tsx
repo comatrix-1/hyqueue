@@ -1,4 +1,4 @@
-import { Center, Grid, GridItem, Text, Flex } from "@chakra-ui/react";
+import { Center, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 
 import LogoQueue from "../../assets/svg/logo-queue.svg";
 

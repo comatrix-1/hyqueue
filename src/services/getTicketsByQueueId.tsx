@@ -1,9 +1,9 @@
 import axios from "axios";
 import {
-  ITrelloCard,
-  ITicketDescription,
   IApiResponse,
   IQueue,
+  ITicketDescription,
+  ITrelloCard,
 } from "../model";
 import { prepareJsonString } from "../utils";
 

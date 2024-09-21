@@ -1,13 +1,12 @@
-import { useEffect } from "react";
-import { useRouter } from "next/router";
-import queryString from "query-string";
 import { Center, Spinner } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
+import { Navbar } from "../../components/Admin";
 import { Container } from "../../components/Container";
 import { Main } from "../../components/Main";
-import { Navbar } from "../../components/Admin";
-import { authentication } from "../../utils";
 import withProtectedRoute from "../../components/withProtectedRoute";
+import { authentication } from "../../utils";
 
 const Index = () => {
   const router = useRouter();

@@ -1,29 +1,27 @@
-import axios from "axios";
-import { FormEvent, useEffect, useState } from "react";
-import queryString from "query-string";
-import Head from "next/head";
 import {
-  Button,
   Box,
+  Button,
   Center,
-  Flex,
   Modal,
   ModalBody,
-  ModalContent,
   ModalCloseButton,
+  ModalContent,
   ModalFooter,
   ModalHeader,
   ModalOverlay,
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
+import axios from "axios";
+import Head from "next/head";
+import { FormEvent, useState } from "react";
 
+import { InputText, Navbar } from "../../components/Admin";
 import { Container } from "../../components/Container";
 import { Main } from "../../components/Main";
-import { InputText, Navbar } from "../../components/Admin";
 
-import { API_ENDPOINT } from "../../constants";
 import { useRouter } from "next/router";
+import { API_ENDPOINT } from "../../constants";
 
 const Index = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();

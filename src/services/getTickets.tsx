@@ -1,7 +1,7 @@
 import axios from "axios";
+import { INTERNAL_SERVER_ERROR } from "../constants";
 import { IApiResponse, ITicket, ITrelloCard } from "../model";
 import { prepareJsonString } from "../utils";
-import { INTERNAL_SERVER_ERROR } from "../constants";
 
 export const getTickets = async (): Promise<IApiResponse<ITicket[]>> => {
   const {

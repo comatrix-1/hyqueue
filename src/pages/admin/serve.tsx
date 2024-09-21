@@ -8,24 +8,16 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import Head from "next/head";
-import { Navbar } from "../../components/Admin";
-import { Main } from "../../components/Main";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import axios, { AxiosResponse } from "axios";
-import { API_ENDPOINT } from "../../constants";
-import * as _ from "lodash";
-import {
-  ITrelloBoardList,
-  EQueueTitles,
-  ITrelloCard,
-  ITrelloList,
-  ITicket,
-} from "../../model";
-import ServerControls from "../../components/Admin/ServerControls";
-import { Alerted } from "../../components/Ticket/Alerted";
+import Head from "next/head";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { Navbar } from "../../components/Admin";
+import ServerControls from "../../components/Admin/ServerControls";
+import { Main } from "../../components/Main";
 import withProtectedRoute from "../../components/withProtectedRoute";
+import { API_ENDPOINT } from "../../constants";
+import { EQueueTitles, ITicket, ITrelloList } from "../../model";
 
 const Serve = () => {
   const [ticket, setTicket] = useState<ITicket>();

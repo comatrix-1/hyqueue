@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
-import Head from "next/head";
 import axios, { AxiosResponse } from "axios";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 import {
-  isQueueClosed,
   validateCategory,
   validateContact,
   validateDescription,
@@ -13,27 +12,27 @@ import {
   validatePostalCode,
 } from "../utils";
 
+import { Loading } from "../components/Common/Loading";
 import { Container } from "../components/Container";
-import { Main } from "../components/Main";
 import { Footer } from "../components/Footer";
+import { Main } from "../components/Main";
 import { NavBar } from "../components/Navbar";
 import { NoSuchQueue } from "../components/View/NoSuchQueue";
-import { Loading } from "../components/Common/Loading";
 
 import {
   Box,
   Button,
   Flex,
   Input,
+  Select,
   Text,
   Textarea,
-  Select,
 } from "@chakra-ui/react";
-import { useCookies } from "react-cookie";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import useTranslation from "next-translate/useTranslation";
+import { useCookies } from "react-cookie";
 import { API_ENDPOINT } from "../constants";
 import { EQueueStatus, IEditableSettings, ITicketDescription } from "../model";
-import { Formik, Form, Field, ErrorMessage } from "formik";
 
 const Index = () => {
   const { t, lang } = useTranslation("common");

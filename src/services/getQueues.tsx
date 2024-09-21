@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IApiResponse, IQueue, ITrelloBoardList } from "../model";
+import { IApiResponse, IQueue } from "../model";
 
 export const getQueues = async (): Promise<IApiResponse<IQueue[]>> => {
   const {

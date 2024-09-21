@@ -1,6 +1,6 @@
 import axios from "axios";
-import { EQueueTitles, IApiResponse, ITicket, ITrelloList } from "../model";
 import { INTERNAL_SERVER_ERROR } from "../constants";
+import { EQueueTitles, IApiResponse, ITicket, ITrelloList } from "../model";
 
 export const postTicketsByQueue = async (
   desc: any
