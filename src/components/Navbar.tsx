@@ -47,13 +47,13 @@ export const NavBar = (props: any) => {
           <LogoQueue height="40px" width="40px" />
         </a>
       </Box>
-      <Box>
+      <Flex>
         {languages.map((lng, idx) => (
-          <>
-            {idx > 0 && <span style={{ color: "#636467" }}>|</span>}
+          <Box key={lng.name} color="gray.700">
+            {idx > 0 && <span>|</span>}
             <Link key={lng.name} href={`${router.asPath}`} locale={lng.locale}>
               <Button
-                textColor="#636467"
+                textColor="gray.700"
                 variant="link"
                 mx={1}
                 fontSize="14px"
@@ -62,9 +62,9 @@ export const NavBar = (props: any) => {
                 {lng.name}
               </Button>
             </Link>
-          </>
+          </Box>
         ))}
-      </Box>
+      </Flex>
     </Flex>
   );
 };
