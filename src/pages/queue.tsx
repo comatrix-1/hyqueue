@@ -402,13 +402,13 @@ const Index = () => {
                       >
                         {t("join-queue")}
                       </Button>
-
+                      
                       {editableSettings.privacyPolicyLink && (
                         <Text pt="1rem" textStyle="body3">
-                          <Text display="inline-block">
+                          <span>
                             {t("by-joining-this-queue-you-agree-to-our")}&nbsp;
-                          </Text>
-                          <Text display="inline-block" textStyle="link">
+                          </span>
+                          <Text as="span" textStyle="link">
                             <a
                               href={editableSettings.privacyPolicyLink}
                               target="_blank"
