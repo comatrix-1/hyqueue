@@ -9,14 +9,13 @@ import EditableSettings from "../../components/Admin/EditableSettings";
 import Links from "../../components/Admin/Links";
 import { Container } from "../../components/Container";
 import { Main } from "../../components/Main";
+import withProtectedRoute from "../../components/withProtectedRoute";
 import { API_ENDPOINT } from "../../constants";
-import { IApiConfig, ITrelloBoardSettings } from "../../model";
-import { authentication } from "../../utils";
+import { ITrelloBoardSettings } from "../../model";
 
 const Index = () => {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [apiConfig, setApiConfig] = useState<IApiConfig>();
   const [boardData, setBoardData] = useState<ITrelloBoardSettings>();
 
   /**
@@ -61,37 +60,35 @@ const Index = () => {
   const updateBoard = async (data: ITrelloBoardSettings) => {
     if (isSubmitting) return;
 
-    if (apiConfig && apiConfig.key && apiConfig.token) {
-      try {
-        setIsSubmitting(true);
-        let settings: ITrelloBoardSettings | null = null;
+    try {
+      setIsSubmitting(true);
+      let settings: ITrelloBoardSettings | null = null;
 
-        if (data.name && data.name !== boardData?.name) {
-          // Is changing name
-          settings = {
-            name: data.name,
-          };
-        } else {
-          // Is changing desc
+      if (data.name && data.name !== boardData?.name) {
+        // Is changing name
+        settings = {
+          name: data.name,
+        };
+      } else {
+        // Is changing desc
 
-          //  Verify that the board desc does not exceed 16384 characters
-          //  https://developer.atlassian.com/cloud/trello/rest/api-group-boards/#api-boards-id-put
-          if (JSON.stringify(data).length > 16384)
-            throw Error(
-              "Could not save due to setting JSON length exceeding 16384"
-            );
-          settings = {
-            desc: data.desc,
-          };
-        }
-
-        await axios.put(`${API_ENDPOINT}/system`, settings);
-        window.location.reload();
-      } catch (error) {
-        errorHandler(error);
-      } finally {
-        setIsSubmitting(false);
+        //  Verify that the board desc does not exceed 16384 characters
+        //  https://developer.atlassian.com/cloud/trello/rest/api-group-boards/#api-boards-id-put
+        if (JSON.stringify(data).length > 16384)
+          throw Error(
+            "Could not save due to setting JSON length exceeding 16384"
+          );
+        settings = {
+          desc: data.desc,
+        };
       }
+
+      await axios.put(`${API_ENDPOINT}/system`, settings);
+      window.location.reload();
+    } catch (error) {
+      errorHandler(error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -106,20 +103,7 @@ const Index = () => {
   };
 
   useEffect(() => {
-    const token = authentication.getToken();
-    const key = authentication.getKey();
-
-    if (token && key) {
-      setApiConfig({
-        token: token,
-        key: key,
-      });
-      getBoard();
-    } else {
-      router.push({
-        pathname: `/admin/login`,
-      });
-    }
+    getBoard();
   }, []);
 
   const submit = async (e: any) => {
@@ -178,4 +162,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default withProtectedRoute(Index);
