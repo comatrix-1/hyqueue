@@ -34,7 +34,6 @@ export const postTicketsByQueue = async (
         trelloList.name.indexOf(EQueueTitles.PENDING) > -1
     )[0].id;
 
-    // TODO: re-implement if contact is provided, search pending queue for duplicate number
     if (contact) {
       logger.info("ticket provided");
       const getCardsOnPendingList = await axios.get(
