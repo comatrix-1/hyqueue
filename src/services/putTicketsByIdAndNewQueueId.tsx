@@ -1,4 +1,6 @@
 import axios from "axios";
+import { INTERNAL_SERVER_ERROR } from "../constants";
+import { logger } from "../logger";
 import { IApiResponse } from "../model";
 
 export const putTicketsByIdAndNewQueueId = async (
@@ -15,15 +17,23 @@ export const putTicketsByIdAndNewQueueId = async (
   const tokenAndKeyParams =
     IS_PUBLIC_BOARD === "true" ? "" : `key=${TRELLO_KEY}&token=${TRELLO_TOKEN}`;
 
-  await axios.put(
-    `${TRELLO_ENDPOINT}/cards/${id}?${tokenAndKeyParams}&idList=${newQueueId}&pos=bottom`
-  );
+  try {
+    await axios.put(
+      `${TRELLO_ENDPOINT}/cards/${id}?${tokenAndKeyParams}&idList=${newQueueId}&pos=bottom`
+    );
 
-  return {
-    status: 201,
-    data: {
-      message: `Successfully updated ticket of ID: ${id}`,
-      data: null,
-    },
-  };
+    return {
+      status: 201,
+      data: {
+        message: `Successfully updated ticket of ID: ${id}`,
+        data: null,
+      },
+    };
+  } catch (error: any) {
+    logger.error(error.message);
+    return {
+      status: error.response?.status || 500,
+      data: { message: INTERNAL_SERVER_ERROR, data: null },
+    };
+  }
 };

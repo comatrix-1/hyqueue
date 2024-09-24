@@ -1,4 +1,6 @@
 import axios from "axios";
+import { INTERNAL_SERVER_ERROR } from "../constants";
+import { logger } from "../logger";
 import { IApiResponse, ITrelloBoardList } from "../model";
 
 export const putTicketsByIdAndNewQueueName = async (
@@ -15,28 +17,39 @@ export const putTicketsByIdAndNewQueueName = async (
   const tokenAndKeyParams =
     IS_PUBLIC_BOARD === "true" ? "" : `key=${TRELLO_KEY}&token=${TRELLO_TOKEN}`;
 
-  const queuesResponse = await axios.get(
-    `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/lists?${tokenAndKeyParams}`
-  );
+  try {
+    const queuesResponse = await axios.get(
+      `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/lists?${tokenAndKeyParams}`
+    );
 
-  const queuesResponseData: ITrelloBoardList[] = queuesResponse.data;
+    const queuesResponseData: ITrelloBoardList[] = queuesResponse.data;
 
-  const newQueue = queuesResponseData.find((queue) =>
-    queue.name.includes(newQueueName)
-  );
-  const newQueueId = newQueue ? newQueue.id : null;
+    const newQueue = queuesResponseData.find((queue) =>
+      queue.name.includes(newQueueName)
+    );
+    const newQueueId = newQueue ? newQueue.id : null;
 
-  await axios.put(
-    `${TRELLO_ENDPOINT}/cards/${id}?${tokenAndKeyParams}&idList=${newQueueId}&pos=bottom`
-  );
+    const updateResponse = await axios.put(
+      `${TRELLO_ENDPOINT}/cards/${id}?${tokenAndKeyParams}&idList=${newQueueId}&pos=bottom`
+    );
 
-  // TODO: check response status
+    const message =
+      updateResponse.status === 200
+        ? `Successfully updated ticket of ID: ${id}`
+        : `Failed to update ticket of ID: ${id}`;
 
-  return {
-    status: 201,
-    data: {
-      message: `Successfully updated ticket of ID: ${id}`,
-      data: null,
-    },
-  };
+    return {
+      status: updateResponse.status,
+      data: {
+        message,
+        data: null,
+      },
+    };
+  } catch (error: any) {
+    logger.error(error.message);
+    return {
+      status: error.response?.status || 500,
+      data: { message: INTERNAL_SERVER_ERROR, data: null },
+    };
+  }
 };

@@ -1,4 +1,6 @@
 import axios from "axios";
+import { INTERNAL_SERVER_ERROR } from "../constants";
+import { logger } from "../logger";
 import { IApiResponse } from "../model";
 
 export const putTicketsByQueueMap = async (queueMap: {
@@ -14,14 +16,15 @@ export const putTicketsByQueueMap = async (queueMap: {
   const tokenAndKeyParams =
     IS_PUBLIC_BOARD === "true" ? "" : `key=${TRELLO_KEY}&token=${TRELLO_TOKEN}`;
 
-  const requests = Object.entries(queueMap).map(([ticketId, newQueueId]) =>
-    axios.put(
-      `${TRELLO_ENDPOINT}/cards/${ticketId}?${tokenAndKeyParams}&idList=${newQueueId}&pos=bottom`
-    )
-  );
-
   try {
+    const requests = Object.entries(queueMap).map(([ticketId, newQueueId]) =>
+      axios.put(
+        `${TRELLO_ENDPOINT}/cards/${ticketId}?${tokenAndKeyParams}&idList=${newQueueId}&pos=bottom`
+      )
+    );
+
     await Promise.all(requests);
+    
     return {
       status: 201,
       data: {
@@ -29,14 +32,11 @@ export const putTicketsByQueueMap = async (queueMap: {
         data: null,
       },
     };
-  } catch (error) {
-    console.error("Error updating cards:", error);
+  } catch (error: any) {
+    logger.error(error.message);
     return {
-      status: 400,
-      data: {
-        message: "Failed to update tickets",
-        data: null,
-      },
+      status: error.response?.status || 500,
+      data: { message: INTERNAL_SERVER_ERROR, data: null },
     };
   }
 };
