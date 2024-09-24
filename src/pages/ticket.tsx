@@ -32,7 +32,6 @@ const Index = () => {
   const [refreshEnabled, setRefreshEnabled] = useState(true);
   const [ticketState, setTicketState] = useState<ETicketStatus>();
   const [ticketId, setTicketId] = useState<string>();
-  const [ticketNumber, setTicketNumber] = useState<string>();
   const [ticket, setTicket] = useState<ITicket>();
   const [lastUpdated, setLastUpdated] = useState<string>("");
   const [editableSettings, setEditableSettings] = useState<IEditableSettings>({
@@ -90,7 +89,6 @@ const Index = () => {
       const retrievedTicket = getTicketData.data;
 
       setTicket(retrievedTicket);
-      setTicketNumber(ticketNumber);
 
       // // Update timestamp
       const timestamp = new Date().toLocaleString("en-UK", {
@@ -247,7 +245,7 @@ const Index = () => {
                 letterSpacing="0.2rem"
                 color="primary.500"
               >
-                {ticketNumber}
+                {ticket?.ticketNumber}
               </Heading>
             </Flex>
           )}
