@@ -106,14 +106,8 @@ const Index = () => {
   };
 
   useEffect(() => {
-    const token =
-      process.env.NODE_ENV === "development"
-        ? "testToken"
-        : authentication.getToken();
-    const key =
-      process.env.NODE_ENV === "development"
-        ? "testKey"
-        : authentication.getKey();
+    const token = authentication.getToken();
+    const key = authentication.getKey();
 
     if (token && key) {
       setApiConfig({

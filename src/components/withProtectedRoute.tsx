@@ -5,7 +5,8 @@ import { authentication } from "../utils";
 const withProtectedRoute = (WrappedComponent: () => JSX.Element) => {
   return (props: any) => {
     const isAuthenticated =
-      authentication.getKey() && authentication.getToken();
+      process.env.NODE_ENV === "development" ||
+      (authentication.getKey() && authentication.getToken());
 
     const router = useRouter();
 
