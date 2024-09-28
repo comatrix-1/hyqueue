@@ -13,7 +13,19 @@ const withProtectedRoute = (WrappedComponent: React.FC) => {
       const token = authentication.getToken();
       const key = authentication.getKey();
 
-      if ((token && key) || process.env.NODE_ENV === "development") {
+      console.log(
+        "authentication.getKey(), authentication.getToken()",
+        authentication.getKey(),
+        authentication.getToken()
+      );
+
+      if (
+        (typeof authentication.getKey() === "string" &&
+          typeof authentication.getToken() === "string" &&
+          authentication.getKey() &&
+          authentication.getToken()) ||
+        process.env.NODE_ENV === "development"
+      ) {
         setIsAuthenticated(true);
       } else {
         setIsAuthenticated(false);
