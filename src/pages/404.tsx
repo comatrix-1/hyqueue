@@ -3,14 +3,16 @@ import { Box, Button, Center, Flex, Heading } from "@chakra-ui/react";
 import useTranslation from "next-translate/useTranslation";
 import Head from "next/head";
 
+import { useRouter } from "next/router";
 import { Container } from "../components/Container";
 import { Footer } from "../components/Footer";
 import { NavBar } from "../components/Navbar";
 
 const error404 = () => {
   const { t } = useTranslation("common");
+  const router = useRouter();
   const goBack = () => {
-    window.history.back();
+    router.push("/");
   };
 
   return (
