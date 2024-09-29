@@ -5,39 +5,19 @@ import { authentication } from "../utils";
 const withProtectedRoute = (WrappedComponent: React.FC) => {
   return (props: any) => {
     const router = useRouter();
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(
-      null
-    );
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-      const token = authentication.getToken();
+      setIsClient(true);
       const key = authentication.getKey();
+      const token = authentication.getToken();
 
-      console.log(
-        "authentication.getKey(), authentication.getToken()",
-        authentication.getKey(),
-        authentication.getToken()
-      );
-
-      if (
-        (typeof authentication.getKey() === "string" &&
-          typeof authentication.getToken() === "string" &&
-          authentication.getKey() &&
-          authentication.getToken()) ||
-        process.env.NODE_ENV === "development"
-      ) {
-        setIsAuthenticated(true);
-      } else {
-        setIsAuthenticated(false);
-        router.push("/not-found");
+      if (!key || !token) {
+        router.replace("/");
       }
     }, [router]);
 
-    if (isAuthenticated === null) {
-      return <div>Loading...</div>;
-    }
-
-    if (!isAuthenticated) {
+    if (!isClient) {
       return null;
     }
 
