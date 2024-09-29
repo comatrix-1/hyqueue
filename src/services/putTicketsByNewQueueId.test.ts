@@ -87,4 +87,29 @@ describe("putTicketsByNewQueueId", () => {
       "Request failed with status code 500"
     );
   });
+
+  it("should return an error if moving the ticket to new queue fails", async () => {
+    const newQueueId = "queue789";
+    const pendingQueueId = "queue123";
+    const ticketId = "ticket123";
+
+    mock
+      .onGet(
+        `${process.env.TRELLO_ENDPOINT}/boards/${process.env.NEXT_PUBLIC_TRELLO_BOARD_ID}/lists?key=${process.env.TRELLO_KEY}&token=${process.env.TRELLO_TOKEN}`
+      )
+      .reply(200, [{ id: pendingQueueId, name: "Pending [PENDING]" }]);
+
+    mock
+      .onGet(
+        `${process.env.TRELLO_ENDPOINT}/lists/${pendingQueueId}/cards?key=${process.env.TRELLO_KEY}&token=${process.env.TRELLO_TOKEN}`
+      )
+      .reply(200, [{ id: ticketId, name: "Test Ticket" }]);
+
+    mock.onPut(/cards/).reply(400);
+
+    const response = await putTicketsByNewQueueId(newQueueId);
+
+    expect(response.status).toBe(400);
+    expect(response.data.message).toBe(INTERNAL_SERVER_ERROR);
+  });
 });

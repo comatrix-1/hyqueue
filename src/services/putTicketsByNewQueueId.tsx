@@ -22,11 +22,9 @@ export const putTicketsByNewQueueId = async (
     IS_PUBLIC_BOARD === "true" ? "" : `key=${TRELLO_KEY}&token=${TRELLO_TOKEN}`;
 
   try {
-    // Take from pending queue and put into queue Id
     const queuesResponse = await axios.get(
       `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/lists?${tokenAndKeyParams}`
     );
-
     const queuesResponseData: ITrelloBoardList[] = queuesResponse.data;
 
     const pendingQueue = queuesResponseData.find((queue) =>
@@ -34,12 +32,22 @@ export const putTicketsByNewQueueId = async (
     );
     const pendingQueueId = pendingQueue ? pendingQueue.id : null;
 
+    if (!pendingQueueId) {
+      return {
+        status: 404,
+        data: {
+          message: "Pending queue not found",
+          data: null,
+        },
+      };
+    }
+
     const ticketsResponse = await axios.get(
       `${TRELLO_ENDPOINT}/lists/${pendingQueueId}/cards?${tokenAndKeyParams}`
     );
-
     const ticketsResponseData: ITrelloCard[] = ticketsResponse.data;
-    if (ticketsResponseData.length <= 0) {
+
+    if (ticketsResponseData.length === 0) {
       return {
         status: 200,
         data: {
@@ -48,6 +56,7 @@ export const putTicketsByNewQueueId = async (
         },
       };
     }
+
     const ticketIdOfFirstInPendingQueue = ticketsResponseData[0].id;
     logger.info("ticketIdOfFirstInPendingQueue", ticketIdOfFirstInPendingQueue);
 
@@ -55,12 +64,16 @@ export const putTicketsByNewQueueId = async (
       `${TRELLO_ENDPOINT}/cards/${ticketIdOfFirstInPendingQueue}?${tokenAndKeyParams}&idList=${newQueueId}&pos=bottom`
     );
 
-    // TODO: check response status
+    if (response.status !== 200 && response.status !== 201) {
+      throw new Error(
+        `Failed to move ticket. Trello responded with status ${response.status}`
+      );
+    }
 
     return {
-      status: 201,
+      status: response.status,
       data: {
-        message: `Successfully put ticket of ID ${ticketIdOfFirstInPendingQueue} to queue of ID ${newQueueId}`,
+        message: `Successfully put ticket of ID ${ticketIdOfFirstInPendingQueue}`,
         data: null,
       },
     };

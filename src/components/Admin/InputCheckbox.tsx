@@ -21,7 +21,6 @@ type Props = {
     description: string;
   };
   onChange: (value: any) => void;
-  style?: any; // TODO: change any
 };
 
 const Index = ({
@@ -31,7 +30,6 @@ const Index = ({
   value,
   options,
   onChange,
-  style,
 }: Props) => {
   return (
     <Flex pt="0.5rem" pb="0.5rem">

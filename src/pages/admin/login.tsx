@@ -29,8 +29,7 @@ const Index = () => {
   const [boardId, setBoardId] = useState<string>("");
   const router = useRouter();
 
-  const updateBoardId = (e: any) => {
-    // TODO: change any
+  const updateBoardId = (e: React.ChangeEvent<HTMLInputElement>) => {
     setBoardId(e.target.value);
   };
 
@@ -43,7 +42,6 @@ const Index = () => {
       return;
     }
 
-    // TODO: change any
     e.preventDefault();
     try {
       setIsLoading(true);

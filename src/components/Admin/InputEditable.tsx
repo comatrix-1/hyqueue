@@ -10,14 +10,23 @@ import {
   useEditableControls,
 } from "@chakra-ui/react";
 
+interface Props {
+  color: string;
+  fontSize: "sm" | "md" | "lg" | "xl";
+  isLoading: boolean;
+  textStyle: string;
+  onSubmit: (value: string) => void;
+  value: string;
+}
+
 const Index = ({
   color = "",
   fontSize = "md",
   isLoading = false,
   textStyle = "",
-  onSubmit = (nextValue: any) => {}, // TODO: change any
+  onSubmit,
   value = "",
-}) => {
+}: Props) => {
   const EditableControls = () => {
     const {
       isEditing,
@@ -61,7 +70,7 @@ const Index = ({
       display="flex"
       flexDir="row"
       alignItems="center"
-      defaultValue={value || ""}
+      defaultValue={value}
       fontSize={fontSize}
       isPreviewFocusable={false}
       onSubmit={onSubmit}

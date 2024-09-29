@@ -13,7 +13,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { Field, FieldArray, Form, Formik } from "formik";
+import { Field, FieldArray, Form, Formik, FormikHelpers } from "formik";
 import moment from "moment-timezone";
 import { IEditableSettings, ITicketDescription } from "../../model";
 import DayOpeningHours from "./DayOpeningHours";
@@ -23,7 +23,9 @@ const EditableSettings = ({
   submit,
 }: {
   editableSettings: IEditableSettings;
-  submit: (e: any) => void;
+  submit: (
+    values: IEditableSettings,
+  ) => void;
 }) => {
   const options: Partial<ITicketDescription> = {
     name: "Full Name",

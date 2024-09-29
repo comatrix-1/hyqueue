@@ -1,5 +1,5 @@
 import axios from "axios";
-import { IApiResponse } from "../model";
+import { IApiResponse, ITrelloList } from "../model";
 
 export const deleteTicketsById = async (
   id: string
@@ -19,8 +19,10 @@ export const deleteTicketsById = async (
       `${TRELLO_ENDPOINT}/boards/${NEXT_PUBLIC_TRELLO_BOARD_ID}/?fields=id,name,desc&cards=visible&card_fields=id,idList,name,idShort,desc&lists=open&list_fields=id,name&${tokenAndKeyParams}`
     );
 
+    console.log('getBoardInfo lists', getBoardInfo.data.lists);
+
     const { lists } = getBoardInfo.data;
-    const leftList = lists.find((l: any) => l.name.includes("[LEFT]")); // TODO: change any
+    const leftList = lists.find((l: ITrelloList) => l.name.includes("[LEFT]"));
 
     // A [LEFT] list exists move the users ticket to the bottom of it
     if (leftList && leftList.id) {

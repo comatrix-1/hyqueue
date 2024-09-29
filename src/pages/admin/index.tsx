@@ -10,7 +10,7 @@ import Links from "../../components/Admin/Links";
 import { Container } from "../../components/Container";
 import { Main } from "../../components/Main";
 import { API_ENDPOINT } from "../../constants";
-import { ITrelloBoardSettings } from "../../model";
+import { IEditableSettings, ITrelloBoardSettings } from "../../model";
 
 const Index = () => {
   const router = useRouter();
@@ -100,10 +100,9 @@ const Index = () => {
     getBoard();
   }, []);
 
-  const submit = async (e: any) => {
-    // TODO: change any
+  const submit = async (formValues: IEditableSettings) => {
     try {
-      await updateBoard({ desc: e });
+      await updateBoard({ desc: formValues });
     } catch (error) {
       console.error(error);
     }
@@ -133,7 +132,7 @@ const Index = () => {
                     isLoading={isSubmitting}
                     onSubmit={(name) => updateBoard({ name })}
                     textStyle="heading1"
-                    value={boardData.name}
+                    value={boardData.name ?? ""}
                   />
 
                   <Links toggleQueueIsDisabled={toggleQueueIsDisabled} />

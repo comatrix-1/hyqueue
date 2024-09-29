@@ -10,11 +10,11 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { ITicket } from "../../model";
+import { IQueue, ITicket } from "../../model";
 
 interface Props {
-  tickets: ITicket[]; // TODO: change any
-  queues: any[]; // TODO: change any
+  tickets: ITicket[];
+  queues: IQueue[];
   selectedQueues: { [key: string]: string };
   handleQueueChange: (ticketId: string, newQueueId: string) => void;
   isSubmitting: boolean;

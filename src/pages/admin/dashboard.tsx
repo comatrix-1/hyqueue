@@ -9,10 +9,11 @@ import { Navbar } from "../../components/Admin";
 import DashboardActions from "../../components/Admin/DashboardActions";
 import { Main } from "../../components/Main";
 import { API_ENDPOINT } from "../../constants";
+import { IQueue, ITicket } from "../../model";
 
 const Dashboard = () => {
-  const [tickets, setTickets] = useState<any[]>([]);
-  const [queues, setQueues] = useState<any[]>([]);
+  const [tickets, setTickets] = useState<ITicket[]>([]);
+  const [queues, setQueues] = useState<IQueue[]>([]);
   useEffect(() => {
     getTickets();
   }, []);
