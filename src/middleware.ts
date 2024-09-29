@@ -6,7 +6,11 @@ import { NextResponse } from "next/server";
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  if (pathname.startsWith("/admin") && pathname !== "/admin/login") {
+  if (
+    pathname.startsWith("/admin") &&
+    pathname !== "/admin/login" &&
+    pathname !== "/admin/callback"
+  ) {
     const cookies = request.headers.get("cookie") || "";
     const parsedCookies = parse(cookies);
 
