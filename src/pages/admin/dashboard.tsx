@@ -8,7 +8,6 @@ import { useEffect, useState } from "react";
 import { Navbar } from "../../components/Admin";
 import DashboardActions from "../../components/Admin/DashboardActions";
 import { Main } from "../../components/Main";
-import withProtectedRoute from "../../components/withProtectedRoute";
 import { API_ENDPOINT } from "../../constants";
 
 const Dashboard = () => {
@@ -49,7 +48,7 @@ const Dashboard = () => {
       } else {
         updatedQueues[ticketId] = newQueueId; // Update if it's different
       }
-      
+
       return updatedQueues;
     });
   };
@@ -100,4 +99,4 @@ const Dashboard = () => {
   );
 };
 
-export default withProtectedRoute(Dashboard);
+export default Dashboard;

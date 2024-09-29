@@ -15,7 +15,6 @@ import { useEffect, useState } from "react";
 import { Navbar } from "../../components/Admin";
 import ServerControls from "../../components/Admin/ServerControls";
 import { Main } from "../../components/Main";
-import withProtectedRoute from "../../components/withProtectedRoute";
 import { API_ENDPOINT } from "../../constants";
 import { EQueueTitles, ITicket, ITrelloList } from "../../model";
 
@@ -175,4 +174,4 @@ const Serve = () => {
   );
 };
 
-export default withProtectedRoute(Serve);
+export default Serve;

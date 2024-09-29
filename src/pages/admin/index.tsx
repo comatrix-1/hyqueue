@@ -9,7 +9,6 @@ import EditableSettings from "../../components/Admin/EditableSettings";
 import Links from "../../components/Admin/Links";
 import { Container } from "../../components/Container";
 import { Main } from "../../components/Main";
-import withProtectedRoute from "../../components/withProtectedRoute";
 import { API_ENDPOINT } from "../../constants";
 import { ITrelloBoardSettings } from "../../model";
 
@@ -162,4 +161,4 @@ const Index = () => {
   );
 };
 
-export default withProtectedRoute(Index);
+export default Index;

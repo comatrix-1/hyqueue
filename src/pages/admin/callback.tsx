@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import { Navbar } from "../../components/Admin";
 import { Container } from "../../components/Container";
 import { Main } from "../../components/Main";
-import withProtectedRoute from "../../components/withProtectedRoute";
 import { authentication } from "../../utils";
 
 const Index = () => {
@@ -39,4 +38,4 @@ const Index = () => {
   );
 };
 
-export default withProtectedRoute(Index);
+export default Index;

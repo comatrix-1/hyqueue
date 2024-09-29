@@ -1,3 +1,4 @@
+import { serialize } from "cookie";
 import { format, toZonedTime } from "date-fns-tz";
 import { useEffect, useRef } from "react";
 import { EQueueTitles, IOpeningHour } from "./model";
@@ -68,23 +69,49 @@ export const authentication = {
     if (typeof window !== "undefined") {
       localStorage.setItem("key", key);
       localStorage.setItem("token", token);
+
+      document.cookie = serialize("token", token, {
+        path: "/",
+        maxAge: 60 * 60 * 24,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+      });
     }
   },
+
   logout: () => {
     if (typeof window !== "undefined") {
       localStorage.removeItem("token");
       localStorage.removeItem("key");
+
+      document.cookie = serialize("token", "", {
+        path: "/",
+        maxAge: 0,
+      });
     }
   },
-  getToken: () =>
-    typeof window !== "undefined" ? localStorage.getItem("token") : null,
+  getToken: () => {
+    if (typeof window !== "undefined") {
+      const tokenFromLocalStorage = localStorage.getItem("token");
+      if (tokenFromLocalStorage) return tokenFromLocalStorage;
+
+      const cookies = document.cookie.split("; ");
+      const tokenCookie = cookies.find((cookie) => cookie.startsWith("token="));
+      return tokenCookie ? tokenCookie.split("=")[1] : null;
+    }
+    return null;
+  },
   setKey: (key: string) => {
     if (typeof window !== "undefined") {
       localStorage.setItem("key", key);
     }
   },
-  getKey: () =>
-    typeof window !== "undefined" ? localStorage.getItem("key") : null,
+  getKey: () => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("key");
+    }
+    return null;
+  },
 };
 
 export const isQueueClosed = (

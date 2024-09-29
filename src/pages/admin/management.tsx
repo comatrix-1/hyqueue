@@ -17,7 +17,6 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Navbar } from "../../components/Admin";
 import { Main } from "../../components/Main";
-import withProtectedRoute from "../../components/withProtectedRoute";
 import { API_ENDPOINT } from "../../constants";
 import { EQueueTitles, IQueue, ITrelloBoardList } from "../../model";
 
@@ -134,4 +133,4 @@ const Management = () => {
   );
 };
 
-export default withProtectedRoute(Management);
+export default Management;
