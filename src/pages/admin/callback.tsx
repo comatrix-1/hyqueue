@@ -13,13 +13,12 @@ const Index = () => {
   const login = async () => {
     const searchParams = new URLSearchParams(window.location.search);
     const keyValue = searchParams.get("key") ?? "";
-    const boardIdValue = searchParams.get("boardId") ?? "";
 
     const hashParams = new URLSearchParams(window.location.hash.substring(1)); // Remove the leading '#'
     const token = hashParams.get("token") ?? "";
 
     authentication.login(keyValue, token);
-    router.push({ pathname: "/admin", query: { boardId: boardIdValue } });
+    router.push({ pathname: "/admin" });
   };
 
   useEffect(() => {

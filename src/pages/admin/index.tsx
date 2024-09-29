@@ -22,17 +22,12 @@ const Index = () => {
    */
   const errorHandler = (error: any) => {
     // TODO: change any
-    const searchParams = new URLSearchParams(window.location.search);
-    const boardIdValue = searchParams.get("boardId") ?? "";
 
     if (error.response) {
       if (error.response.status === 401) {
         alert(`Your login token is expired. Please login again`);
         router.push({
           pathname: `/admin/login`,
-          query: {
-            boardId: boardIdValue,
-          },
         });
       } else {
         alert(`Error ${error.response.status} : ${error.response.data}`);
