@@ -1,5 +1,5 @@
 This forked project contains modifications by comatrix-1 on Github, as of December 2024. 
-The original project can be found at [[original repository URL]. ](https://github.com/opengovsg/queuesg).
+The original project can be found at [QueueSG](https://github.com/opengovsg/queuesg).
 All modifications are also provided under the MIT License, subject to the original terms.
 
 The MIT License and the terms herein (collectively, the “Terms”) shall be governed by the laws of Singapore. Any dispute arising out of or in connection with the Terms, including any question regarding its existence, validity or termination, shall be referred to and finally resolved by arbitration administered by the Singapore International Arbitration Centre (“SIAC”) in accordance with the Arbitration Rules of the Singapore International Arbitration Centre (“SIAC Rules”) for the time being in force, which rules are deemed to be incorporated by reference in this clause. The seat of arbitration shall be Singapore. The Tribunal shall consist of one (1) arbitrator. The language of the arbitration shall be English.
