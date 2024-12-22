@@ -42,6 +42,33 @@ const DashboardActions = ({
     }
   };
 
+  // Function to generate the report
+  const generateReport = async () => {
+    setIsSubmitting(true);
+    try {
+      const response = await axios.get(`${API_ENDPOINT}/generate-report`, {
+        responseType: "blob", // Ensure the response is treated as a file
+      });
+
+      if (response.status === 200) {
+        // Create a link element to trigger the download
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "Queue_Report.csv"); // You can adjust the filename here
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        throw new Error("Failed to generate the report");
+      }
+    } catch (error) {
+      alert("Failed to generate the report");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <ButtonGroup>
       <Button
@@ -55,6 +82,17 @@ const DashboardActions = ({
         onClick={() => updateTicketsToNewQueues()}
       >
         Activate changes
+      </Button>
+      <Button
+        display="flex"
+        colorScheme="green"
+        borderRadius="3px"
+        color="white"
+        variant="solid"
+        isLoading={isSubmitting}
+        onClick={generateReport} // Call generateReport function when clicked
+      >
+        Generate Report
       </Button>
     </ButtonGroup>
   );
