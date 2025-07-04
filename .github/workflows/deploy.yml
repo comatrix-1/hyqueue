@@ -1,29 +1,39 @@
-name: Deploy to Netlify
+name: Deploy Marketing App to Netlify
 
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
-  build-deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repo
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: '18'
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-    - name: Install dependencies
-      run: npm install
+      - name: Install dependencies (monorepo root)
+        run: npm install
 
-    - name: Build the site
-      run: npm run build
+      - name: Build the marketing app
+        working-directory: apps/marketing
+        run: npm run build
 
-    - name: Deploy to Netlify
-      run: |
-        curl -X POST https://api.netlify.com/build_hooks/6867ccdd5865396f257404bf
+      - name: Deploy via Netlify CLI
+        working-directory: apps/marketing
+        run: |
+          npm install -g netlify-cli
+          netlify deploy --prod \
+            --dir=.next \
+            --functions=netlify/functions \
+            --site=$NETLIFY_SITE_ID \
+            --auth=$NETLIFY_AUTH_TOKEN
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
