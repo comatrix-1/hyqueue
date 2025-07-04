@@ -9,7 +9,7 @@ const PrivacyPolicy = () => {
       </Heading>
       <VStack align="start">
         <Text fontSize="lg">
-          <strong>Effective Date:</strong> [Insert Date]
+          <strong>Effective Date:</strong> 4 July 2025
         </Text>
         <Text fontSize="lg">
           At Hyqueue, we respect your privacy and are committed to

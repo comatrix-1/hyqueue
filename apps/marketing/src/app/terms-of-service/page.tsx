@@ -9,7 +9,7 @@ const TermsOfService = () => {
       </Heading>
       <VStack align="start">
         <Text fontSize="lg">
-          <strong>Effective Date:</strong> [Insert Date]
+          <strong>Effective Date:</strong> 4 July 2025
         </Text>
         <Text fontSize="lg">
           These Terms of Service (&quot;Terms&quot;) govern your use of the

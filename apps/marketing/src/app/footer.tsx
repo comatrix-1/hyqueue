@@ -55,7 +55,7 @@ const Footer = () => {
           <Link href="/terms-of-service">Terms of Service</Link>
         </HStack>
         <Text textAlign="center" color="gray.400" fontSize="sm">
-          © 2024 Hyqueue. All rights reserved.
+          © 2025 Hyqueue. All rights reserved.
         </Text>
       </VStack>
     </Container>
