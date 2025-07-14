@@ -14,6 +14,7 @@ import {
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useColorModeValue } from "@/components/ui/color-mode";
 
 const Home = () => {
   return (
@@ -23,7 +24,7 @@ const Home = () => {
         as="header"
         textAlign="center"
         py={{ base: 20, md: 200 }}
-        bg="gray.50"
+        bg={useColorModeValue("gray.50", "gray.800")}
       >
         <Heading fontSize="4xl" fontWeight="bold" mb={8}>
           Effortless Queue Management System
@@ -61,7 +62,7 @@ const Home = () => {
       </Box>
 
       {/* Features Section */}
-      <Box bg="blue.500" py={20} color="white" id="features">
+      <Box bg={useColorModeValue("blue.500", "blue.700")} py={20} color="white" id="features">
         <Container maxW="container.md" textAlign="center">
           <Heading fontSize="4xl" fontWeight="bold" mb={8}>
             Take Control of Your Queue
@@ -229,7 +230,7 @@ const Testimonial = ({
   rating?: number;
 }) => (
   <Flex
-    bg="blue.100"
+    bg={useColorModeValue("blue.100", "blue.800")}
     p="5"
     borderRadius="md"
     boxShadow="md"
@@ -273,7 +274,7 @@ const FAQItem = ({
     <Heading fontSize="lg" fontWeight="bold">
       {question}
     </Heading>
-    <Text mt="2" color="gray.600">
+    <Text mt="2" color={useColorModeValue("gray.600", "gray.400")}>
       {answer}
     </Text>
   </Box>
