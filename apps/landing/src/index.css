@@ -1,0 +1,180 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* HyQueue Landing Page Design System
+Professional queue management system branding with modern SaaS aesthetics
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Core Brand Colors */
+    --background: 0 0% 100%;
+    --foreground: 224 15% 15%;
+
+    /* Primary - Professional Blue */
+    --primary: 214 84% 56%;
+    --primary-foreground: 0 0% 98%;
+    --primary-muted: 214 84% 66%;
+    --primary-dark: 214 84% 46%;
+
+    /* Secondary - Teal Accent */
+    --secondary: 187 85% 53%;
+    --secondary-foreground: 0 0% 98%;
+    --secondary-muted: 187 85% 63%;
+
+    /* Success Green */
+    --success: 142 72% 29%;
+    --success-foreground: 0 0% 98%;
+
+    /* Neutral Grays */
+    --muted: 224 15% 96%;
+    --muted-foreground: 224 15% 45%;
+    --border: 224 15% 90%;
+    --input: 224 15% 90%;
+
+    /* Cards & Surfaces */
+    --card: 0 0% 100%;
+    --card-foreground: 224 15% 15%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 224 15% 15%;
+
+    /* Interactive Elements */
+    --accent: 224 15% 96%;
+    --accent-foreground: 224 15% 15%;
+    --ring: 214 84% 56%;
+
+    /* Status Colors */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-dark)) 50%, hsl(var(--secondary)) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
+
+    /* Shadows */
+    --shadow-soft: 0 4px 12px hsl(var(--primary) / 0.1);
+    --shadow-medium: 0 8px 24px hsl(var(--primary) / 0.15);
+    --shadow-strong: 0 16px 40px hsl(var(--primary) / 0.2);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Core Brand Colors - Dark Mode */
+    --background: 224 15% 9%;
+    --foreground: 0 0% 95%;
+
+    /* Primary - Professional Blue (adjusted for dark) */
+    --primary: 214 84% 66%;
+    --primary-foreground: 224 15% 9%;
+    --primary-muted: 214 84% 56%;
+    --primary-dark: 214 84% 76%;
+
+    /* Secondary - Teal Accent */
+    --secondary: 187 85% 63%;
+    --secondary-foreground: 224 15% 9%;
+    --secondary-muted: 187 85% 53%;
+
+    /* Success Green */
+    --success: 142 72% 39%;
+    --success-foreground: 224 15% 9%;
+
+    /* Neutral Grays */
+    --muted: 224 15% 15%;
+    --muted-foreground: 224 15% 65%;
+    --border: 224 15% 18%;
+    --input: 224 15% 18%;
+
+    /* Cards & Surfaces */
+    --card: 224 15% 12%;
+    --card-foreground: 0 0% 95%;
+    --popover: 224 15% 12%;
+    --popover-foreground: 0 0% 95%;
+
+    /* Interactive Elements */
+    --accent: 224 15% 18%;
+    --accent-foreground: 0 0% 95%;
+    --ring: 214 84% 66%;
+
+    /* Status Colors */
+    --destructive: 0 84% 70%;
+    --destructive-foreground: 224 15% 9%;
+
+    /* Gradients - Dark Mode */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--secondary)));
+    --gradient-hero: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary-dark)) 50%, hsl(var(--secondary)) 100%);
+    --gradient-subtle: linear-gradient(180deg, hsl(var(--background)), hsl(var(--muted)));
+
+    /* Shadows - Dark Mode */
+    --shadow-soft: 0 4px 12px hsl(0 0% 0% / 0.3);
+    --shadow-medium: 0 8px 24px hsl(0 0% 0% / 0.4);
+    --shadow-strong: 0 16px 40px hsl(0 0% 0% / 0.5);
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer utilities {
+  .gradient-text {
+    @apply bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent;
+  }
+  
+  .glass-effect {
+    @apply backdrop-blur-md bg-white/10 border border-white/20;
+  }
+  
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-medium;
+  }
+  
+  .fade-in {
+    @apply animate-[fadeIn_0.6s_ease-out_forwards];
+  }
+  
+  .slide-up {
+    @apply animate-[slideUp_0.6s_ease-out_forwards];
+  }
+}
