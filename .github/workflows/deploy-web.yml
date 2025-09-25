@@ -1,11 +1,8 @@
-name: Deploy Marketing App to Netlify
+name: Deploy Web App to Netlify
 
 on:
   push:
     branches:
-      - master
-  pull_request:
-    branches: 
       - master
 
 jobs:
@@ -21,23 +18,23 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install dependencies (monorepo root)
-        working-directory: apps/marketing
+      - name: Install dependencies
+        working-directory: apps/web
         run: npm install
 
-      - name: Build the marketing app
-        working-directory: apps/marketing
+      - name: Build the web app
+        working-directory: apps/web
         run: npm run build
 
       - name: Deploy via Netlify CLI
-        working-directory: apps/marketing
+        working-directory: apps/web
         run: |
           npm install -g netlify-cli
-          netlify deploy --prod \
+          netlify deploy --build --prod \
             --dir=.next \
-            --functions=netlify/functions \
-            --site=$NETLIFY_SITE_ID \
+            --functions=netlify/functions \ 
+            --site=$NETLIFY_SITE_ID_WEB \
             --auth=$NETLIFY_AUTH_TOKEN
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID_WEB }}
