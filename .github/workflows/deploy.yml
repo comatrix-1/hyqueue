@@ -1,4 +1,4 @@
-name: Deploy Marketing App to Netlify
+name: Deploy Marketing and Web App to Netlify
 
 on:
   push:
@@ -25,6 +25,7 @@ jobs:
           netlify deploy --build --prod \
             --site=$NETLIFY_SITE_ID_WEB \
             --auth=$NETLIFY_AUTH_TOKEN
+        working-directory: apps/web
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID_WEB: ${{ secrets.NETLIFY_SITE_ID_WEB }}
