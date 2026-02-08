@@ -13,9 +13,9 @@
   IS_PUBLIC_BOARD="Public Board e.g. false"
   REDIRECT_URL="Admin Callback Url e.g. https://eg.co/admin/callback"
   SCOPES="Trello Scopes e.g. read,write"
-  EXPIRATION_DURATION="Authorisation Token Duration e.g. 1hours"
+  EXPIRATION_DURATION="Authorisation Token Duration e.g. 1hour"
 
-# https://app.netlify.com/start/deploy?repository=https://github.com/comatrix-1/hyqueue#IS_PUBLIC_BOARD=false&NEXT_PUBLIC_WAIT_TIME_MINS=3&NEXT_PUBLIC_REFRESH_INTERVAL=5000&NEXT_PUBLIC_TRELLO_BOARD_ID=replace_me&TRELLO_KEY=replace_me&TRELLO_TOKEN=replace_me&SCOPES=read,write&EXPIRATION_DURATION=1hours&REDIRECT_URL=https://example.com/admin/callback&APP_NAME=Hyqueue
+# https://app.netlify.com/start/deploy?repository=https://github.com/comatrix-1/hyqueue&base=apps/web#IS_PUBLIC_BOARD=false&NEXT_PUBLIC_WAIT_TIME_MINS=3&NEXT_PUBLIC_REFRESH_INTERVAL=5000&NEXT_PUBLIC_TRELLO_BOARD_ID=replace_me&TRELLO_KEY=replace_me&TRELLO_TOKEN=replace_me&SCOPES=read,write&EXPIRATION_DURATION=1hour
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"

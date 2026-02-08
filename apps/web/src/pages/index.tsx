@@ -1,8 +1,7 @@
-import { Box, Button, Center, Heading } from "@chakra-ui/react";
+import { Box, Button, Center, Heading, Input, Text } from "@chakra-ui/react";
 import axios, { AxiosResponse } from "axios";
 import useTranslation from "next-translate/useTranslation";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 import { Container } from "../components/Container";
 import { Footer } from "../components/Footer";
@@ -14,19 +13,15 @@ import { EQueueTitles, IQueue } from "../model";
 
 const Index = () => {
   const { t, lang } = useTranslation("common");
-  const [queuePendingUrl, setQueuePendingUrl] = useState("");
+  const router = useRouter();
 
-  useEffect(() => {
-    getQueues();
-  }, []);
-
-  const getQueues = async () => {
+  const navigateToQueue = async () => {
     try {
       const result = await axios.get(`${API_ENDPOINT}/queues`);
       const response = result.data as AxiosResponse;
       response.data.forEach((queue: IQueue) => {
         if (queue.name.indexOf(EQueueTitles.PENDING) > -1) {
-          setQueuePendingUrl(location.origin + `/queue`);
+          router.push(location.origin + `/queue`);
         }
       });
     } catch (error) {
@@ -43,19 +38,18 @@ const Index = () => {
             {t("demo-title")}
           </Heading>
           <Center mt="4rem">
-            <Link href={`${queuePendingUrl}`}>
-              <Button
-                bgColor="primary.500"
-                borderRadius="3px"
-                width="100%"
-                color="white"
-                size="lg"
-                variant="solid"
-                type="submit"
-              >
-                {t("join-queue")}
-              </Button>
-            </Link>
+            <Button
+              bgColor="primary.500"
+              borderRadius="3px"
+              width="100%"
+              color="white"
+              size="lg"
+              variant="solid"
+              type="submit"
+              onClick={navigateToQueue}
+            >
+              {t("join-queue")}
+            </Button>
           </Center>
         </Box>
       </Main>
