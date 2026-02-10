@@ -76,18 +76,6 @@ const CTASection = () => {
               <p className="text-white/80">Ready in under 5 minutes</p>
             </div>
           </div>
-
-          {/* Trust Signal */}
-          <div className="inline-flex items-center gap-3 bg-white/10 px-6 py-3 rounded-full">
-            <div className="flex items-center gap-1">
-              {[...Array(5)].map((_, i) => (
-                <span key={i} className="text-yellow-400 text-sm">★</span>
-              ))}
-            </div>
-            <span className="text-white/90 text-sm font-medium">
-              Trusted by 500+ businesses worldwide
-            </span>
-          </div>
         </div>
       </div>
     </section>

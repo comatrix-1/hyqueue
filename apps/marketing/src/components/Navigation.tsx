@@ -35,12 +35,6 @@ const Navigation = () => {
               How It Works
             </a>
             <a
-              href="#testimonials"
-              className="text-black/80 hover:text-white transition-colors"
-            >
-              Testimonials
-            </a>
-            <a
               href="#faq"
               className="text-black/80 hover:text-white transition-colors"
             >
@@ -109,12 +103,6 @@ const Navigation = () => {
                 className="text-black/80 hover:text-white transition-colors"
               >
                 How It Works
-              </a>
-              <a
-                href="#testimonials"
-                className="text-black/80 hover:text-white transition-colors"
-              >
-                Testimonials
               </a>
               <a
                 href="#faq"
